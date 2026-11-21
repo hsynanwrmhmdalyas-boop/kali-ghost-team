@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة التحكم الإدارية | KALI COMMUNITY ADMIN</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{--bg:#060907;--panel:#0d140f;--panel2:#121c15;--green:#39ff14;--green-glow:rgba(57,255,20,0.3);--muted:#8b9d90;--line:#1c2d22;--white:#effbf1;--danger:#ff3366;--warn:#ffb700;--cyan:#00f0ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--white);font-family:Tahoma,Arial,sans-serif;line-height:1.6}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1200px;margin:auto;padding:0 20px}
+/* Header */
+header{background:#080e0a;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+.admin-nav{height:70px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900}
+.logo{width:38px;height:38px;border:1px solid var(--green);border-radius:10px;display:grid;place-items:center;color:var(--green);font-size:20px;box-shadow:0 0 15px var(--green-glow)}
+.brand span:last-child{font-size:16px}.brand b{color:var(--green)}
+.admin-badge{background:var(--green);color:#000;font-size:10px;padding:3px 8px;border-radius:4px;font-weight:900;letter-spacing:1px}
+.nav-actions{display:flex;align-items:center;gap:12px}
+.btn{border:1px solid var(--green);background:var(--green);color:#071008;padding:8px 16px;border-radius:8px;font-weight:bold;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font-size:13px;transition:all .2s}
+.btn.ghost{background:transparent;color:var(--green)}.btn.ghost:hover{background:rgba(57,255,20,0.1);color:#fff}
+.btn:hover{filter:brightness(1.15);box-shadow:0 0 14px var(--green-glow)}
+.btn.danger{border-color:var(--danger);background:rgba(255,51,102,0.15);color:var(--danger)}
+.btn.danger:hover{background:var(--danger);color:#fff}
+.btn.cyan{border-color:var(--cyan);background:rgba(0,240,255,0.12);color:var(--cyan)}
+.btn.cyan:hover{background:var(--cyan);color:#000}
+/* Login Gate Screen */
+#loginGate{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-card{width:min(440px,100%);background:linear-gradient(145deg,#0e1711,#070d09);border:1px solid var(--green);border-radius:18px;padding:32px;box-shadow:0 20px 60px rgba(0,0,0,0.9),0 0 30px var(--green-glow);text-align:center}
+.login-card h2{margin:0 0 8px;color:var(--green);font-size:24px}
+.login-card p{color:var(--muted);font-size:13px;margin-bottom:24px}
+.login-card input{width:100%;padding:13px 16px;background:#050906;border:1px solid var(--line);border-radius:8px;color:#fff;font-size:15px;outline:none;text-align:center;letter-spacing:2px;margin-bottom:16px}
+.login-card input:focus{border-color:var(--green);box-shadow:0 0 15px var(--green-glow)}
+.hint-text{font-size:12px;color:#718576;margin-top:14px}
+/* Dashboard Layout */
+.dashboard{padding:30px 0 60px}
+.dash-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:15px}
+.dash-header h1{margin:0;font-size:28px}
+.dash-header p{margin:4px 0 0;color:var(--muted);font-size:14px}
+/* KPI Stats */
+.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:30px}
+.kpi-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;align-items:center;gap:14px;box-shadow:0 8px 25px rgba(0,0,0,0.4)}
+.kpi-icon{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:20px;flex-shrink:0}
+.kpi-icon.green{background:rgba(57,255,20,0.12);color:var(--green);border:1px solid var(--green)}
+.kpi-icon.cyan{background:rgba(0,240,255,0.12);color:var(--cyan);border:1px solid var(--cyan)}
+.kpi-icon.yellow{background:rgba(255,183,0,0.12);color:var(--warn);border:1px solid var(--warn)}
+.kpi-icon.red{background:rgba(255,51,102,0.12);color:var(--danger);border:1px solid var(--danger)}
+.kpi-details strong{display:block;font-size:24px;color:#fff;line-height:1.2}
+.kpi-details span{color:var(--muted);font-size:11px}
+/* Tab Navigation */
+.tabs-bar{display:flex;gap:8px;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:24px;overflow-x:auto}
+.tab-btn{background:transparent;border:1px solid transparent;color:var(--muted);padding:10px 18px;border-radius:8px;font-weight:bold;cursor:pointer;font-size:14px;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;transition:all .2s}
+.tab-btn:hover{color:#fff;background:rgba(255,255,255,0.03)}
+.tab-btn.active{background:#132217;border-color:var(--green);color:var(--green);box-shadow:0 0 12px var(--green-glow)}
+/* Tab Panels */
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.admin-card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:24px;margin-bottom:24px;box-shadow:0 8px 30px rgba(0,0,0,0.4)}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.card-head h3{margin:0;font-size:18px;display:flex;align-items:center;gap:10px;color:var(--green)}
+/* Table */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;text-align:right}
+th{background:#090f0b;padding:12px;color:var(--muted);border-bottom:1px solid var(--line);font-weight:bold}
+td{padding:14px 12px;border-bottom:1px solid var(--line);color:#d0dcd2;vertical-align:middle}
+tr:hover td{background:rgba(57,255,20,0.02)}
+.table-avatar{width:32px;height:32px;border-radius:8px;background:#18351f;border:1px solid #32683d;color:var(--green);display:inline-grid;place-items:center;font-weight:bold;font-size:13px;margin-left:8px}
+.tag-badge{padding:3px 8px;border-radius:12px;font-size:11px;font-weight:bold}
+.tag-badge.green{background:rgba(57,255,20,0.12);color:var(--green);border:1px solid rgba(57,255,20,0.3)}
+.tag-badge.yellow{background:rgba(255,183,0,0.12);color:var(--warn);border:1px solid rgba(255,183,0,0.3)}
+.table-actions{display:flex;gap:6px}
+.action-icon-btn{background:#090f0b;border:1px solid var(--line);color:#94a698;width:32px;height:32px;border-radius:6px;cursor:pointer;display:grid;place-items:center;font-size:13px;transition:all .2s}
+.action-icon-btn:hover{border-color:var(--green);color:var(--green)}
+.action-icon-btn.danger:hover{border-color:var(--danger);color:var(--danger)}
+/* Forms & Inputs */
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:18px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:12px;color:var(--muted)}
+.admin-input, .admin-select, .admin-textarea{background:#070d09;border:1px solid var(--line);border-radius:8px;padding:11px 14px;color:#fff;font-family:inherit;font-size:13px;outline:none;transition:border-color .2s}
+.admin-input:focus, .admin-select:focus, .admin-textarea:focus{border-color:var(--green);box-shadow:0 0 10px var(--green-glow)}
+.admin-textarea{resize:vertical;min-height:90px}
+/* Edit Post Modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:none;place-items:center;z-index:9000;padding:20px;backdrop-filter:blur(8px)}
+.modal.show{display:grid}
+.modal-box{width:min(550px,100%);background:#0e1711;border:1px solid var(--green);border-radius:16px;padding:24px;box-shadow:0 25px 70px rgba(0,0,0,0.95)}
+.modal-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:18px}
+.modal-head h3{margin:0;color:var(--green);font-size:18px}
+.modal-close{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer}
+/* Toast */
+.toast{position:fixed;bottom:24px;left:24px;background:#112716;border:1px solid var(--green);padding:13px 22px;border-radius:8px;color:#e8fee9;display:none;z-index:10000;box-shadow:0 10px 30px rgba(0,0,0,0.8);font-size:14px}
+@media(max-width:960px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.kpi-grid{grid-template-columns:1fr}.dash-header h1{font-size:22px}}
+</style>
+</head>
+<body>
+
+<!-- 1. LOGIN GATE SCREEN (PROTECTED BY PASSWORD) -->
+<div id="loginGate">
+  <div class="login-card">
+    <div class="logo" style="margin:0 auto 16px; width:52px; height:52px; font-size:26px;">K</div>
+    <h2>لوحة تحكم المسؤول</h2>
+    <p>أدخل كلمة سر الإدارة للوصول للتحكم الكامل في قاعدة بيانات KALI COMMUNITY.</p>
+    
+    <input type="password" id="adminPasswordInput" placeholder="أدخل كلمة المرور" autofocus>
+    <button class="btn" style="width:100%; justify-content:center; padding:12px;" onclick="verifyAdminLogin()">
+      <i class="fa-solid fa-unlock"></i> فتح لوحة الإدارة
+    </button>
+
+    <div class="hint-text">
+      <i class="fa-solid fa-key"></i> كلمة المرور الافتراضية هي: <strong style="color:var(--green)">kali</strong> أو <strong style="color:var(--green)">kali2026</strong>
+    </div>
+
+    <div style="margin-top:18px; border-top:1px solid var(--line); padding-top:14px;">
+      <a href="index.html" style="font-size:13px; color:var(--muted); display:inline-flex; align-items:center; gap:6px;">
+        <i class="fa-solid fa-arrow-right"></i> العودة للموقع الرئيسي
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- 2. ADMIN MAIN INTERFACE -->
+<header>
+  <div class="wrap">
+    <div class="admin-nav">
+      <div class="brand">
+        <a href="index.html" class="logo">K</a>
+        <span><b>KALI</b> COMMUNITY</span>
+        <span class="admin-badge">ADMIN CONSOLE</span>
+      </div>
+
+      <div class="nav-actions">
+        <a href="index.html" class="btn ghost" target="_blank" title="عرض الموقع المباشر">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> عرض الموقع
+        </a>
+        <button class="btn danger" onclick="adminLogout()" title="قفل لوحة الإدارة">
+          <i class="fa-solid fa-lock"></i> قفل الإدارة
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap dashboard">
+  
+  <!-- Header & Title -->
+  <div class="dash-header">
+    <div>
+      <h1>لوحة التحكم والإدارة الشاملة</h1>
+      <p>تحكم كامل في المنشورات، صالون مناقشات الأعضاء، بطاقات الأعضاء، المواضيع، الإحصائيات، وقاعدة البيانات.</p>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <button class="btn cyan" onclick="exportDatabase()"><i class="fa-solid fa-download"></i> تصدير نسخة احتياطية</button>
+      <button class="btn ghost" onclick="showNewPostForm()"><i class="fa-solid fa-plus"></i> منشور جديد</button>
+    </div>
+  </div>
+
+  <!-- KPI Overview Counters -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon green"><i class="fa-solid fa-comments"></i></div>
+      <div class="kpi-details">
+        <strong id="kpiPostsCount">0</strong>
+        <span>المنشورات</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon cyan"><i class="fa-solid fa-comment-dots"></i></div>
+      <div class="kpi-details">
+        <strong id="kpiDiscussionsCount">0</strong>
+        <span>المناقشات الحية</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon green"><i class="fa-solid fa-users"></i></div>
+      <div class="kpi-details">
+        <strong id="kpiMembersCount">0</strong>
+        <span>الأعضاء</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon yellow"><i class="fa-solid fa-tags"></i></div>
+      <div class="kpi-details">
+        <strong id="kpiTopicsCount">0</strong>
+        <span>المجالات</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon red"><i class="fa-solid fa-heart"></i></div>
+      <div class="kpi-details">
+        <strong id="kpiLikesCount">0</strong>
+        <span>التفاعلات</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GHOST TEAM INVITE PORTAL CARD (رابط تيم الشباح) -->
+  <div class="admin-card" style="border:1px solid var(--green); background:linear-gradient(135deg, #0d1a10, #060c08); box-shadow:0 0 25px rgba(57,255,20,0.15); margin-bottom:24px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div style="width:52px; height:52px; border-radius:14px; background:#142d1a; border:2px solid var(--green); display:grid; place-items:center; font-size:26px; color:var(--green); box-shadow:0 0 15px var(--green-glow); flex-shrink:0;">
+          <i class="fa-solid fa-ghost"></i>
+        </div>
+        <div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <h3 style="margin:0; font-size:18px; color:#fff;">بوابة ورابط انضمام <span style="color:var(--green)">تيم الشباح (GHOST TEAM)</span></h3>
+            <span class="tag-badge green"><i class="fa-solid fa-bolt"></i> رابط تسجيل معتمد</span>
+          </div>
+          <p style="margin:4px 0 0; color:var(--muted); font-size:13px;">
+            أي شخص يفتح هذا الرابط ويسجل اسمه، تظهر له فوراً رسالة الترحيب: <strong style="color:var(--green)">"مرحباً بك في تيم الشباح"</strong> ويتم إدراجه فوراً كعضو معتمد في المحادثات وقائمة الأعضاء.
+          </p>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <input type="text" id="adminGhostLinkInput" readonly style="background:#050906; border:1px solid var(--line); color:var(--green); padding:10px 14px; border-radius:8px; font-size:13px; font-family:monospace; min-width:320px;" dir="ltr">
+        <button class="btn" onclick="copyGhostTeamLink()"><i class="fa-solid fa-copy"></i> نسخ رابط تيم الشباح</button>
+        <a href="join.html" target="_blank" class="btn cyan"><i class="fa-solid fa-arrow-up-right-from-square"></i> تجربة الرابط</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs Navigation -->
+  <div class="tabs-bar">
+    <button class="tab-btn active" data-tab="postsTab"><i class="fa-solid fa-newspaper"></i> إدارة المنشورات</button>
+    <button class="tab-btn" data-tab="discussionsTab"><i class="fa-solid fa-comments"></i> صالون مناقشات الأعضاء</button>
+    <button class="tab-btn" data-tab="membersTab"><i class="fa-solid fa-user-group"></i> بطاقات الأعضاء</button>
+    <button class="tab-btn" data-tab="topicsTab"><i class="fa-solid fa-tags"></i> المجالات والمواضيع</button>
+    <button class="tab-btn" data-tab="statsTab"><i class="fa-solid fa-chart-line"></i> إحصائيات ونصوص الموقع</button>
+    <button class="tab-btn" data-tab="databaseTab"><i class="fa-solid fa-database"></i> قاعدة البيانات و Firebase</button>
+  </div>
+
+  <!-- ================= TAB 1: POSTS ================= -->
+  <div class="tab-panel active" id="postsTab">
+    
+    <!-- Add New Post Card -->
+    <div class="admin-card" id="newPostBox" style="display:none;">
+      <div class="card-head">
+        <h3><i class="fa-solid fa-pen-nib"></i> نشر مشاركة رسمية باسم الإدارة</h3>
+        <button class="action-icon-btn" onclick="hideNewPostForm()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>اسم الناشر:</label>
+          <input type="text" id="adminPostAuthor" class="admin-input" value="حسين أنور (KALI - الإدارة)">
+        </div>
+        <div class="form-group">
+          <label>المجال / القسم:</label>
+          <select id="adminPostTopic" class="admin-select">
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px;">
+        <label>محتوى المنشور:</label>
+        <textarea id="adminPostContent" class="admin-textarea" placeholder="اكتب نص المشاركة أو الإعلان الرسمي هنا..."></textarea>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button class="btn ghost" onclick="hideNewPostForm()">إلغاء</button>
+        <button class="btn" onclick="publishAdminPost()"><i class="fa-solid fa-check"></i> حفظ ونشر فوراً</button>
+      </div>
+    </div>
+
+    <!-- Posts Table Card -->
+    <div class="admin-card">
+      <div class="card-head">
+        <h3><i class="fa-solid fa-list-check"></i> جميع منشورات المجتمع</h3>
+        <button class="btn ghost btn-sm" onclick="showNewPostForm()"><i class="fa-solid fa-plus"></i> إضافة منشور</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>الناشر</th>
+              <th>المجال</th>
+              <th>المحتوى</th>
+              <th>التاريخ</th>
+              <th>التفاعل</th>
+              <th>التعليقات</th>
+              <th>إجراءات الإدارة</th>
+            </tr>
+          </thead>
+          <tbody id="postsTableBody">
+            <!-- Injected dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TAB 2: LIVE DISCUSSIONS ================= -->
+  <div class="tab-panel" id="discussionsTab">
+    
+    <!-- Broadcast Announcement into Discussions -->
+    <div class="admin-card">
+      <div class="card-head">
+        <h3><i class="fa-solid fa-bullhorn"></i> إرسال رسالة رسمية لصالون مناقشات الأعضاء</h3>
+      </div>
+      <div style="display:flex; gap:10px;">
+        <input type="text" id="adminLoungeMsgInput" class="admin-input" style="flex:1" placeholder="اكتب رسالة من الإدارة تظهر في شات مناقشات الأعضاء مباشرة...">
+        <button class="btn" onclick="sendAdminLoungeMessage()"><i class="fa-solid fa-paper-plane"></i> إرسال للشات</button>
+      </div>
+    </div>
+
+    <!-- Discussions List -->
+    <div class="admin-card">
+      <div class="card-head">
+        <h3><i class="fa-solid fa-comments"></i> سجل مناقشات ورسائل الأعضاء المباشرة</h3>
+        <button class="btn ghost btn-sm" onclick="renderDiscussionsTable()"><i class="fa-solid fa-rotate-right"></i> تحديث</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>العضو</th>
+              <th>الرتبة</th>
+              <th>نص المناقشة / السؤال</th>
+              <th>الوقت</th>
+              <th>إجراء</th>
+            </tr>
+          </thead>
+          <tbody id="discussionsTableBody">
+            <!-- Injected dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TAB 3: MEMBERS ================= -->
+  <div class="tab-panel" id="membersTab">
+    <div class="admin-card">
+      <div class="card-head">
+        <h3><i class="fa-solid fa-user-plus"></i> إضافة بطاقة عضو جديد يدوياً</h3>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>اسم العضو الكامل:</label>
+          <input type="text" id="newMemberName" class="admin-input" placeholder="مثال: طارق علي">
+        </div>
+        <div class="form-group">
+          <label>الرتبة / الدور:</label>
+          <select id="newMemberRole" class="admin-select">
+            <option value="عضو نشط">عضو نشط</option>
+            <option value="مشرف تقني">مشرف تقني</option>
+            <option value="خبير أمان">خبير أمان</option>
+            <option value="مطور برمجيات">مطور برمجيات</option>
+            <option value="مهندس شبكات">مهندس شبكات</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>التخصص التقني للعضو:</label>
+          <input type="text" id="newMemberSpecialty" class="admin-input" placeholder="مثال: تطوير تطبيقات Flutter والشبكات">
+        </div>
+        <div class="form-group">
+          <label>نبذة تعريفية قصيرة:</label>
+          <input type="text" id="newMemberBio" class="admin-input" placeholder="نبذة مختصرة عن اهتماماته...">
+        </div>
+      </div>
+      <button class="btn" onclick="addMemberAction()"><i class="fa-solid fa-user-check"></i> حفظ بطاقة العضو</button>
+    </div>
+
+    <div class="admin-card">
+      <div class="card-head">
+        <h3><i class="fa-solid fa-users-gear"></i> بطاقات الأعضاء المسجلين</h3>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>العضو</th>
+              <th>الرتبة</th>
+              <th>التخصص</th>
+              <th>الحالة</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="membersTableBody">
+            <!-- Injected dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TAB 4: TOPICS ================= -->
+  <div class="tab-panel" id="topicsTab">
+    <div class="admin-card">
+      <div class="card-head">
+        <h3><i class="fa-solid fa-folder-plus"></i> إضافة مجال تقني جديد</h3>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>رمز / أيقونة المجال (إيموجي):</label>
+          <input type="text" id="newTopicIcon" class="admin-input" placeholder="مثال: 🛡️ أو 📱 أو 🚀" value="💡">
+        </div>
+        <div class="form-group">
+          <label>اسم المجال التقني:</label>
+          <input type="text" id="newTopicName" class="admin-input" placeholder="مثال: الحوسبة السحابية (Cloud)">
+        </div>
+      </div>
+      <button class="btn" onclick="addTopicAction()"><i class="fa-solid fa-plus"></i> إضافة المجال للقائمة</button>
+    </div>
+
+    <div class="admin-card">
+      <div class="card-head">
+        <h3><i class="fa-solid fa-tags"></i> المجالات النشطة حالياً في الموقع</h3>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>الأيقونة</th>
+              <th>اسم المجال</th>
+              <th>عدد المواضيع المسجلة</th>
+              <th>إجراء</th>
+            </tr>
+          </thead>
+          <tbody id="topicsTableBody">
+            <!-- Injected dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TAB 5: STATS & SITE CONTENT ================= -->
+  <div class="tab-panel" id="statsTab">
+    <div class="admin-card">
+      <div class="card-head">
+        <h3><i class="fa-solid fa-sliders"></i> تعديل إحصائيات الصفحة الرئيسية</h3>
+      </div>
+      <div class="form-grid" style="grid-template-columns:repeat(3,1fr);">
+        <div class="form-group">
+          <label>عداد الأعضاء (المربع الأول):</label>
+          <input type="text" id="statsMembersInput" class="admin-input" placeholder="+1K">
+        </div>
+        <div class="form-group">
+          <label>عداد المواضيع (المربع الثاني):</label>
+          <input type="text" id="statsTopicsInput" class="admin-input" placeholder="+250">
+        </div>
+        <div class="form-group">
+          <label>عداد النشاط (المربع الثالث):</label>
+          <input type="text" id="statsUptimeInput" class="admin-input" placeholder="24/7">
+        </div>
+      </div>
+      <button class="btn" onclick="saveStatsAction()"><i class="fa-solid fa-floppy-disk"></i> حفظ الإحصائيات</button>
+    </div>
+
+    <div class="admin-card">
+      <div class="card-head">
+        <h3><i class="fa-solid fa-lock"></i> تغيير كلمة سر لوحة التحكم</h3>
+      </div>
+      <div class="form-group" style="max-width:380px; margin-bottom:16px;">
+        <label>كلمة المرور الجديدة للإدارة:</label>
+        <input type="password" id="newAdminPasswordInput" class="admin-input" placeholder="اكتب كلمة سر قوية">
+      </div>
+      <button class="btn" onclick="changeAdminPasswordAction()"><i class="fa-solid fa-key"></i> حفظ كلمة المرور الجديدة</button>
+    </div>
+  </div>
+
+  <!-- ================= TAB 6: DATABASE & FIREBASE ================= -->
+  <div class="tab-panel" id="databaseTab">
+    <div class="admin-card">
+      <div class="card-head">
+        <h3><i class="fa-solid fa-file-export"></i> النسخ الاحتياطي واسترجاع البيانات (JSON Backup)</h3>
+      </div>
+      <p style="color:var(--muted); font-size:13px;">
+        يمكنك تنزيل نسخة احتياطية كاملة من جميع المنشورات، المناقشات، الأعضاء، والمواضيع، أو استرجاعها في أي وقت.
+      </p>
+      
+      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px;">
+        <button class="btn cyan" onclick="exportDatabase()"><i class="fa-solid fa-download"></i> تصدير وحفظ نسخة JSON</button>
+        <button class="btn ghost" onclick="document.getElementById('importFileInput').click()"><i class="fa-solid fa-upload"></i> استرجاع نسخة احتياطية</button>
+        <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="importDatabase(event)">
+        <button class="btn danger" onclick="resetDatabase()"><i class="fa-solid fa-triangle-exclamation"></i> إعادة تعيين للبيانات الافتراضية</button>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <div class="card-head">
+        <h3><i class="fa-solid fa-fire" style="color:#ffb700"></i> ربط قاعدة البيانات السحابية (Firebase Firestore)</h3>
+        <span class="tag-badge green">سحابي ومجاني 100%</span>
+      </div>
+      <p style="color:var(--muted); font-size:13px; line-height:1.8;">
+        الموقع حالياً يعمل بكامل طاقته على قاعدة البيانات المحلية المتزامنة عبر المتصفح. لربطه بقاعدة بيانات <strong>Google Firebase Firestore</strong> السحابية، يمكنك لصق إعدادات Firebase هنا:
+      </p>
+
+      <div class="form-group" style="margin-bottom:16px;">
+        <label>إعدادات Firebase Config (JSON):</label>
+        <textarea id="firebaseConfigTextarea" class="admin-textarea" style="font-family:Consolas,monospace; direction:ltr; text-align:left;" placeholder='{\n  "apiKey": "AIzaSy...",\n  "authDomain": "kali-community.firebaseapp.com",\n  "projectId": "kali-community",\n  "storageBucket": "kali-community.appspot.com",\n  "appId": "1:..."\n}'></textarea>
+      </div>
+
+      <button class="btn" onclick="saveFirebaseConfigAction()"><i class="fa-solid fa-plug"></i> حفظ والاتصال بالسحابة</button>
+    </div>
+  </div>
+
+</main>
+
+<!-- EDIT POST MODAL -->
+<div class="modal" id="editModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>تعديل محتوى المنشور</h3>
+      <button class="modal-close" onclick="closeEditModal()">×</button>
+    </div>
+    <input type="hidden" id="editPostId">
+    <div class="form-group" style="margin-bottom:16px;">
+      <label>نص المنشور الجديد:</label>
+      <textarea id="editPostContent" class="admin-textarea" rows="5"></textarea>
+    </div>
+    <div style="display:flex; justify-content:flex-end; gap:10px;">
+      <button class="btn ghost" onclick="closeEditModal()">إلغاء</button>
+      <button class="btn" onclick="saveEditedPost()"><i class="fa-solid fa-check"></i> حفظ التعديل</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="adminToast"></div>
+
+<script src="db.js"></script>
+
+<script>
+/**
+ * Admin Console Logic with Live Discussions Moderation
+ */
+const AUTH_SESSION_KEY = 'kali_admin_auth_v2';
+
+function checkAuth() {
+  const isAuth = sessionStorage.getItem(AUTH_SESSION_KEY) === 'true';
+  const gate = document.getElementById('loginGate');
+  if (isAuth) {
+    gate.style.display = 'none';
+    loadAdminDashboard();
+  } else {
+    gate.style.display = 'flex';
+  }
+}
+
+function verifyAdminLogin() {
+  const pass = document.getElementById('adminPasswordInput').value.trim();
+  if (KALI_DB.verifyAdminPassword(pass)) {
+    sessionStorage.setItem(AUTH_SESSION_KEY, 'true');
+    document.getElementById('loginGate').style.display = 'none';
+    loadAdminDashboard();
+    adminToast('تم التحقق بنجاح! مرحباً بك في لوحة تحكم KALI COMMUNITY');
+  } else {
+    adminToast('كلمة المرور غير صحيحة! جرّب "kali" أو "kali2026"');
+  }
+}
+
+document.getElementById('adminPasswordInput').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') verifyAdminLogin();
+});
+
+function adminLogout() {
+  sessionStorage.removeItem(AUTH_SESSION_KEY);
+  location.reload();
+}
+
+// Load Dashboard Data
+function loadAdminDashboard() {
+  renderKPIs();
+  populateGhostInviteLink();
+  renderPostsTable();
+  renderDiscussionsTable();
+  renderTopicsTable();
+  renderMembersTable();
+  renderStatsForm();
+  populateTopicSelect();
+}
+
+function renderKPIs() {
+  const posts = KALI_DB.getPosts();
+  const discussions = KALI_DB.getDiscussions();
+  const members = KALI_DB.getMembers();
+  const topics = KALI_DB.getTopics();
+  let likes = 0;
+  posts.forEach(p => likes += (p.likesCount || 0));
+
+  document.getElementById('kpiPostsCount').textContent = posts.length;
+  document.getElementById('kpiDiscussionsCount').textContent = discussions.length;
+  document.getElementById('kpiMembersCount').textContent = members.length;
+  document.getElementById('kpiTopicsCount').textContent = topics.length;
+  document.getElementById('kpiLikesCount').textContent = likes;
+}
+
+// Tab Switching
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+
+    btn.classList.add('active');
+    const tabId = btn.getAttribute('data-tab');
+    document.getElementById(tabId).classList.add('active');
+  });
+});
+
+// Render Posts Table
+function renderPostsTable() {
+  const posts = KALI_DB.getPosts();
+  const tbody = document.getElementById('postsTableBody');
+  if (!tbody) return;
+
+  if (posts.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--muted);">لا توجد منشورات حتى الآن.</td></tr>';
+    return;
+  }
+
+  let html = '';
+  posts.forEach(p => {
+    html += `
+      <tr>
+        <td>
+          <div style="display:flex; align-items:center;">
+            <span class="table-avatar">${p.authorAvatar || p.author.charAt(0)}</span>
+            <strong>${p.author}</strong>
+          </div>
+        </td>
+        <td><span class="tag-badge green">${p.topicTag || 'عام'}</span></td>
+        <td style="max-width:320px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHTML(p.content)}</td>
+        <td style="font-size:11px; color:var(--muted);">${p.time || 'الآن'}</td>
+        <td><strong style="color:var(--green)">${p.likesCount || 0}</strong></td>
+        <td>${p.comments ? p.comments.length : 0}</td>
+        <td>
+          <div class="table-actions">
+            <button class="action-icon-btn ${p.pinned ? 'danger' : ''}" onclick="togglePinAction('${p.id}')" title="${p.pinned ? 'إلغاء التثبيت' : 'تثبيت في الأعلى'}">
+              <i class="fa-solid fa-thumbtack"></i>
+            </button>
+            <button class="action-icon-btn" onclick="openEditModal('${p.id}')" title="تعديل المنشور">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button class="action-icon-btn danger" onclick="deletePostAction('${p.id}')" title="حذف نهائي">
+              <i class="fa-regular fa-trash-can"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `;
+  });
+
+  tbody.innerHTML = html;
+}
+
+// Discussions Table
+function renderDiscussionsTable() {
+  const list = KALI_DB.getDiscussions();
+  const tbody = document.getElementById('discussionsTableBody');
+  if (!tbody) return;
+
+  if (list.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:25px; color:var(--muted);">لا توجد رسائل مناقشة بعد.</td></tr>';
+    return;
+  }
+
+  let html = '';
+  list.forEach(d => {
+    html += `
+      <tr>
+        <td>
+          <div style="display:flex; align-items:center;">
+            <span class="table-avatar">${d.senderAvatar || d.sender.charAt(0)}</span>
+            <strong>${d.sender}</strong>
+          </div>
+        </td>
+        <td><span class="tag-badge green">${d.role || 'عضو'}</span></td>
+        <td style="max-width:380px; word-break:break-word;">${escapeHTML(d.text)}</td>
+        <td style="font-size:11px; color:var(--muted);">${d.time || 'الآن'}</td>
+        <td>
+          <button class="action-icon-btn danger" onclick="deleteDiscussionAction('${d.id}')" title="حذف الرسالة"><i class="fa-regular fa-trash-can"></i></button>
+        </td>
+      </tr>
+    `;
+  });
+  tbody.innerHTML = html;
+}
+
+function sendAdminLoungeMessage() {
+  const input = document.getElementById('adminLoungeMsgInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  KALI_DB.addDiscussionMessage({
+    sender: 'حسين أنور (KALI - الإدارة)',
+    senderAvatar: 'K',
+    role: 'إدارة المجتمع',
+    text: text
+  });
+
+  input.value = '';
+  renderDiscussionsTable();
+  renderKPIs();
+  adminToast('تم إرسال الرسالة إلى صالون المناقشات بنجاح!');
+}
+
+function deleteDiscussionAction(id) {
+  if (confirm('حذف هذه الرسالة نهائياً من المناقشات؟')) {
+    KALI_DB.deleteDiscussionMessage(id);
+    renderDiscussionsTable();
+    renderKPIs();
+    adminToast('تم حذف رسالة المناقشة');
+  }
+}
+
+// Toggle Pin
+function togglePinAction(id) {
+  const isPinned = KALI_DB.togglePinPost(id);
+  renderPostsTable();
+  adminToast(isPinned ? 'تم تثبيت المنشور في أعلى الموقع 📌' : 'تم إلغاء تثبيت المنشور');
+}
+
+// Delete Post Action
+function deletePostAction(id) {
+  if (confirm('هل أنت متأكد من حذف هذا المنشور نهائياً من قاعدة البيانات؟')) {
+    KALI_DB.deletePost(id);
+    renderPostsTable();
+    renderKPIs();
+    adminToast('تم حذف المنشور بنجاح');
+  }
+}
+
+// Edit Modal
+function openEditModal(id) {
+  const posts = KALI_DB.getPosts();
+  const post = posts.find(p => p.id === id);
+  if (!post) return;
+
+  document.getElementById('editPostId').value = post.id;
+  document.getElementById('editPostContent').value = post.content;
+  document.getElementById('editModal').classList.add('show');
+}
+
+function closeEditModal() {
+  document.getElementById('editModal').classList.remove('show');
+}
+
+function saveEditedPost() {
+  const id = document.getElementById('editPostId').value;
+  const newContent = document.getElementById('editPostContent').value.trim();
+  if (!newContent) return;
+
+  const posts = KALI_DB.getPosts();
+  const post = posts.find(p => p.id === id);
+  if (post) {
+    post.content = newContent;
+    localStorage.setItem('kali_comm_posts_v2', JSON.stringify(posts));
+    closeEditModal();
+    renderPostsTable();
+    adminToast('تم حفظ التعديلات على المنشور بنجاح!');
+  }
+}
+
+// Admin New Post Form
+function showNewPostForm() {
+  document.getElementById('newPostBox').style.display = 'block';
+  document.getElementById('newPostBox').scrollIntoView({ behavior: 'smooth' });
+}
+function hideNewPostForm() {
+  document.getElementById('newPostBox').style.display = 'none';
+}
+
+function populateTopicSelect() {
+  const topics = KALI_DB.getTopics();
+  const select = document.getElementById('adminPostTopic');
+  if (!select) return;
+
+  let html = '';
+  topics.forEach(t => {
+    html += `<option value="${t.name}">${t.icon} ${t.name}</option>`;
+  });
+  select.innerHTML = html;
+}
+
+function publishAdminPost() {
+  const author = document.getElementById('adminPostAuthor').value.trim() || 'حسين أنور (KALI - الإدارة)';
+  const topic = document.getElementById('adminPostTopic').value;
+  const content = document.getElementById('adminPostContent').value.trim();
+
+  if (!content) {
+    adminToast('يرجى كتابة محتوى المنشور أولاً');
+    return;
+  }
+
+  KALI_DB.addPost({
+    author: author,
+    authorAvatar: 'K',
+    role: 'إدارة المجتمع',
+    topicTag: topic,
+    content: content
+  });
+
+  KALI_DB.incrementTopicCount(topic);
+  document.getElementById('adminPostContent').value = '';
+  hideNewPostForm();
+  renderPostsTable();
+  renderKPIs();
+  adminToast('تم نشر المشاركة الرسمية بنجاح على الموقع الرئيسي! 🚀');
+}
+
+// Topics Management
+function renderTopicsTable() {
+  const topics = KALI_DB.getTopics();
+  const tbody = document.getElementById('topicsTableBody');
+  if (!tbody) return;
+
+  let html = '';
+  topics.forEach(t => {
+    html += `
+      <tr>
+        <td style="font-size:20px;">${t.icon}</td>
+        <td><strong>${t.name}</strong></td>
+        <td><span class="tag-badge green">${t.count} موضوع</span></td>
+        <td>
+          <button class="action-icon-btn danger" onclick="deleteTopicAction('${t.id}')" title="حذف المجال"><i class="fa-regular fa-trash-can"></i></button>
+        </td>
+      </tr>
+    `;
+  });
+  tbody.innerHTML = html;
+}
+
+function addTopicAction() {
+  const icon = document.getElementById('newTopicIcon').value.trim() || '💡';
+  const name = document.getElementById('newTopicName').value.trim();
+  if (!name) {
+    adminToast('يرجى إدخال اسم المجال');
+    return;
+  }
+  KALI_DB.addTopic(icon, name);
+  document.getElementById('newTopicName').value = '';
+  renderTopicsTable();
+  renderKPIs();
+  populateTopicSelect();
+  adminToast(`تمت إضافة المجال "${name}" بنجاح!`);
+}
+
+function deleteTopicAction(id) {
+  if (confirm('هل أنت متأكد من حذف هذا المجال؟')) {
+    KALI_DB.deleteTopic(id);
+    renderTopicsTable();
+    renderKPIs();
+    populateTopicSelect();
+    adminToast('تم حذف المجال');
+  }
+}
+
+// Members Management
+function renderMembersTable() {
+  const members = KALI_DB.getMembers();
+  const tbody = document.getElementById('membersTableBody');
+  if (!tbody) return;
+
+  let html = '';
+  members.forEach(m => {
+    const isGhost = m.team === 'ghost' || (m.role && m.role.includes('الشباح'));
+    html += `
+      <tr>
+        <td>
+          <div style="display:flex; align-items:center;">
+            <span class="table-avatar">${m.avatar || m.name.charAt(0)}</span>
+            <div>
+              <strong>${m.name} ${isGhost ? '<i class="fa-solid fa-ghost" style="color:var(--green); font-size:12px;" title="عضو تيم الشباح"></i>' : ''}</strong>
+              <div style="font-size:11px; color:var(--muted);">${m.bio || ''}</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="tag-badge ${m.role.includes('مؤسس') || m.role.includes('Admin') ? 'green' : (isGhost ? 'green' : 'yellow')}">${m.role}</span></td>
+        <td style="font-size:12px; color:var(--cyan);">${m.specialty || 'تقنية المعلومات'}</td>
+        <td><span style="color:var(--green)">● متصل</span></td>
+        <td>
+          <button class="action-icon-btn danger" onclick="deleteMemberAction('${m.id}')" title="حذف أو حظر العضو"><i class="fa-regular fa-trash-can"></i></button>
+        </td>
+      </tr>
+    `;
+  });
+  tbody.innerHTML = html;
+}
+
+function populateGhostInviteLink() {
+  const input = document.getElementById('adminGhostLinkInput');
+  if (input) {
+    const origin = window.location.origin || '';
+    const path = window.location.pathname || '';
+    const folder = path.substring(0, path.lastIndexOf('/') + 1);
+    input.value = `${origin}${folder}join.html`;
+  }
+}
+
+function copyGhostTeamLink() {
+  const input = document.getElementById('adminGhostLinkInput');
+  if (input) {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(input.value).then(() => {
+        adminToast('تم نسخ رابط تيم الشباح! يمكنك إرساله لأي شخص للتسجيل والترحيب به 👻📋');
+      });
+    } else {
+      input.select();
+      document.execCommand('copy');
+      adminToast('تم نسخ الرابط للحافظة!');
+    }
+  }
+}
+
+function addMemberAction() {
+  const name = document.getElementById('newMemberName').value.trim();
+  const role = document.getElementById('newMemberRole').value;
+  const specialty = document.getElementById('newMemberSpecialty').value.trim() || 'تقنية المعلومات والبرمجة';
+  const bio = document.getElementById('newMemberBio').value.trim() || 'عضو مميز في KALI COMMUNITY.';
+
+  if (!name) {
+    adminToast('اكتب اسم العضو');
+    return;
+  }
+  KALI_DB.addMember(name, role, specialty, bio);
+  document.getElementById('newMemberName').value = '';
+  document.getElementById('newMemberSpecialty').value = '';
+  document.getElementById('newMemberBio').value = '';
+
+  renderMembersTable();
+  renderKPIs();
+  adminToast(`تمت إضافة بطاقة العضو "${name}" بنجاح!`);
+}
+
+function deleteMemberAction(id) {
+  if (confirm('هل تريد حذف هذا العضو من المجتمع؟')) {
+    KALI_DB.deleteMember(id);
+    renderMembersTable();
+    renderKPIs();
+    adminToast('تم حذف العضو');
+  }
+}
+
+// Stats & Password Management
+function renderStatsForm() {
+  const stats = KALI_DB.getStats();
+  document.getElementById('statsMembersInput').value = stats.membersCount;
+  document.getElementById('statsTopicsInput').value = stats.topicsCount;
+  document.getElementById('statsUptimeInput').value = stats.uptime;
+}
+
+function saveStatsAction() {
+  const members = document.getElementById('statsMembersInput').value.trim() || '+1K';
+  const topics = document.getElementById('statsTopicsInput').value.trim() || '+250';
+  const uptime = document.getElementById('statsUptimeInput').value.trim() || '24/7';
+
+  KALI_DB.updateStats({ membersCount: members, topicsCount: topics, uptime: uptime });
+  adminToast('تم حفظ أرقام الإحصائيات بنجاح، وستظهر فوراً في الواجهة الرئيسية!');
+}
+
+function changeAdminPasswordAction() {
+  const newPass = document.getElementById('newAdminPasswordInput').value.trim();
+  if (!newPass || newPass.length < 3) {
+    adminToast('يرجى إدخال كلمة سر لا تقل عن 3 أحرف');
+    return;
+  }
+  KALI_DB.updateSettings({ adminPassword: newPass });
+  document.getElementById('newAdminPasswordInput').value = '';
+  adminToast(`تم تغيير كلمة المرور بنجاح! كلمة السر الجديدة هي: ${newPass}`);
+}
+
+// Database Backup & Restore
+function exportDatabase() {
+  const data = KALI_DB.exportDataJSON();
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `kali_community_backup_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  adminToast('تم تنزيل النسخة الاحتياطية بنجاح بصيغة JSON!');
+}
+
+function importDatabase(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const success = KALI_DB.importDataJSON(e.target.result);
+    if (success) {
+      loadAdminDashboard();
+      adminToast('تمت استعادة كافة البيانات والمنشورات بنجاح!');
+    } else {
+      adminToast('فشل الاستيراد: ملف JSON غير صالح');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function resetDatabase() {
+  if (confirm('تحذير: هل أنت متأكد من إعادة تعيين قاعدة البيانات؟ سيتم استرجاع المنشورات والمواضيع الافتراضية.')) {
+    KALI_DB.resetToDefault();
+    loadAdminDashboard();
+    adminToast('تمت إعادة تعيين قاعدة البيانات بنجاح');
+  }
+}
+
+function saveFirebaseConfigAction() {
+  const text = document.getElementById('firebaseConfigTextarea').value.trim();
+  if (!text) {
+    adminToast('يرجى لصق كود Firebase Config');
+    return;
+  }
+  try {
+    const parsed = JSON.parse(text);
+    KALI_DB.updateSettings({ firebaseConfig: parsed });
+    adminToast('تم حفظ إعدادات Firebase بنجاح!');
+  } catch (e) {
+    adminToast('خطأ: تأكد من صحة كود JSON لـ Firebase');
+  }
+}
+
+function adminToast(msg) {
+  const t = document.getElementById('adminToast');
+  if (!t) return;
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.style.display = 'none'; }, 3200);
+}
+
+function escapeHTML(str) {
+  return str.replace(/[&<>'"]/g, tag => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[tag] || tag));
+}
+
+document.addEventListener('DOMContentLoaded', checkAuth);
+</script>
+</body>
+</html>

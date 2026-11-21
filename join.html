@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسجيل الدخول والانضمام | تيم الشباح - KALI COMMUNITY</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root {
+  --bg: #050806;
+  --panel: #0a110c;
+  --panel2: #0f1c13;
+  --green: #39ff14;
+  --green-glow: rgba(57, 255, 20, 0.45);
+  --cyan: #00f0ff;
+  --cyan-glow: rgba(0, 240, 255, 0.35);
+  --muted: #839788;
+  --line: #192a1d;
+  --white: #f0faf2;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Background Cyber Grid & Glow */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(57, 255, 20, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(57, 255, 20, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.glow-orb {
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(57, 255, 20, 0.12), transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+  top: 15%;
+  right: 20%;
+}
+
+.portal-container {
+  width: min(500px, 100%);
+  position: relative;
+  z-index: 10;
+}
+
+/* Cyber Card */
+.ghost-card {
+  background: linear-gradient(160deg, #0d1710, #060b08);
+  border: 1px solid var(--green);
+  border-radius: 20px;
+  padding: 36px 30px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 35px var(--green-glow);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.ghost-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--green), var(--cyan), transparent);
+}
+
+/* Ghost Logo / Hologram */
+.ghost-badge-header {
+  margin-bottom: 20px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ghost-icon-ring {
+  width: 86px;
+  height: 86px;
+  border-radius: 24px;
+  background: #112617;
+  border: 2px solid var(--green);
+  display: grid;
+  place-items: center;
+  font-size: 40px;
+  color: var(--green);
+  box-shadow: 0 0 25px var(--green-glow);
+  margin-bottom: 14px;
+  animation: floatGhost 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes floatGhost {
+  0% { transform: translateY(0px) scale(1); filter: drop-shadow(0 0 10px var(--green-glow)); }
+  100% { transform: translateY(-7px) scale(1.04); filter: drop-shadow(0 0 25px var(--green-glow)); }
+}
+
+.team-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(57, 255, 20, 0.12);
+  border: 1px solid rgba(57, 255, 20, 0.4);
+  color: var(--green);
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: 26px;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+h1 span {
+  color: var(--green);
+  text-shadow: 0 0 12px var(--green-glow);
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+/* Form Controls */
+.form-box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: right;
+  margin-bottom: 22px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  color: #bcd1c1;
+  margin-bottom: 6px;
+}
+
+.input-group label i {
+  color: var(--green);
+  margin-left: 6px;
+}
+
+.cyber-input {
+  width: 100%;
+  background: #060a07;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 13px 16px;
+  color: #fff;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.cyber-input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 15px var(--green-glow);
+  background: #09120b;
+}
+
+/* Buttons */
+.btn-submit {
+  width: 100%;
+  background: var(--green);
+  border: 1px solid var(--green);
+  color: #050d06;
+  font-size: 16px;
+  font-weight: 900;
+  padding: 14px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 10px 25px rgba(57, 255, 20, 0.3);
+  transition: all 0.25s ease;
+}
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 35px var(--green-glow);
+  filter: brightness(1.1);
+}
+
+.btn-ghost-sec {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  padding: 11px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-ghost-sec:hover {
+  border-color: var(--green);
+  color: var(--green);
+  background: rgba(57, 255, 20, 0.06);
+}
+
+/* SUCCESS WELCOME SCREEN (مرحباً بك في تيم الشباح) */
+#welcomeScreen {
+  display: none;
+}
+
+.welcome-burst {
+  animation: pulseIn 0.5s ease-out forwards;
+}
+
+@keyframes pulseIn {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.welcome-headline {
+  font-size: 30px;
+  font-weight: 900;
+  color: var(--green);
+  text-shadow: 0 0 20px var(--green-glow);
+  margin-bottom: 10px;
+}
+
+.member-identity-card {
+  background: #070e09;
+  border: 1px dashed var(--green);
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin: 22px 0;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.identity-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(57, 255, 20, 0.1);
+  padding-bottom: 6px;
+}
+
+.identity-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.identity-label {
+  color: var(--muted);
+}
+
+.identity-val {
+  font-weight: bold;
+  color: #fff;
+}
+
+.welcome-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  background: #0f2414;
+  border: 1px solid var(--green);
+  color: #eaffeb;
+  padding: 12px 24px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  font-size: 14px;
+  display: none;
+  z-index: 100;
+}
+
+footer {
+  margin-top: 25px;
+  font-size: 12px;
+  color: #607567;
+  text-align: center;
+  z-index: 10;
+}
+footer a {
+  color: var(--green);
+  text-decoration: none;
+}
+</style>
+</head>
+<body>
+
+<div class="glow-orb"></div>
+
+<div class="portal-container">
+  
+  <!-- FORM CARD: REGISTRATION & LOGIN -->
+  <div class="ghost-card" id="formCard">
+    <div class="ghost-badge-header">
+      <div class="ghost-icon-ring">
+        <i class="fa-solid fa-ghost"></i>
+      </div>
+      <span class="team-pill"><i class="fa-solid fa-shield-halved"></i> GHOST TEAM ACCESS</span>
+    </div>
+
+    <h1>بوابة تسجيل الدخول<br><span>تيم الشباح (GHOST TEAM)</span></h1>
+    <p class="subtitle">سجّل اسمك للانضمام فوراً إلى تيم الشباح والتواصل المباشر في صالون المناقشات مع KALI HUSSEIN وباقي الأعضاء.</p>
+
+    <form onsubmit="handleGhostJoin(event)">
+      <div class="form-box">
+        <div class="input-group">
+          <label><i class="fa-solid fa-user-astronaut"></i> اسمك أو كنيتك في الفريق (مطلوب):</label>
+          <input type="text" id="ghostName" class="cyber-input" placeholder="اكتب اسمك (مثال: الشبح، أحمد، عمر...)" required autofocus>
+        </div>
+
+        <div class="input-group">
+          <label><i class="fa-solid fa-laptop-code"></i> تخصصك واهتمامك التقني:</label>
+          <input type="text" id="ghostSpecialty" class="cyber-input" placeholder="مثال: أمن سيبراني، تطبيقات Flutter، شبكات، لينكس...">
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit">
+        <i class="fa-solid fa-bolt"></i> تسجيل الدخول والانضمام لتيم الشباح
+      </button>
+    </form>
+
+    <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
+      <a href="index.html" class="btn-ghost-sec">
+        <i class="fa-solid fa-house"></i> الدخول للرئيسية كزائر
+      </a>
+      <a href="admin.html" class="btn-ghost-sec">
+        <i class="fa-solid fa-lock"></i> دخول المسؤول (Admin)
+      </a>
+    </div>
+  </div>
+
+  <!-- SUCCESS WELCOME CARD: مرحباً بك في تيم الشباح -->
+  <div class="ghost-card welcome-burst" id="welcomeScreen">
+    <div class="ghost-badge-header">
+      <div class="ghost-icon-ring" style="border-color:var(--green); box-shadow:0 0 35px var(--green-glow);">
+        <i class="fa-solid fa-ghost"></i>
+      </div>
+      <span class="team-pill" style="background:var(--green); color:#000;">
+        <i class="fa-solid fa-check"></i> عضو رسمي معتمد
+      </span>
+    </div>
+
+    <!-- The exact requested headline -->
+    <h2 class="welcome-headline">مرحباً بك في تيم الشباح</h2>
+    <p class="subtitle" style="margin-bottom:16px;">
+      تم تسجيل دخولك بنجاح في المنظومة الرقمية لـ <strong>KALI HUSSEIN</strong>. أهلاً وسهلاً بك في كتيبة الشباح للأمن والتقنية! ⚡👻
+    </p>
+
+    <div class="member-identity-card">
+      <div class="identity-row">
+        <span class="identity-label">الاسم الكودي:</span>
+        <span class="identity-val" id="resMemberName" style="color:var(--green); font-size:15px;">—</span>
+      </div>
+      <div class="identity-row">
+        <span class="identity-label">الفريق الرسمي:</span>
+        <span class="identity-val" style="color:#00f0ff;">تيم الشباح (GHOST SQUAD) 👻</span>
+      </div>
+      <div class="identity-row">
+        <span class="identity-label">الرتبة في المنظومة:</span>
+        <span class="identity-val" id="resMemberRole">عضو في تيم الشباح 👻</span>
+      </div>
+      <div class="identity-row">
+        <span class="identity-label">التخصص التقني:</span>
+        <span class="identity-val" id="resMemberSpecialty">—</span>
+      </div>
+      <div class="identity-row">
+        <span class="identity-label">حالة الاتصال:</span>
+        <span class="identity-val" style="color:var(--green);"><i class="fa-solid fa-circle" style="font-size:10px;"></i> متصل ونشط الآن</span>
+      </div>
+    </div>
+
+    <div class="welcome-actions">
+      <a href="index.html?view=discussions&welcome=ghost" class="btn-submit" style="text-decoration:none;">
+        <i class="fa-solid fa-comments"></i> الدخول فوراً لصالون المناقشات المباشرة
+      </a>
+      <a href="index.html?view=feed&welcome=ghost" class="btn-ghost-sec" style="justify-content:center;">
+        <i class="fa-solid fa-newspaper"></i> تصفح مقالات ومشاركات المجتمع
+      </a>
+      <button class="btn-ghost-sec" onclick="copyInviteLink()" style="justify-content:center; border-color:var(--cyan); color:var(--cyan);">
+        <i class="fa-solid fa-share-nodes"></i> نسخ رابط الدعوة لإرساله لزملائك
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  KALI COMMUNITY &copy; 2026 — قيادة وتطوير: <a href="../index.html">حسين أنور (KALI)</a> | جامعة الجزيرة
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<!-- Unified DB -->
+<script src="db.js"></script>
+<script>
+// Play access granted sound
+function playAccessSound() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    
+    // Cyber Arpeggio Chime
+    const notes = [440, 554.37, 659.25, 880];
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + (idx * 0.08));
+      gain.gain.setValueAtTime(0.05, ctx.currentTime + (idx * 0.08));
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + (idx * 0.08) + 0.25);
+      osc.start(ctx.currentTime + (idx * 0.08));
+      osc.stop(ctx.currentTime + (idx * 0.08) + 0.25);
+    });
+  } catch(e) {}
+}
+
+function handleGhostJoin(e) {
+  e.preventDefault();
+  const name = document.getElementById('ghostName').value.trim();
+  const specialty = document.getElementById('ghostSpecialty').value.trim() || 'عضو في تيم الشباح (الأمن والتقنية)';
+
+  if (!name) {
+    showToast('يرجى كتابة اسمك أولاً');
+    return;
+  }
+
+  // Register in DB
+  const user = KALI_DB.registerGhostMember(name, specialty);
+
+  // Play sound
+  playAccessSound();
+
+  // Populate welcome screen
+  document.getElementById('resMemberName').textContent = user.name;
+  document.getElementById('resMemberRole').textContent = user.role;
+  document.getElementById('resMemberSpecialty').textContent = user.specialty;
+
+  // Switch to welcome screen
+  document.getElementById('formCard').style.display = 'none';
+  const welcomeScreen = document.getElementById('welcomeScreen');
+  welcomeScreen.style.display = 'block';
+
+  showToast(`مرحباً بك في تيم الشباح يا ${user.name}! 👻⚡`);
+}
+
+function copyInviteLink() {
+  const url = window.location.href;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => {
+      showToast('تم نسخ رابط تيم الشباح! يمكنك إرساله لأصدقائك 📋');
+    });
+  } else {
+    showToast(`رابط التسجيل: ${url}`);
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.style.display = 'none'; }, 3500);
+}
+
+// Auto check if already logged in via parameter ?show=welcome or similar
+window.addEventListener('DOMContentLoaded', () => {
+  KALI_DB.init();
+  const urlParams = new URLSearchParams(window.location.search);
+  const user = KALI_DB.getCurrentUser();
+
+  // If user opened with ?joined=true or already has a ghost session and wants to see card
+  if (urlParams.get('status') === 'active' && user) {
+    document.getElementById('resMemberName').textContent = user.name;
+    document.getElementById('resMemberRole').textContent = user.role;
+    document.getElementById('resMemberSpecialty').textContent = user.specialty || 'عضو في تيم الشباح';
+    document.getElementById('formCard').style.display = 'none';
+    document.getElementById('welcomeScreen').style.display = 'block';
+  }
+});
+</script>
+</body>
+</html>

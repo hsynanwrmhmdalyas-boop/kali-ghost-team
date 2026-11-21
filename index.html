@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KALI COMMUNITY — مجتمع التقنية والأمن السيبراني</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<!-- FontAwesome for crisp UI icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{--bg:#070a08;--panel:#101612;--panel2:#141d17;--green:#39ff14;--green-glow:rgba(57,255,20,0.25);--muted:#9aa99d;--line:#233329;--white:#eff8f0;--danger:#ff3366;--cyan:#00f0ff}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 80% 0%,#12301a 0,transparent 32%),var(--bg);color:var(--white);font-family:Tahoma,Arial,sans-serif;line-height:1.6}
+a{color:inherit;text-decoration:none}.wrap{max-width:1200px;margin:auto;padding:0 20px}
+header{position:sticky;top:0;z-index:50;background:#070a08eF;border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
+nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:900;letter-spacing:1px}
+.logo{width:42px;height:42px;border:1px solid var(--green);border-radius:12px;display:grid;place-items:center;color:var(--green);font-size:23px;box-shadow:0 0 20px #39ff1422;background:#0c140e}
+.brand span:last-child{font-size:18px}.brand b{color:var(--green)}
+.navlinks{display:flex;gap:24px;color:#b7c5ba;font-size:14px}.navlinks a:hover{color:var(--green)}
+.actions{display:flex;gap:10px;align-items:center}
+.btn{border:1px solid var(--green);background:var(--green);color:#071008;padding:10px 17px;border-radius:9px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-size:13px;transition:all .2s}
+.btn.ghost{background:transparent;color:var(--green)}.btn:hover{filter:brightness(1.15);transform:translateY(-1px);box-shadow:0 0 16px var(--green-glow)}
+.btn.admin-btn{background:#112216;color:var(--green);border:1px solid var(--green)}
+.btn.cyan{background:rgba(0,240,255,0.12);color:var(--cyan);border:1px solid var(--cyan)}
+.btn.cyan:hover{background:var(--cyan);color:#000}
+.hero{padding:65px 0 45px;display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:35px}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;color:var(--green);border:1px solid #39ff1444;background:#39ff140d;padding:8px 14px;border-radius:30px;font-size:12px}
+h1{font-size:clamp(34px,5.2vw,60px);line-height:1.18;margin:18px 0 14px;letter-spacing:-1px}
+h1 span{color:var(--green);text-shadow:0 0 25px #39ff1440}
+.hero p{color:#aab8ad;line-height:2;font-size:16px;max-width:610px}
+.hero-buttons{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+.terminal{background:linear-gradient(145deg,#121b15,#090e0b);border:1px solid #294331;border-radius:18px;padding:20px;box-shadow:0 20px 70px #0008,0 0 40px #39ff140d;transform:rotate(-1deg)}
+.term-top{display:flex;gap:7px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:18px;align-items:center}
+.dot{width:9px;height:9px;border-radius:50%;background:#526158}.dot.red{background:#ff5f56}.dot.yellow{background:#ffbd2e}.dot.green{background:#27c93f}
+.term-title{margin-right:auto;color:#7f9184;font-size:11px;font-family:Consolas,monospace}
+pre{white-space:pre-wrap;color:#c9d8cc;font:13px/2 Consolas,monospace;direction:ltr;text-align:left;margin:0}pre .g{color:var(--green)}pre .dim{color:#718276}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:15px 0 40px}
+.stat{background:#0e1510;border:1px solid var(--line);border-radius:13px;padding:18px;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,0.4)}
+.stat strong{display:block;color:var(--green);font-size:28px;font-weight:900}.stat small{color:var(--muted);font-size:13px}
+
+/* MAIN VIEW NAVIGATION TABS (POSTS VS LIVE DISCUSSIONS) */
+.view-tabs-bar{display:flex;gap:12px;margin:20px 0 24px;border-bottom:1px solid var(--line);padding-bottom:14px}
+.view-tab-btn{background:rgba(255,255,255,0.03);border:1px solid var(--line);color:var(--muted);padding:12px 22px;border-radius:12px;font-weight:bold;cursor:pointer;font-size:15px;display:inline-flex;align-items:center;gap:10px;transition:all .2s}
+.view-tab-btn:hover{color:#fff;background:rgba(57,255,20,0.05);border-color:rgba(57,255,20,0.3)}
+.view-tab-btn.active{background:linear-gradient(135deg,#132717,#0e1c12);border-color:var(--green);color:var(--green);box-shadow:0 0 16px var(--green-glow)}
+.view-tab-btn .badge-pill{background:var(--green);color:#000;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:900}
+
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:24px;padding-bottom:70px}
+.card{background:linear-gradient(145deg,#111912,#0c120e);border:1px solid var(--line);border-radius:15px;padding:20px;margin-bottom:16px;box-shadow:0 6px 25px rgba(0,0,0,0.35)}
+.compose textarea{width:100%;min-height:95px;resize:vertical;background:#080d09;color:var(--white);border:1px solid var(--line);border-radius:10px;padding:13px;font:14px Tahoma;outline:none}
+.compose textarea:focus{border-color:var(--green);box-shadow:0 0 12px var(--green-glow)}
+.compose-options{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.compose-select{background:#080d09;color:var(--white);border:1px solid var(--line);padding:7px 12px;border-radius:8px;font-size:13px;outline:none}
+.compose-row{display:flex;justify-content:space-between;align-items:center;margin-top:12px;color:var(--muted);font-size:12px}
+.post-head{display:flex;align-items:center;gap:11px}
+.avatar{width:42px;height:42px;border-radius:12px;background:#18351f;border:1px solid #32683d;color:var(--green);display:grid;place-items:center;font-weight:bold;font-size:15px;flex-shrink:0;cursor:pointer}
+.user-info{display:flex;flex-direction:column}
+.user{font-weight:bold;font-size:14px;color:#fff;cursor:pointer}
+.user:hover{color:var(--green);text-decoration:underline}
+.time{color:#7f9083;font-size:11px;margin-top:3px}
+.tag{margin-right:auto;color:var(--green);font-size:11px;background:#39ff1412;border:1px solid #39ff1428;padding:4px 10px;border-radius:20px;font-weight:bold}
+.pinned-badge{background:rgba(255,183,0,0.15);border:1px solid rgba(255,183,0,0.4);color:#ffb700;font-size:11px;padding:3px 8px;border-radius:6px;margin-left:8px;display:inline-flex;align-items:center;gap:4px}
+.post p{color:#d6e4d8;line-height:1.9;margin:16px 0;font-size:15px;word-break:break-word}
+.post-actions{display:flex;gap:18px;border-top:1px solid var(--line);padding-top:13px;color:#91a196;font-size:13px;align-items:center}
+.post-actions button{background:none;border:0;color:inherit;cursor:pointer;font:inherit;display:inline-flex;align-items:center;gap:6px;transition:color .2s}
+.post-actions button:hover,.post-actions button.liked{color:var(--green)}
+.btn-del-post{margin-right:auto;color:#718276;font-size:12px}
+.btn-del-post:hover{color:var(--danger)!important}
+
+/* ================= LIVE DISCUSSIONS LOUNGE (صالون النقاش الحي) ================= */
+.discussion-lounge-card{background:linear-gradient(145deg,#0d1610,#080f0a);border:1px solid var(--green);border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,0.7),0 0 25px rgba(57,255,20,0.1);display:none;flex-direction:column}
+.discussion-lounge-card.active-view{display:flex}
+.lounge-header{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid var(--line);background:#0c140e;border-radius:16px 16px 0 0}
+.lounge-title{font-size:16px;font-weight:bold;color:#fff;display:flex;align-items:center;gap:10px}
+.lounge-pulse{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulseLight 1.8s infinite}
+@keyframes pulseLight{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.4);opacity:1}}
+.messages-box{height:460px;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px;background:#060a07}
+/* Custom Scrollbar */
+.messages-box::-webkit-scrollbar{width:6px}
+.messages-box::-webkit-scrollbar-thumb{background:#1f3325;border-radius:4px}
+.msg-bubble{background:#0e1711;border:1px solid var(--line);border-radius:12px;padding:12px 16px;max-width:88%;position:relative;transition:border-color .2s}
+.msg-bubble:hover{border-color:rgba(57,255,20,0.4)}
+.msg-bubble.my-msg{background:#122817;border-color:#2a5a35;margin-right:auto;border-bottom-left-radius:3px}
+.msg-bubble.other-msg{margin-left:auto;border-bottom-right-radius:3px}
+.msg-head{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12px}
+.msg-head strong{color:#fff;cursor:pointer}
+.msg-head strong:hover{color:var(--green);text-decoration:underline}
+.msg-role-tag{font-size:10px;background:rgba(57,255,20,0.1);color:var(--green);padding:2px 6px;border-radius:4px}
+.msg-time{color:#6c8072;font-size:10px;margin-right:auto}
+.msg-text{color:#e0ece2;font-size:14px;line-height:1.7;word-break:break-word;margin:0}
+.msg-text .mention{color:var(--green);font-weight:bold;background:rgba(57,255,20,0.12);padding:1px 6px;border-radius:4px}
+.msg-actions-bar{display:flex;gap:12px;margin-top:8px;font-size:11px;color:#7c9282}
+.msg-actions-bar button{background:none;border:none;color:inherit;cursor:pointer;padding:0;font-size:11px}
+.msg-actions-bar button:hover{color:var(--green)}
+/* Chat Input Area */
+.chat-composer{padding:16px 20px;border-top:1px solid var(--line);background:#0a120c;border-radius:0 0 16px 16px;display:flex;flex-direction:column;gap:10px}
+.reply-preview-pill{background:#112015;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:11px;color:var(--green);display:none;align-items:center;justify-content:space-between}
+.chat-input-row{display:flex;gap:10px}
+.chat-input{flex:1;background:#060a07;border:1px solid var(--line);border-radius:10px;padding:12px 16px;color:#fff;font-family:inherit;font-size:14px;outline:none}
+.chat-input:focus{border-color:var(--green);box-shadow:0 0 12px var(--green-glow)}
+
+/* ================= ENHANCED MEMBER CARDS (بطاقات الأعضاء التفاعلية) ================= */
+.member-card-interactive{background:#0b130e;border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;transition:all .2s;cursor:pointer}
+.member-card-interactive:hover{border-color:var(--green);background:#101a13;transform:translateX(-3px);box-shadow:0 4px 15px rgba(57,255,20,0.1)}
+.member-card-top{display:flex;align-items:center;gap:10px}
+.member-avatar-box{position:relative}
+.member-avatar-box .avatar{width:38px;height:38px;font-size:14px}
+.online-dot{position:absolute;bottom:-2px;left:-2px;width:10px;height:10px;background:var(--green);border-radius:50%;border:2px solid #0b130e;box-shadow:0 0 6px var(--green)}
+.member-name-group{flex:1;overflow:hidden}
+.member-name-group strong{display:block;color:#fff;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.member-specialty{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.member-card-actions{display:flex;gap:8px;margin-top:8px;border-top:1px dashed var(--line);padding-top:8px}
+.btn-member-action{flex:1;background:rgba(57,255,20,0.06);border:1px solid rgba(57,255,20,0.25);color:var(--green);border-radius:6px;padding:4px 8px;font-size:11px;font-weight:bold;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:5px;transition:all .2s}
+.btn-member-action:hover{background:var(--green);color:#000}
+
+/* Member Details Profile Modal */
+.profile-modal-box{width:min(460px,100%);background:linear-gradient(145deg,#0e1811,#070d09);border:1px solid var(--green);border-radius:18px;padding:26px;box-shadow:0 20px 60px rgba(0,0,0,0.95)}
+.profile-header-center{text-align:center;margin-bottom:20px}
+.profile-big-avatar{width:70px;height:70px;border-radius:20px;background:#18351f;border:2px solid var(--green);color:var(--green);font-size:28px;font-weight:900;display:grid;place-items:center;margin:0 auto 12px;box-shadow:0 0 20px var(--green-glow)}
+.profile-name{font-size:20px;font-weight:900;color:#fff;margin-bottom:4px}
+.profile-badge{display:inline-block;background:rgba(57,255,20,0.15);color:var(--green);font-size:12px;padding:3px 10px;border-radius:20px;font-weight:bold;margin-bottom:12px}
+.profile-spec-box{background:#090f0b;border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-bottom:14px;text-align:right}
+.profile-spec-box strong{color:var(--green);font-size:12px;display:block;margin-bottom:4px}
+.profile-spec-box p{margin:0;color:#ccd7ce;font-size:13px;line-height:1.6}
+.profile-actions-row{display:flex;gap:10px;margin-top:18px}
+.profile-actions-row button{flex:1}
+
+/* Comments Box */
+.comments-container{margin-top:14px;border-top:1px dashed var(--line);padding-top:14px;display:none}
+.comments-container.open{display:block}
+.comment-item{background:#0a0f0b;border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:13px}
+.comment-head{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:12px}
+.comment-head strong{color:var(--green)}
+.comment-time{color:var(--muted);font-size:10px;margin-right:auto}
+.comment-form{display:flex;gap:8px;margin-top:10px}
+.comment-input{flex:1;background:#080d09;color:#fff;border:1px solid var(--line);border-radius:6px;padding:8px 12px;font:13px Tahoma;outline:none}
+.comment-input:focus{border-color:var(--green)}
+.comment-btn{background:var(--green);border:none;color:#000;font-weight:bold;padding:0 14px;border-radius:6px;cursor:pointer}
+
+/* Sidebar & Modals */
+.side-title{font-weight:bold;margin-bottom:15px;display:flex;align-items:center;justify-content:space-between;color:#ffffff}
+.topic-item{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);font-size:13px;cursor:pointer;transition:all .18s;color:#c9d8cc}
+.topic-item:hover{color:var(--green);padding-right:6px}
+.topic-item:last-child{border:0}
+.topic-count{background:rgba(57,255,20,0.1);color:var(--green);padding:2px 8px;border-radius:12px;font-size:11px;font-weight:bold}
+footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:center;font-size:13px;line-height:1.9}
+.modal{position:fixed;inset:0;background:#000b;display:none;place-items:center;z-index:100;padding:20px;backdrop-filter:blur(6px)}
+.modal.show{display:grid}
+.modalbox{width:min(440px,100%);background:#101811;border:1px solid #34533b;border-radius:16px;padding:26px;box-shadow:0 20px 60px rgba(0,0,0,0.9)}
+.modalbox h3{margin-top:0;font-size:20px;color:var(--green)}
+.modalbox label{font-size:12px;color:var(--muted);display:block;margin-top:12px}
+.modalbox input{width:100%;padding:11px 13px;margin:6px 0 0;background:#080d09;color:white;border:1px solid var(--line);border-radius:8px;outline:none}
+.close{float:left;background:none;border:0;color:#9aaa9e;font-size:22px;cursor:pointer}
+.toast{position:fixed;bottom:24px;left:24px;background:#132918;border:1px solid var(--green);padding:13px 20px;border-radius:9px;color:#eaffeb;display:none;z-index:200;box-shadow:0 10px 25px rgba(0,0,0,0.7);font-size:14px}
+.admin-badge-user{background:#39ff14;color:#000;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:bold;margin-right:6px}
+.active-user-pill{display:inline-flex;align-items:center;gap:8px;background:#0e1710;border:1px solid var(--line);padding:6px 12px;border-radius:20px;font-size:12px}
+@media(max-width:880px){.navlinks{display:none}.hero{grid-template-columns:1fr;padding-top:40px}.terminal{transform:none}.layout{grid-template-columns:1fr}.stats{margin-bottom:25px}}
+@media(max-width:480px){.wrap{padding:0 14px}nav{height:66px}.brand span:last-child{font-size:15px}.actions .ghost{display:none}.view-tabs-bar{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="wrap">
+    <nav>
+      <a class="brand" href="#">
+        <span class="logo">K</span>
+        <span><b>KALI</b> COMMUNITY</span>
+      </a>
+
+      <div class="navlinks">
+        <a href="#home">الرئيسية</a>
+        <a href="#community">المجتمع</a>
+        <a href="javascript:void(0)" onclick="switchView('discussions')">💬 صالون المناقشات</a>
+        <a href="#topics">المواضيع</a>
+        <a href="admin.html" style="color:var(--green);font-weight:bold;" title="لوحة التحكم الإدارية الكاملة"><i class="fa-solid fa-lock"></i> لوحة الإدارة</a>
+      </div>
+
+      <div class="actions" id="authActions">
+        <a href="admin.html" class="btn ghost admin-btn"><i class="fa-solid fa-gear"></i> لوحة الإدارة</a>
+        <a href="join.html" class="btn ghost" style="border-color:var(--green); color:var(--green);" title="رابط تسجيل الدخول والانضمام"><i class="fa-solid fa-ghost"></i> تيم الشباح</a>
+        <button class="btn ghost" onclick="openModal('login')">دخول</button>
+        <button class="btn" onclick="openModal('register')">انضم إلينا</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- HERO SECTION -->
+  <section class="hero" id="home">
+    <div>
+      <div class="eyebrow">● مجتمع التقنية والأمن السيبراني • مناقشات حية وتواصل مباشر</div>
+      <h1>تعلّم. شارك.<br><span>وناقش مع زملائك.</span></h1>
+      <p>مرحباً بك في KALI COMMUNITY — مساحة تفاعلية تجمع الطلاب والمهتمين بالبرمجة والشبكات وتوزيعات لينكس والأمن السيبراني. تبادل النقاشات وتحدث مباشرة مع باقي الأعضاء واستفد من خبراتهم.</p>
+      <div class="hero-buttons">
+        <button class="btn" onclick="switchView('discussions')"><i class="fa-solid fa-comments"></i> الدخول لصالون المناقشات الحي</button>
+        <a class="btn" href="join.html" style="background:#112517; border-color:var(--green); color:var(--green);"><i class="fa-solid fa-ghost"></i> رابط انضمام تيم الشباح</a>
+        <a class="btn ghost" href="admin.html"><i class="fa-solid fa-sliders"></i> لوحة الإدارة الكاملة</a>
+      </div>
+    </div>
+
+    <div class="terminal">
+      <div class="term-top">
+        <i class="dot red"></i>
+        <i class="dot yellow"></i>
+        <i class="dot green"></i>
+        <span class="term-title">kali-community — live discussions &amp; database</span>
+      </div>
+      <pre><span class="g">┌──(kali㉿community)-[~]</span>
+└─$ whoami
+<span class="g">hussein_anwar // lead_developer</span>
+
+└─$ kali-chat --status
+<span class="g">[✔] MEMBER DISCUSSION ROOM: ACTIVE (ONLINE)</span>
+<span class="g">[✔] ACTIVE PARTICIPANTS: 5 MEMBERS CONNECTED</span>
+
+└─$ cat our_mission.txt
+<span class="dim">Learn together.</span>
+<span class="dim">Discuss in real-time.</span>
+<span class="dim">Build a safer digital world.</span>
+
+└─$ <span class="g">_</span></pre>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats" id="statsBar">
+    <div class="stat"><strong id="statMembers">+1K</strong><small>عضو في المجتمع</small></div>
+    <div class="stat"><strong id="statTopics">+250</strong><small>موضوع تقني</small></div>
+    <div class="stat"><strong id="statUptime">24/7</strong><small>نقاشات حية ومشاركة</small></div>
+  </div>
+
+  <!-- VIEW NAVIGATION TABS -->
+  <div class="view-tabs-bar" id="community">
+    <button class="view-tab-btn active" id="tabBtnFeed" onclick="switchView('feed')">
+      <i class="fa-solid fa-newspaper"></i> منشورات ومقالات المجتمع
+    </button>
+    <button class="view-tab-btn" id="tabBtnDiscussions" onclick="switchView('discussions')">
+      <i class="fa-solid fa-comments"></i> صالون المناقشات والمحادثة المباشرة بين الأعضاء
+      <span class="badge-pill" id="discussionsCountPill">5</span>
+    </button>
+  </div>
+
+  <!-- Active Filter Notification -->
+  <div id="activeFilterNotice" class="filter-notice" style="display:none; background:rgba(57,255,20,0.08); border:1px solid var(--line); border-radius:10px; padding:10px 16px; margin-bottom:18px; font-size:13px; color:#c9d8cc; align-items:center; justify-content:space-between;">
+    <span>يتم الآن عرض المنشورات الخاصة بـ: <strong id="filterTopicName" style="color:var(--green)"></strong></span>
+    <button class="clear-filter-btn" style="background:none; border:none; color:var(--green); cursor:pointer; font-weight:bold; text-decoration:underline;" onclick="clearTopicFilter()">عرض جميع المنشورات</button>
+  </div>
+
+  <div class="layout">
+    
+    <!-- MAIN COLUMN: POSTS FEED OR DISCUSSIONS LOUNGE -->
+    <section>
+      
+      <!-- ================= 1. POSTS FEED VIEW ================= -->
+      <div id="feedViewArea">
+        <!-- Compose Post Card -->
+        <div class="card compose">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <div class="active-user-pill" id="postingAsPill">
+              <span class="avatar" style="width:26px; height:26px; font-size:12px;" id="composeAvatar">K</span>
+              <span id="composeUserName">النشر باسم: حسين أنور</span>
+            </div>
+            <span style="font-size:11px; color:var(--muted);" id="postCharCount">0 / 1000</span>
+          </div>
+
+          <textarea id="postText" placeholder="شنو الفكرة أو المعلومة التقنية الداير تشاركها اليوم مع زملائك؟" maxlength="1000"></textarea>
+          
+          <div class="compose-options">
+            <label style="font-size:12px; color:var(--muted);">اختر مجال المنشور:</label>
+            <select id="postTopicSelect" class="compose-select">
+              <option value="الأمن السيبراني">🛡️ الأمن السيبراني</option>
+              <option value="الشبكات">🌐 الشبكات</option>
+              <option value="البرمجة">💻 البرمجة</option>
+              <option value="Linux وKali">🐧 Linux وKali</option>
+              <option value="الذكاء الاصطناعي">🤖 الذكاء الاصطناعي</option>
+              <option value="تطوير الموبايل (Flutter)">📱 تطوير الموبايل (Flutter)</option>
+              <option value="مجتمعنا">🚀 نقاش عام / مجتمعنا</option>
+            </select>
+          </div>
+
+          <div class="compose-row">
+            <span>✦ شارك معرفة مفيدة • تُحفظ المشاركة في قاعدة البيانات فوراً</span>
+            <button class="btn" onclick="addPost()"><i class="fa-solid fa-paper-plane"></i> نشر المشاركة</button>
+          </div>
+        </div>
+
+        <!-- Posts List -->
+        <div id="posts">
+          <!-- Rendered dynamically via KALI_DB -->
+        </div>
+      </div>
+
+      <!-- ================= 2. LIVE DISCUSSIONS LOUNGE VIEW (غرفة مناقشات الأعضاء) ================= -->
+      <div id="discussionsViewArea" class="discussion-lounge-card">
+        <div class="lounge-header">
+          <div class="lounge-title">
+            <span class="lounge-pulse"></span>
+            <span>صالون المناقشات الحية بين الأعضاء</span>
+            <span style="font-size:11px; color:var(--muted); font-weight:normal;">(محادثات فورية وتبادل أسئلة)</span>
+          </div>
+          <button class="btn ghost btn-sm" onclick="clearDiscussionsInput()" title="تحديث النقاشات"><i class="fa-solid fa-arrows-rotate"></i> تحديث</button>
+        </div>
+
+        <!-- Live Messages Box -->
+        <div class="messages-box" id="messagesChatBox">
+          <!-- Rendered dynamically from KALI_DB.getDiscussions() -->
+        </div>
+
+        <!-- Chat Input Form -->
+        <div class="chat-composer">
+          <div class="reply-preview-pill" id="replyPreviewPill">
+            <span><i class="fa-solid fa-reply"></i> جاري الرد على: <strong id="replyToUserText"></strong></span>
+            <button style="background:none; border:none; color:var(--danger); cursor:pointer;" onclick="cancelReply()"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+
+          <div class="chat-input-row">
+            <input type="text" id="chatMessageInput" class="chat-input" placeholder="اكتب رسالتك أو استفسارك هنا للمناقشة مع الأعضاء... (اضغط Enter للإرسال)" maxlength="500">
+            <button class="btn" onclick="sendDiscussionMessage()"><i class="fa-solid fa-paper-plane"></i> إرسال</button>
+          </div>
+          <span style="font-size:11px; color:var(--muted);"><i class="fa-solid fa-circle-info"></i> يمكنك الضغط على أي عضو في القائمة الجانبية للتحدث وتوجيه السؤال له مباشرة.</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- SIDEBAR COLUMN (ENHANCED MEMBER CARDS & TOPICS) -->
+    <aside>
+      
+      <!-- Interactive Members List Card -->
+      <div class="card" id="membersCardSection">
+        <div class="side-title">
+          <span>بطاقات أعضاء المجتمع</span>
+          <span style="font-size:11px; color:var(--green);" id="membersCountPill">● 5 أعضاء متصلين</span>
+        </div>
+        <p style="font-size:11px; color:var(--muted); margin-top:-6px; margin-bottom:14px;">
+          اضغط على أي عضو للتحدث معه في صالون المناقشات أو الاطلاع على تخصصه ومنشوراته.
+        </p>
+        
+        <div id="membersInteractiveList">
+          <!-- Rendered dynamically as interactive member cards -->
+        </div>
+      </div>
+
+      <!-- Topics Card -->
+      <div class="card" id="topics">
+        <div class="side-title">
+          <span>استكشف المجالات</span>
+          <a href="admin.html" style="font-size:11px; color:var(--green);" title="إدارة المجالات"><i class="fa-solid fa-plus"></i> إدارة</a>
+        </div>
+        <div id="topicsList">
+          <!-- Rendered dynamically from KALI_DB -->
+        </div>
+      </div>
+
+      <!-- About Card -->
+      <div class="card" id="about">
+        <div class="side-title">عن KALI COMMUNITY</div>
+        <p style="color:var(--muted);font-size:13px;line-height:1.9;margin-bottom:12px">
+          مجتمع عربي تقني للنقاش والتعاون المعرفي المسؤول والآمن في مجالات البرمجة ولينكس والشبكات والأمن السيبراني.
+        </p>
+        <a href="admin.html" class="btn ghost btn-sm" style="width:100%; justify-content:center;">
+          <i class="fa-solid fa-shield-halved"></i> لوحة التحكم الإدارية للموقع
+        </a>
+      </div>
+    </aside>
+
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    &copy; 2026 KALI COMMUNITY — صُنع بشغف للتقنية <span style="color:var(--green)">♥</span><br>
+    <span style="display:inline-block;margin-top:10px;color:#39ff14">
+      تصميم وتطوير: حسين أنور (Kali Hussein) | University of Gezira • IT Level 2
+    </span>
+    <div style="margin-top:10px; font-size:12px;">
+      <a href="admin.html" style="color:var(--muted); text-decoration:underline;">لوحة التحكم الإدارية (Admin Panel)</a>
+      <span style="color:var(--line); margin:0 8px;">|</span>
+      <a href="../index.html" style="color:var(--muted); text-decoration:underline;">البورتفوليو الشخصي</a>
+    </div>
+  </div>
+</footer>
+
+<!-- MEMBER PROFILE POPUP MODAL -->
+<div class="modal" id="memberModal">
+  <div class="profile-modal-box">
+    <button class="close" onclick="closeMemberModal()">×</button>
+    <div class="profile-header-center">
+      <div class="profile-big-avatar" id="modalMemberAvatar">K</div>
+      <div class="profile-name" id="modalMemberName">حسين أنور</div>
+      <span class="profile-badge" id="modalMemberRole">مؤسس المجتمع</span>
+    </div>
+
+    <div class="profile-spec-box">
+      <strong><i class="fa-solid fa-microchip"></i> التخصص والاهتمامات:</strong>
+      <p id="modalMemberSpecialty">تطوير تطبيقات Flutter، هندسة البرمجيات، والأمن السيبراني.</p>
+    </div>
+
+    <div class="profile-spec-box">
+      <strong><i class="fa-solid fa-quote-right"></i> نبذة تعريفية:</strong>
+      <p id="modalMemberBio">طالب تقنية معلومات (المستوى الثاني) بجامعة الجزيرة. شغوف بالهوية السيبرانية وبناء الحلول الرقمية.</p>
+    </div>
+
+    <div class="profile-actions-row">
+      <button class="btn" id="modalTalkBtn"><i class="fa-solid fa-comment-dots"></i> بدء مناقشة مع العضو</button>
+      <button class="btn ghost" id="modalFilterPostsBtn"><i class="fa-solid fa-newspaper"></i> منشورات العضو</button>
+    </div>
+  </div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="modal" id="modal">
+  <div class="modalbox">
+    <button class="close" onclick="closeModal()">×</button>
+    <div style="text-align:center; margin-bottom:12px;">
+      <span style="display:inline-block; background:rgba(57,255,20,0.12); color:var(--green); border:1px solid rgba(57,255,20,0.4); padding:3px 12px; border-radius:12px; font-size:11px; font-weight:bold; letter-spacing:1px;">
+        ⚡ GHOST TEAM ENTRY
+      </span>
+    </div>
+    <h3 id="modalTitle" style="text-align:center;">تسجيل الدخول والانضمام لتيم الشباح</h3>
+    <p style="color:var(--muted);font-size:13px; text-align:center;" id="modalDesc">سجل اسمك للانضمام فوراً لتيم الشباح والمشاركة في النقاشات والتفاعل المباشر.</p>
+    
+    <label>اسم المستخدم أو الكنية (مطلوب):</label>
+    <input id="usernameInput" placeholder="اكتب اسمك (مثال: الشبح، أحمد، عمر...)">
+    
+    <label>مجالك واهتمامك التقني:</label>
+    <input id="userSpecialtyInput" placeholder="مثال: مطور تطبيقات، شبكات، أمن معلومات...">
+
+    <div style="margin-top:20px; display:flex; flex-direction:column; gap:10px;">
+      <button class="btn" style="width:100%; justify-content:center; padding:12px;" onclick="handleJoin()">
+        <i class="fa-solid fa-bolt"></i> تسجيل الدخول والانضمام لتيم الشباح
+      </button>
+      <a href="admin.html" class="btn ghost" style="width:100%; justify-content:center;">
+        <i class="fa-solid fa-lock"></i> تسجيل الدخول كمسؤول (Admin)
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- GHOST TEAM WELCOME MODAL (مرحباً بك في تيم الشباح) -->
+<div class="modal" id="ghostWelcomeModal">
+  <div class="modalbox" style="text-align:center; border:2px solid var(--green); box-shadow:0 0 40px var(--green-glow); max-width:480px; position:relative;">
+    <button class="close" onclick="closeGhostWelcomeModal()">×</button>
+    <div style="width:76px; height:76px; margin:0 auto 14px; border-radius:22px; background:#122817; border:2px solid var(--green); display:grid; place-items:center; font-size:38px; color:var(--green); box-shadow:0 0 25px var(--green-glow);">
+      <i class="fa-solid fa-ghost"></i>
+    </div>
+    <div style="display:inline-block; background:rgba(57,255,20,0.12); color:var(--green); border:1px solid rgba(57,255,20,0.4); padding:3px 12px; border-radius:12px; font-size:11px; font-weight:bold; letter-spacing:1px; margin-bottom:8px;">
+      ⚡ GHOST TEAM OFFICIAL ACCESS
+    </div>
+    <h2 style="color:var(--green); font-size:26px; font-weight:900; margin-bottom:10px; text-shadow:0 0 15px var(--green-glow);">
+      مرحباً بك في تيم الشباح
+    </h2>
+    <p style="color:#d0dcd2; font-size:14px; line-height:1.7; margin-bottom:18px;">
+      أهلاً وسهلاً بك في الكتيبة السيبرانية الرسمية لمجتمع <strong>KALI COMMUNITY</strong> بقيادة <strong>KALI HUSSEIN</strong>! تم تفعيل هويتك الرقمية بنجاح كعضو رسمي.
+    </p>
+    <div style="background:#070d09; border:1px dashed var(--green); border-radius:12px; padding:14px; margin-bottom:20px; text-align:right; font-size:13px; display:flex; flex-direction:column; gap:6px;">
+      <div><span style="color:var(--muted)">الاسم:</span> <strong id="ghostWelcomeName" style="color:#fff;">—</strong></div>
+      <div><span style="color:var(--muted)">الفريق:</span> <strong style="color:#00f0ff">تيم الشباح (GHOST SQUAD) 👻</strong></div>
+      <div><span style="color:var(--muted)">الرتبة:</span> <strong id="ghostWelcomeRole" style="color:var(--green);">عضو رسمي معتمد ⚡</strong></div>
+      <div><span style="color:var(--muted)">حالة الاتصال:</span> <span style="color:var(--green); font-weight:bold;">🟢 متصل ونشط الآن</span></div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <button class="btn" style="width:100%; justify-content:center; padding:12px;" onclick="closeGhostWelcomeModal(); switchView('discussions');">
+        <i class="fa-solid fa-comments"></i> الدخول لصالون المناقشات والتحدث مع الأعضاء
+      </button>
+      <button class="btn ghost" style="width:100%; justify-content:center;" onclick="copyGhostInviteLink()">
+        <i class="fa-solid fa-share-nodes"></i> نسخ رابط تيم الشباح لإرساله للأصدقاء
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- SCRIPTS -->
+<script src="db.js"></script>
+<script>
+/**
+ * Enhanced Application Logic for KALI COMMUNITY
+ * With Live Member Discussions Lounge & Interactive Member Cards
+ */
+let currentFilter = 'all';
+let currentActiveView = 'feed'; // 'feed' or 'discussions'
+let activeReplyTarget = null;
+
+// Initialize
+function initApp() {
+  renderStats();
+  renderTopics();
+  renderInteractiveMembers();
+  renderPosts();
+  renderDiscussions();
+  updateAuthUI();
+
+  // Cross-tab real-time sync
+  window.addEventListener('kali_db_updated', () => {
+    renderStats();
+    renderTopics();
+    renderInteractiveMembers();
+    renderPosts();
+    renderDiscussions();
+  });
+
+  const textarea = document.getElementById('postText');
+  const counter = document.getElementById('postCharCount');
+  if (textarea && counter) {
+    textarea.addEventListener('input', () => {
+      counter.textContent = `${textarea.value.length} / 1000`;
+    });
+  }
+
+  const chatInput = document.getElementById('chatMessageInput');
+  if (chatInput) {
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendDiscussionMessage();
+      }
+    });
+  }
+
+  // Handle URL queries for invite link and welcome message
+  const user = KALI_DB.getCurrentUser();
+  const urlParams = new URLSearchParams(window.location.search);
+
+  if (!user) {
+    // Automatically prompt guest for Ghost Team entry
+    setTimeout(() => {
+      openModal('register');
+    }, 400);
+    switchView('discussions');
+  } else if (urlParams.get('welcome') === 'ghost' || urlParams.has('ghost')) {
+    showGhostWelcomeModal(user.name, user.role);
+  } else if (urlParams.get('join') === 'ghost' || urlParams.has('join')) {
+    openModal('register');
+  }
+
+  if (urlParams.get('view') === 'discussions') {
+    switchView('discussions');
+  }
+}
+
+// Switch between Community Feed and Live Discussions Lounge
+function switchView(view) {
+  currentActiveView = view;
+  const feedArea = document.getElementById('feedViewArea');
+  const discArea = document.getElementById('discussionsViewArea');
+  const tabFeed = document.getElementById('tabBtnFeed');
+  const tabDisc = document.getElementById('tabBtnDiscussions');
+
+  if (view === 'discussions') {
+    feedArea.style.display = 'none';
+    discArea.classList.add('active-view');
+    tabFeed.classList.remove('active');
+    tabDisc.classList.add('active');
+    renderDiscussions();
+    scrollToLatestMessage();
+    playChime(750);
+  } else {
+    discArea.classList.remove('active-view');
+    feedArea.style.display = 'block';
+    tabDisc.classList.remove('active');
+    tabFeed.classList.add('active');
+    renderPosts();
+    playChime(600);
+  }
+}
+
+// Render Stats
+function renderStats() {
+  const stats = KALI_DB.getStats();
+  document.getElementById('statMembers').textContent = stats.membersCount;
+  document.getElementById('statTopics').textContent = stats.topicsCount;
+  document.getElementById('statUptime').textContent = stats.uptime;
+}
+
+// Render Topics in Sidebar
+function renderTopics() {
+  const topics = KALI_DB.getTopics();
+  const container = document.getElementById('topicsList');
+  if (!container) return;
+
+  let html = `<div class="topic-item" onclick="clearTopicFilter()" style="font-weight:bold; color:var(--green);">
+    <span>⚡ عرض جميع المنشورات</span>
+    <span class="topic-count">${KALI_DB.getPosts().length}</span>
+  </div>`;
+
+  topics.forEach(t => {
+    html += `
+      <div class="topic-item" onclick="filterByTopic('${t.name}')">
+        <span>${t.icon} ${t.name}</span>
+        <span class="topic-count">${t.count}</span>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+// Render Interactive Member Cards in Sidebar
+function renderInteractiveMembers() {
+  const members = KALI_DB.getMembers();
+  const container = document.getElementById('membersInteractiveList');
+  const pill = document.getElementById('membersCountPill');
+  if (!container) return;
+
+  if (pill) pill.textContent = `● ${members.length} أعضاء نشطين`;
+
+  let html = '';
+  members.forEach(m => {
+    html += `
+      <div class="member-card-interactive" onclick="openMemberModal('${m.id}')" title="اضغط لعرض الملف الشخصي ومناقشة العضو">
+        <div class="member-card-top">
+          <div class="member-avatar-box">
+            <div class="avatar">${m.avatar || m.name.charAt(0).toUpperCase()}</div>
+            ${m.isOnline ? '<span class="online-dot" title="متصل الآن"></span>' : ''}
+          </div>
+          <div class="member-name-group">
+            <strong>${m.name}</strong>
+            <div class="member-specialty">${m.specialty || m.role}</div>
+          </div>
+        </div>
+        <div class="member-card-actions">
+          <button class="btn-member-action" onclick="event.stopPropagation(); startChatWithMember('${m.name}')">
+            <i class="fa-solid fa-comments"></i> مناقشة
+          </button>
+          <button class="btn-member-action" onclick="event.stopPropagation(); filterMemberPosts('${m.name}')">
+            <i class="fa-solid fa-newspaper"></i> منشوراته
+          </button>
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+// Open Member Profile Modal
+function openMemberModal(memberId) {
+  const member = KALI_DB.getMemberById(memberId);
+  if (!member) return;
+
+  document.getElementById('modalMemberAvatar').textContent = member.avatar || member.name.charAt(0);
+  document.getElementById('modalMemberName').textContent = member.name;
+  document.getElementById('modalMemberRole').textContent = member.role;
+  document.getElementById('modalMemberSpecialty').textContent = member.specialty || 'تقنية المعلومات والأمن السيبراني';
+  document.getElementById('modalMemberBio').textContent = member.bio || 'عضو مميز في KALI COMMUNITY يشارك النقاشات والأفكار التقنية.';
+
+  const talkBtn = document.getElementById('modalTalkBtn');
+  talkBtn.onclick = () => {
+    closeMemberModal();
+    startChatWithMember(member.name);
+  };
+
+  const filterBtn = document.getElementById('modalFilterPostsBtn');
+  filterBtn.onclick = () => {
+    closeMemberModal();
+    filterMemberPosts(member.name);
+  };
+
+  document.getElementById('memberModal').classList.add('show');
+  playChime(850);
+}
+
+function closeMemberModal() {
+  document.getElementById('memberModal').classList.remove('show');
+}
+
+// Start Direct Discussion with Member
+function startChatWithMember(memberName) {
+  switchView('discussions');
+  const chatInput = document.getElementById('chatMessageInput');
+  if (chatInput) {
+    chatInput.value = `@${memberName} `;
+    chatInput.focus();
+  }
+  toast(`جاري بدء مناقشة مع ${memberName}... اكتب رسالتك واضغط إرسال`);
+}
+
+// Filter posts by Member Name
+function filterMemberPosts(memberName) {
+  switchView('feed');
+  currentFilter = memberName;
+  const notice = document.getElementById('activeFilterNotice');
+  const topicLabel = document.getElementById('filterTopicName');
+  if (notice && topicLabel) {
+    topicLabel.textContent = `منشورات العضو: ${memberName}`;
+    notice.style.display = 'flex';
+  }
+  renderPosts();
+  document.getElementById('community').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ================= LIVE DISCUSSIONS ENGINE =================
+function renderDiscussions() {
+  const box = document.getElementById('messagesChatBox');
+  const countPill = document.getElementById('discussionsCountPill');
+  if (!box) return;
+
+  const discussions = KALI_DB.getDiscussions();
+  if (countPill) countPill.textContent = discussions.length;
+
+  const currentUser = KALI_DB.getCurrentUser();
+  const currentUserName = currentUser ? currentUser.name : '';
+
+  if (discussions.length === 0) {
+    box.innerHTML = `
+      <div style="text-align:center; padding:50px 20px; color:var(--muted);">
+        <i class="fa-solid fa-comments" style="font-size:36px; margin-bottom:12px; color:var(--green);"></i>
+        <p>لا توجد مناقشات بعد. ابدأ أول رسالة أو استفسار للنقاش مع باقي الأعضاء الآن!</p>
+      </div>
+    `;
+    return;
+  }
+
+  let html = '';
+  discussions.forEach(msg => {
+    const isMe = msg.sender === currentUserName;
+    
+    // Highlight @mentions in text
+    let formattedText = escapeHTML(msg.text);
+    formattedText = formattedText.replace(/@([^\s]+)/g, '<span class="mention">@$1</span>');
+
+    html += `
+      <div class="msg-bubble ${isMe ? 'my-msg' : 'other-msg'}" id="${msg.id}">
+        <div class="msg-head">
+          <span class="avatar" style="width:24px; height:24px; font-size:11px;" onclick="openMemberModal('${msg.sender}')">${msg.senderAvatar || msg.sender.charAt(0)}</span>
+          <strong onclick="openMemberModal('${msg.sender}')">${msg.sender}</strong>
+          <span class="msg-role-tag">${msg.role || 'عضو'}</span>
+          <span class="msg-time">${msg.time || 'الآن'}</span>
+        </div>
+        <p class="msg-text">${formattedText}</p>
+        <div class="msg-actions-bar">
+          <button onclick="replyToDiscussion('${msg.id}', '${msg.sender}')"><i class="fa-solid fa-reply"></i> رد على ${msg.sender}</button>
+          ${(currentUser && currentUser.isAdmin) ? `<button style="color:var(--danger)" onclick="deleteDiscussion('${msg.id}')"><i class="fa-regular fa-trash-can"></i> حذف</button>` : ''}
+        </div>
+      </div>
+    `;
+  });
+
+  box.innerHTML = html;
+}
+
+function sendDiscussionMessage() {
+  const input = document.getElementById('chatMessageInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const user = KALI_DB.getCurrentUser() || { name: 'زائر تقني', avatar: 'U', role: 'عضو' };
+  
+  KALI_DB.addDiscussionMessage({
+    sender: user.name,
+    senderAvatar: user.avatar,
+    role: user.role,
+    text: text,
+    replyTo: activeReplyTarget
+  });
+
+  input.value = '';
+  cancelReply();
+  renderDiscussions();
+  scrollToLatestMessage();
+  playChime(950);
+  toast('تم إرسال رسالتك ونشرها في صالون المناقشات! 💬');
+}
+
+function replyToDiscussion(msgId, senderName) {
+  activeReplyTarget = msgId;
+  const pill = document.getElementById('replyPreviewPill');
+  const userText = document.getElementById('replyToUserText');
+  const input = document.getElementById('chatMessageInput');
+  if (pill && userText && input) {
+    userText.textContent = senderName;
+    pill.style.display = 'flex';
+    input.value = `@${senderName} `;
+    input.focus();
+  }
+}
+
+function cancelReply() {
+  activeReplyTarget = null;
+  const pill = document.getElementById('replyPreviewPill');
+  if (pill) pill.style.display = 'none';
+}
+
+function deleteDiscussion(msgId) {
+  if (confirm('حذف هذه الرسالة من صالون المناقشات؟')) {
+    KALI_DB.deleteDiscussionMessage(msgId);
+    renderDiscussions();
+    toast('تم حذف الرسالة بنجاح');
+  }
+}
+
+function scrollToLatestMessage() {
+  const box = document.getElementById('messagesChatBox');
+  if (box) {
+    setTimeout(() => {
+      box.scrollTop = box.scrollHeight;
+    }, 50);
+  }
+}
+
+function clearDiscussionsInput() {
+  renderDiscussions();
+  scrollToLatestMessage();
+  toast('تم تحديث المناقشات');
+}
+
+// ================= POSTS FEED ENGINE =================
+function renderPosts() {
+  let posts = KALI_DB.getPosts();
+  const container = document.getElementById('posts');
+  if (!container) return;
+
+  if (currentFilter !== 'all') {
+    posts = posts.filter(p => p.topicTag === currentFilter || p.author.includes(currentFilter));
+  }
+
+  if (posts.length === 0) {
+    container.innerHTML = `
+      <div class="card" style="text-align:center; padding:50px 20px;">
+        <i class="fa-regular fa-folder-open" style="font-size:32px; color:var(--muted); margin-bottom:12px; display:block;"></i>
+        <p style="color:var(--muted); margin:0;">لا توجد مشاركات حتى الآن في هذا التصنيف.</p>
+        <button class="btn ghost btn-sm" style="margin-top:14px;" onclick="clearTopicFilter()">عرض جميع المنشورات</button>
+      </div>
+    `;
+    return;
+  }
+
+  const currentUser = KALI_DB.getCurrentUser();
+  const currentUserId = currentUser ? currentUser.id : '';
+
+  let html = '';
+  posts.forEach(post => {
+    const isLiked = Array.isArray(post.likedBy) && post.likedBy.includes(currentUserId);
+    const comments = post.comments || [];
+
+    let commentsHtml = '';
+    comments.forEach(c => {
+      commentsHtml += `
+        <div class="comment-item">
+          <div class="comment-head">
+            <strong>${c.author}</strong>
+            <span class="comment-time">${c.time || 'الآن'}</span>
+          </div>
+          <p style="margin:0; color:#d1ddd3; font-size:13px;">${c.text}</p>
+        </div>
+      `;
+    });
+
+    html += `
+      <article class="card post" id="${post.id}">
+        <div class="post-head">
+          <div class="avatar" onclick="openMemberModal('${post.author}')">${post.authorAvatar || post.author.charAt(0).toUpperCase()}</div>
+          <div class="user-info">
+            <div class="user" onclick="openMemberModal('${post.author}')">
+              ${post.author}
+              ${post.pinned ? '<span class="pinned-badge"><i class="fa-solid fa-thumbtack"></i> مثبت</span>' : ''}
+            </div>
+            <div class="time">${post.time || 'الآن'} · ${post.role || 'عضو'}</div>
+          </div>
+          <span class="tag">${post.topicTag || 'عام'}</span>
+        </div>
+
+        <p>${escapeHTML(post.content)}</p>
+
+        <div class="post-actions">
+          <button class="${isLiked ? 'liked' : ''}" onclick="toggleLike('${post.id}')">
+            ${isLiked ? '♥' : '♡'} إعجاب <b id="likes_${post.id}">${post.likesCount || 0}</b>
+          </button>
+          
+          <button onclick="toggleComments('${post.id}')">
+            <i class="fa-regular fa-comment"></i> مناقشة وتعليقات (<b>${comments.length}</b>)
+          </button>
+
+          <button onclick="startChatWithMember('${post.author}')">
+            <i class="fa-solid fa-reply"></i> تحدث مع الناشر
+          </button>
+
+          <button onclick="sharePost('${post.id}')">
+            <i class="fa-solid fa-arrow-up-from-bracket"></i> مشاركة
+          </button>
+
+          ${(currentUser && currentUser.isAdmin) ? `<button class="btn-del-post" onclick="deletePost('${post.id}')" title="حذف المنشور كمسؤول"><i class="fa-regular fa-trash-can"></i> حذف</button>` : ''}
+        </div>
+
+        <!-- Comments Drawer -->
+        <div class="comments-container" id="comments_${post.id}">
+          <div id="comments_list_${post.id}">
+            ${commentsHtml}
+          </div>
+          <form class="comment-form" onsubmit="submitComment(event, '${post.id}')">
+            <input type="text" class="comment-input" placeholder="اكتب تعليقك أو استفسارك هنا للمناقشة..." required>
+            <button type="submit" class="comment-btn">إرسال</button>
+          </form>
+        </div>
+      </article>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+// Add New Post
+function addPost() {
+  const area = document.getElementById('postText');
+  const tagSelect = document.getElementById('postTopicSelect');
+  const content = area.value.trim();
+
+  if (!content) {
+    toast('يرجى كتابة نص المشاركة أولاً');
+    return;
+  }
+
+  const topicTag = tagSelect ? tagSelect.value : 'نقاش عام';
+  KALI_DB.addPost({
+    content: content,
+    topicTag: topicTag
+  });
+
+  KALI_DB.incrementTopicCount(topicTag);
+
+  area.value = '';
+  document.getElementById('postCharCount').textContent = '0 / 1000';
+  renderPosts();
+  renderTopics();
+  playChime(900);
+  toast('تم حفظ المشاركة في قاعدة البيانات ونشرها فوراً! 🚀');
+}
+
+// Like Post
+function toggleLike(postId) {
+  const user = KALI_DB.getCurrentUser();
+  const result = KALI_DB.toggleLike(postId, user ? user.id : null);
+  const likesCounter = document.getElementById(`likes_${postId}`);
+  if (likesCounter) likesCounter.textContent = result.count;
+  renderPosts();
+  playChime(result.liked ? 880 : 440);
+  toast(result.liked ? 'تم تسجيل إعجابك بالمشاركة' : 'تم إلغاء الإعجاب');
+}
+
+// Comments
+function toggleComments(postId) {
+  const box = document.getElementById(`comments_${postId}`);
+  if (box) {
+    box.classList.toggle('open');
+    if (box.classList.contains('open')) {
+      const input = box.querySelector('.comment-input');
+      if (input) input.focus();
+    }
+  }
+}
+
+function submitComment(e, postId) {
+  e.preventDefault();
+  const form = e.target;
+  const input = form.querySelector('.comment-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const user = KALI_DB.getCurrentUser();
+  const authorName = user ? user.name : 'زائر تقني';
+
+  KALI_DB.addComment(postId, text, authorName);
+  input.value = '';
+  renderPosts();
+
+  const box = document.getElementById(`comments_${postId}`);
+  if (box) box.classList.add('open');
+
+  playChime(900);
+  toast('تم حفظ التعليق والمناقشة في قاعدة البيانات!');
+}
+
+function deletePost(postId) {
+  if (confirm('حذف هذا المنشور نهائياً من قاعدة البيانات؟')) {
+    KALI_DB.deletePost(postId);
+    renderPosts();
+    renderTopics();
+    toast('تم حذف المنشور');
+  }
+}
+
+function filterByTopic(topicName) {
+  switchView('feed');
+  currentFilter = topicName;
+  const notice = document.getElementById('activeFilterNotice');
+  const topicLabel = document.getElementById('filterTopicName');
+
+  if (notice && topicLabel) {
+    topicLabel.textContent = topicName;
+    notice.style.display = 'flex';
+  }
+
+  renderPosts();
+  document.getElementById('community').scrollIntoView({ behavior: 'smooth' });
+}
+
+function clearTopicFilter() {
+  currentFilter = 'all';
+  const notice = document.getElementById('activeFilterNotice');
+  if (notice) notice.style.display = 'none';
+  renderPosts();
+}
+
+function sharePost(postId) {
+  const url = `${window.location.origin}${window.location.pathname}#${postId}`;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => toast('تم نسخ رابط المنشور!'));
+  } else {
+    toast(`رابط المنشور: ${url}`);
+  }
+}
+
+// User Profile & Join
+function updateAuthUI() {
+  const actions = document.getElementById('authActions');
+  const user = KALI_DB.getCurrentUser();
+  const composeAvatar = document.getElementById('composeAvatar');
+  const composeName = document.getElementById('composeUserName');
+
+  if (user) {
+    if (composeAvatar) composeAvatar.textContent = user.avatar || user.name.charAt(0);
+    if (composeName) composeName.textContent = `النشر باسم: ${user.name} (${user.role})`;
+
+    if (actions) {
+      actions.innerHTML = `
+        <a href="admin.html" class="btn ghost admin-btn" title="فتح لوحة التحكم"><i class="fa-solid fa-sliders"></i> لوحة الإدارة</a>
+        <a href="join.html" class="btn ghost" style="color:var(--green); border-color:var(--green);" title="رابط دعوة تيم الشباح"><i class="fa-solid fa-ghost"></i> تيم الشباح</a>
+        <div class="active-user-pill" style="color:#fff;" onclick="openMemberModal('${user.name}')" title="عرض ملفي الشخصي">
+          <span class="avatar" style="width:26px; height:26px; font-size:12px;">${user.avatar || 'K'}</span>
+          <span>${user.name}</span>
+          ${user.isAdmin ? '<span class="admin-badge-user">ADMIN</span>' : ''}
+          <span style="font-size:10px; background:rgba(57,255,20,0.15); color:var(--green); padding:1px 5px; border-radius:4px;">👻 الشباح</span>
+        </div>
+        <button class="btn ghost" onclick="handleLogout()" title="تسجيل الخروج"><i class="fa-solid fa-right-from-bracket"></i></button>
+      `;
+    }
+  } else {
+    if (actions) {
+      actions.innerHTML = `
+        <a href="admin.html" class="btn ghost admin-btn"><i class="fa-solid fa-gear"></i> لوحة الإدارة</a>
+        <a href="join.html" class="btn" style="background:#132918; border-color:var(--green); color:var(--green); font-weight:bold;" title="بوابة الانضمام الرسمية"><i class="fa-solid fa-ghost"></i> تسجيل دخول تيم الشباح</a>
+        <button class="btn ghost" onclick="openModal('register')">انضم إلينا</button>
+      `;
+    }
+  }
+}
+
+function openModal(mode = 'register') {
+  const modal = document.getElementById('modal');
+  modal.classList.add('show');
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('show');
+}
+
+function handleJoin() {
+  const name = document.getElementById('usernameInput').value.trim();
+  const specialty = document.getElementById('userSpecialtyInput').value.trim() || 'تقنية المعلومات والبرمجة';
+
+  if (!name) {
+    toast('يرجى كتابة اسم المستخدم أولاً');
+    return;
+  }
+
+  const newUser = KALI_DB.registerGhostMember(name, specialty);
+  closeModal();
+  updateAuthUI();
+  renderInteractiveMembers();
+  switchView('discussions');
+  showGhostWelcomeModal(newUser.name, newUser.role);
+}
+
+function showGhostWelcomeModal(name, role) {
+  const modal = document.getElementById('ghostWelcomeModal');
+  const nameSpan = document.getElementById('ghostWelcomeName');
+  const roleSpan = document.getElementById('ghostWelcomeRole');
+  if (nameSpan) nameSpan.textContent = name;
+  if (roleSpan && role) roleSpan.textContent = role;
+  if (modal) modal.classList.add('show');
+  playChime(880);
+  toast(`مرحباً بك في تيم الشباح يا ${name}! 👻⚡`);
+}
+
+function closeGhostWelcomeModal() {
+  const modal = document.getElementById('ghostWelcomeModal');
+  if (modal) modal.classList.remove('show');
+}
+
+function copyGhostInviteLink() {
+  const origin = window.location.origin || '';
+  const path = window.location.pathname || '';
+  const folder = path.substring(0, path.lastIndexOf('/') + 1);
+  const inviteUrl = `${origin}${folder}join.html`;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(inviteUrl).then(() => {
+      toast('تم نسخ رابط تيم الشباح! أرسله لأي شخص لتسجيل الدخول 📋');
+    });
+  } else {
+    toast(`رابط تيم الشباح: ${inviteUrl}`);
+  }
+}
+
+function handleLogout() {
+  if (confirm('تسجيل الخروج؟')) {
+    KALI_DB.logout();
+    updateAuthUI();
+    toast('تم تسجيل الخروج');
+  }
+}
+
+// Subtle Audio Chime
+function playChime(freq = 700) {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    gain.gain.setValueAtTime(0.04, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.12);
+  } catch (e) {}
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => {
+    t.style.display = 'none';
+  }, 3200);
+}
+
+function escapeHTML(str) {
+  return str.replace(/[&<>'"]/g, tag => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[tag] || tag));
+}
+
+document.addEventListener('DOMContentLoaded', initApp);
+</script>
+</body>
+</html>
