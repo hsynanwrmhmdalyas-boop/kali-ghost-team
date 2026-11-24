@@ -2,7 +2,10 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KALI COMMUNITY — مجتمع التقنية والأمن السيبراني</title>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <!-- FontAwesome for crisp UI icons -->
@@ -175,11 +178,11 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
         <a href="#community">المجتمع</a>
         <a href="javascript:void(0)" onclick="switchView('discussions')">💬 صالون المناقشات</a>
         <a href="#topics">المواضيع</a>
-        <a href="admin.html" style="color:var(--green);font-weight:bold;" title="لوحة التحكم الإدارية الكاملة"><i class="fa-solid fa-lock"></i> لوحة الإدارة</a>
+        
       </div>
 
       <div class="actions" id="authActions">
-        <a href="admin.html" class="btn ghost admin-btn"><i class="fa-solid fa-gear"></i> لوحة الإدارة</a>
+        <a href="admin.html" class="btn ghost admin-btn" style="padding:8px 12px;" title="الإعدادات"><i class="fa-solid fa-gear"></i></a>
         <a href="join.html" class="btn ghost" style="border-color:var(--green); color:var(--green);" title="رابط تسجيل الدخول والانضمام"><i class="fa-solid fa-ghost"></i> تيم الشباح</a>
         <button class="btn ghost" onclick="openModal('login')">دخول</button>
         <button class="btn" onclick="openModal('register')">انضم إلينا</button>
@@ -198,7 +201,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
       <div class="hero-buttons">
         <button class="btn" onclick="switchView('discussions')"><i class="fa-solid fa-comments"></i> الدخول لصالون المناقشات الحي</button>
         <a class="btn" href="join.html" style="background:#112517; border-color:var(--green); color:var(--green);"><i class="fa-solid fa-ghost"></i> رابط انضمام تيم الشباح</a>
-        <a class="btn ghost" href="admin.html"><i class="fa-solid fa-sliders"></i> لوحة الإدارة الكاملة</a>
+        
       </div>
     </div>
 
@@ -349,7 +352,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
       <div class="card" id="topics">
         <div class="side-title">
           <span>استكشف المجالات</span>
-          <a href="admin.html" style="font-size:11px; color:var(--green);" title="إدارة المجالات"><i class="fa-solid fa-plus"></i> إدارة</a>
+          
         </div>
         <div id="topicsList">
           <!-- Rendered dynamically from KALI_DB -->
@@ -362,9 +365,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
         <p style="color:var(--muted);font-size:13px;line-height:1.9;margin-bottom:12px">
           مجتمع عربي تقني للنقاش والتعاون المعرفي المسؤول والآمن في مجالات البرمجة ولينكس والشبكات والأمن السيبراني.
         </p>
-        <a href="admin.html" class="btn ghost btn-sm" style="width:100%; justify-content:center;">
-          <i class="fa-solid fa-shield-halved"></i> لوحة التحكم الإدارية للموقع
-        </a>
+        
       </div>
     </aside>
 
@@ -379,7 +380,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
       تصميم وتطوير: حسين أنور (Kali Hussein) | University of Gezira • IT Level 2
     </span>
     <div style="margin-top:10px; font-size:12px;">
-      <a href="admin.html" style="color:var(--muted); text-decoration:underline;">لوحة التحكم الإدارية (Admin Panel)</a>
+      <a href="admin.html" style="color:var(--muted); opacity:0.6;" title="System"><i class="fa-solid fa-gear" style="font-size:11px;"></i></a>
       <span style="color:var(--line); margin:0 8px;">|</span>
       <a href="../index.html" style="color:var(--muted); text-decoration:underline;">البورتفوليو الشخصي</a>
     </div>
@@ -435,9 +436,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
       <button class="btn" style="width:100%; justify-content:center; padding:12px;" onclick="handleJoin()">
         <i class="fa-solid fa-bolt"></i> تسجيل الدخول والانضمام لتيم الشباح
       </button>
-      <a href="admin.html" class="btn ghost" style="width:100%; justify-content:center;">
-        <i class="fa-solid fa-lock"></i> تسجيل الدخول كمسؤول (Admin)
-      </a>
+      
     </div>
   </div>
 </div>
@@ -479,7 +478,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
 <div class="toast" id="toast"></div>
 
 <!-- SCRIPTS -->
-<script src="db.js"></script>
+<script src="db.js?v=2026.11.24.3"></script>
 <script>
 /**
  * Enhanced Application Logic for KALI COMMUNITY
@@ -621,8 +620,8 @@ function renderInteractiveMembers() {
             ${m.isOnline ? '<span class="online-dot" title="متصل الآن"></span>' : ''}
           </div>
           <div class="member-name-group">
-            <strong>${m.name}</strong>
-            <div class="member-specialty">${m.specialty || m.role}</div>
+            <strong>${escapeHTML(m.name)}</strong>
+            <div class="member-specialty">${escapeHTML(m.specialty || m.role)}</div>
           </div>
         </div>
         <div class="member-card-actions">
@@ -730,13 +729,13 @@ function renderDiscussions() {
       <div class="msg-bubble ${isMe ? 'my-msg' : 'other-msg'}" id="${msg.id}">
         <div class="msg-head">
           <span class="avatar" style="width:24px; height:24px; font-size:11px;" onclick="openMemberModal('${msg.sender}')">${msg.senderAvatar || msg.sender.charAt(0)}</span>
-          <strong onclick="openMemberModal('${msg.sender}')">${msg.sender}</strong>
-          <span class="msg-role-tag">${msg.role || 'عضو'}</span>
+          <strong onclick="openMemberModal(decodeURIComponent('${encodeURIComponent(msg.sender)}'))">${escapeHTML(msg.sender)}</strong>
+          <span class="msg-role-tag">${escapeHTML(msg.role || 'عضو')}</span>
           <span class="msg-time">${msg.time || 'الآن'}</span>
         </div>
         <p class="msg-text">${formattedText}</p>
         <div class="msg-actions-bar">
-          <button onclick="replyToDiscussion('${msg.id}', '${msg.sender}')"><i class="fa-solid fa-reply"></i> رد على ${msg.sender}</button>
+          <button onclick="replyToDiscussion('${msg.id}', decodeURIComponent('${encodeURIComponent(msg.sender)}'))"><i class="fa-solid fa-reply"></i> رد على ${escapeHTML(msg.sender)}</button>
           ${(currentUser && currentUser.isAdmin) ? `<button style="color:var(--danger)" onclick="deleteDiscussion('${msg.id}')"><i class="fa-regular fa-trash-can"></i> حذف</button>` : ''}
         </div>
       </div>
@@ -845,10 +844,10 @@ function renderPosts() {
       commentsHtml += `
         <div class="comment-item">
           <div class="comment-head">
-            <strong>${c.author}</strong>
-            <span class="comment-time">${c.time || 'الآن'}</span>
+            <strong>${escapeHTML(c.author)}</strong>
+            <span class="comment-time">${escapeHTML(c.time || 'الآن')}</span>
           </div>
-          <p style="margin:0; color:#d1ddd3; font-size:13px;">${c.text}</p>
+          <p style="margin:0; color:#d1ddd3; font-size:13px;">${escapeHTML(c.text)}</p>
         </div>
       `;
     });
@@ -858,8 +857,8 @@ function renderPosts() {
         <div class="post-head">
           <div class="avatar" onclick="openMemberModal('${post.author}')">${post.authorAvatar || post.author.charAt(0).toUpperCase()}</div>
           <div class="user-info">
-            <div class="user" onclick="openMemberModal('${post.author}')">
-              ${post.author}
+            <div class="user" onclick="openMemberModal(decodeURIComponent('${encodeURIComponent(post.author)}'))">
+              ${escapeHTML(post.author)}
               ${post.pinned ? '<span class="pinned-badge"><i class="fa-solid fa-thumbtack"></i> مثبت</span>' : ''}
             </div>
             <div class="time">${post.time || 'الآن'} · ${post.role || 'عضو'}</div>
@@ -878,7 +877,7 @@ function renderPosts() {
             <i class="fa-regular fa-comment"></i> مناقشة وتعليقات (<b>${comments.length}</b>)
           </button>
 
-          <button onclick="startChatWithMember('${post.author}')">
+          <button onclick="startChatWithMember(decodeURIComponent('${encodeURIComponent(post.author)}'))">
             <i class="fa-solid fa-reply"></i> تحدث مع الناشر
           </button>
 
@@ -1030,7 +1029,7 @@ function updateAuthUI() {
 
     if (actions) {
       actions.innerHTML = `
-        <a href="admin.html" class="btn ghost admin-btn" title="فتح لوحة التحكم"><i class="fa-solid fa-sliders"></i> لوحة الإدارة</a>
+        <a href="admin.html" class="btn ghost admin-btn" style="padding:8px 12px;" title="الإعدادات"><i class="fa-solid fa-gear"></i></a>
         <a href="join.html" class="btn ghost" style="color:var(--green); border-color:var(--green);" title="رابط دعوة تيم الشباح"><i class="fa-solid fa-ghost"></i> تيم الشباح</a>
         <div class="active-user-pill" style="color:#fff;" onclick="openMemberModal('${user.name}')" title="عرض ملفي الشخصي">
           <span class="avatar" style="width:26px; height:26px; font-size:12px;">${user.avatar || 'K'}</span>
@@ -1044,7 +1043,7 @@ function updateAuthUI() {
   } else {
     if (actions) {
       actions.innerHTML = `
-        <a href="admin.html" class="btn ghost admin-btn"><i class="fa-solid fa-gear"></i> لوحة الإدارة</a>
+        <a href="admin.html" class="btn ghost admin-btn" style="padding:8px 12px;" title="الإعدادات"><i class="fa-solid fa-gear"></i></a>
         <a href="join.html" class="btn" style="background:#132918; border-color:var(--green); color:var(--green); font-weight:bold;" title="بوابة الانضمام الرسمية"><i class="fa-solid fa-ghost"></i> تسجيل دخول تيم الشباح</a>
         <button class="btn ghost" onclick="openModal('register')">انضم إلينا</button>
       `;
@@ -1145,7 +1144,8 @@ function toast(msg) {
 }
 
 function escapeHTML(str) {
-  return str.replace(/[&<>'"]/g, tag => ({
+  if (str === null || str === undefined) return '';
+  return String(str).replace(/[&<>'"]/g, tag => ({
     '&': '&amp;',
     '<': '&lt;',
     '>': '&gt;',
@@ -1153,6 +1153,20 @@ function escapeHTML(str) {
     '"': '&quot;'
   }[tag] || tag));
 }
+
+
+// Auto-Sync across tabs: When admin adds posts, discussions or updates stats in another tab
+window.addEventListener('storage', (e) => {
+  if (!e.key) return;
+  if (e.key.includes('kali_comm')) {
+    console.log('[KALI Auto-Sync] Detected database update from another session:', e.key);
+    renderPosts();
+    renderDiscussions();
+    renderInteractiveMembers();
+    renderStats();
+    renderTopics();
+  }
+});
 
 document.addEventListener('DOMContentLoaded', initApp);
 </script>

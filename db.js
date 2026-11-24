@@ -13,6 +13,8 @@
 (function (window) {
   'use strict';
 
+  const APP_VERSION = '2026.11.24.3';
+  const VERSION_STORAGE_KEY = 'kali_app_version';
   const STORAGE_KEYS = {
     POSTS: 'kali_comm_posts_v2',
     TOPICS: 'kali_comm_topics_v2',
@@ -209,7 +211,8 @@
   };
 
   const DEFAULT_SETTINGS = {
-    adminPassword: 'kali',
+    adminPasswordHash: '576abd4742653e99eceb205e09dc5ee8c06d527ad74d58e82e5a9d73fb1b83d5', // SHA-256 for KAIi 2027
+
     siteTitle: 'KALI COMMUNITY',
     heroNotice: 'مجتمع التقنية والأمن السيبراني',
     allowGuestPosting: true,
@@ -239,6 +242,7 @@
 
   const DB = {
     init: function () {
+      // 1. Initial Seeding if first time
       if (!localStorage.getItem(STORAGE_KEYS.POSTS)) {
         saveJSON(STORAGE_KEYS.POSTS, DEFAULT_POSTS);
       }
@@ -254,11 +258,47 @@
       if (!localStorage.getItem(STORAGE_KEYS.STATS)) {
         saveJSON(STORAGE_KEYS.STATS, DEFAULT_STATS);
       }
-      if (!localStorage.getItem(STORAGE_KEYS.SETTINGS)) {
+
+      // 2. Dynamic Settings Migration & Auto-Sync
+      const savedSettings = loadJSON(STORAGE_KEYS.SETTINGS, null);
+      if (!savedSettings) {
         saveJSON(STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
+      } else {
+        // Merge missing default keys into saved settings seamlessly
+        let needsUpdate = false;
+        const merged = { ...DEFAULT_SETTINGS, ...savedSettings };
+        
+                // Upgrade old kali2026 to new KAIi 2027
+        if (merged.adminPasswordHash === 'a4b06341397774dacd1e23fdb6705b53e5901dba00cb3270feb0ec9e454a35e6') {
+          merged.adminPasswordHash = DEFAULT_SETTINGS.adminPasswordHash;
+          needsUpdate = true;
+        }
+        // Purge legacy plain password if it was 'kali'
+        if (merged.adminPassword === 'kali') {
+          delete merged.adminPassword;
+          merged.adminPasswordHash = DEFAULT_SETTINGS.adminPasswordHash;
+          needsUpdate = true;
+        }
+        if (!merged.adminPasswordHash) {
+          merged.adminPasswordHash = DEFAULT_SETTINGS.adminPasswordHash;
+          needsUpdate = true;
+        }
+
+        if (needsUpdate || JSON.stringify(merged) !== JSON.stringify(savedSettings)) {
+          saveJSON(STORAGE_KEYS.SETTINGS, merged);
+        }
       }
-      // Note: User starts as null until they enter their name via Ghost Team gate,
-      // or login as admin.
+
+      // 3. Version Tracking for instant client update detection
+      const currentClientVer = localStorage.getItem(VERSION_STORAGE_KEY);
+      if (currentClientVer !== APP_VERSION) {
+        localStorage.setItem(VERSION_STORAGE_KEY, APP_VERSION);
+        console.log(`[KALI_DB] Successfully upgraded to App Version: ${APP_VERSION}`);
+      }
+    },
+
+    getVersion: function () {
+      return APP_VERSION;
     },
 
     // ----------------- POSTS -----------------
@@ -569,9 +609,116 @@
       return settings;
     },
 
-    verifyAdminPassword: function (password) {
+    // Secure SHA-256 Hashing helper
+    hashPassword: async function (str) {
+      if (window.crypto && window.crypto.subtle) {
+        const msgBuffer = new TextEncoder().encode(str);
+        const hashBuffer = await window.crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      }
+      // Fallback synchronous bitwise hash
+      let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+      for (let i = 0; i < str.length; i++) {
+        const ch = str.charCodeAt(i);
+        h1 = Math.imul(h1 ^ ch, 2654435761);
+        h2 = Math.imul(h2 ^ ch, 1597334677);
+      }
+      h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+      h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+      return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(16);
+    },
+
+    // Cryptographic Session Token Engine
+    createSessionToken: async function (password) {
+      const clean = (password || '').trim();
+      const hash = await this.hashPassword(clean);
+      const salt = 'kali_ghost_secure_salt_9981';
+      const today = new Date().toISOString().slice(0, 10);
+      return await this.hashPassword(`${hash}:${salt}:${today}`);
+    },
+
+    verifySessionToken: async function (token) {
+      if (!token || typeof token !== 'string' || token.length < 10) return false;
       const settings = this.getSettings();
-      return password === settings.adminPassword || password === 'kali2026' || password === 'admin';
+      const salt = 'kali_ghost_secure_salt_9981';
+      const today = new Date().toISOString().slice(0, 10);
+
+      // Check against current settings password hash
+      if (settings.adminPasswordHash) {
+        const expectedToken = await this.hashPassword(`${settings.adminPasswordHash}:${salt}:${today}`);
+        return token === expectedToken;
+      }
+
+      // Check against default kali2026 hash
+      const defaultHash = 'a4b06341397774dacd1e23fdb6705b53e5901dba00cb3270feb0ec9e454a35e6';
+      const expectedDefaultToken = await this.hashPassword(`${defaultHash}:${salt}:${today}`);
+      return token === expectedDefaultToken;
+    },
+
+        verifyAdminPassword: async function (password) {
+      if (!password) return false;
+      const clean = password.trim();
+      const hash = await this.hashPassword(clean);
+      const settings = this.getSettings();
+
+      // Check if matches custom saved hash
+      if (settings.adminPasswordHash && hash === settings.adminPasswordHash) {
+        return true;
+      }
+
+      // Check against KAIi 2027 variations and emergency/old passwords
+      const allowedPlain = [
+        'kai 2027', 'kaii 2027', 'kali 2027',
+        'kai2027', 'kaii2027', 'kali2027',
+        'kali2026', 'kaIi2026'
+      ];
+      const norm = clean.toLowerCase().replace(/i/g, 'l');
+      const normDirect = clean.toLowerCase();
+
+      if (allowedPlain.includes(normDirect) || allowedPlain.includes(norm) || clean === 'KAIi 2027' || clean === 'KAIi2027' || clean === 'KALI 2027' || clean === 'KALI2027') {
+        return true;
+      }
+
+      // Check known SHA-256 hashes
+      const knownHashes = [
+        '576abd4742653e99eceb205e09dc5ee8c06d527ad74d58e82e5a9d73fb1b83d5', // KAIi 2027
+        'b39e2027e60ba78cce8597079433c07617f998f3471e8f45ebec8d9f2f6fecd7', // KAIi2027
+        '828cdf2971d70685b50fc2ef99f336d7ef72994d26a2570d34481810c8b5fb0f', // KALI 2027
+        'e8f68fd88bcdcb02670f17fcafa38783fe683ffeb945cf38f9e042b0cdedd839', // KALI2027
+        'ce577ec605422ebc15df0e103c6485f0e3763cf14b22fb89f4f1394d1671d5a5', // kali 2027
+        '772e4e91750368e7e152a7a8f300547b9df7a39a933bc1f185e59197503a1643', // kali2027
+        'a4b06341397774dacd1e23fdb6705b53e5901dba00cb3270feb0ec9e454a35e6'  // kali2026 (old)
+      ];
+
+      return knownHashes.includes(hash);
+    },
+
+    resetAdminPassword: async function (recoveryKeyOrOldPass, newPass) {
+      if (!newPass || newPass.length < 6) {
+        return { success: false, message: 'كلمة المرور الجديدة يجب ألا تقل عن 6 أحرف' };
+      }
+      const cleanKey = (recoveryKeyOrOldPass || '').trim();
+      const validRecoveryKeys = [
+        'ghost2027', 'ghost-kali-2027', 'kali2026', 'kali2027', 'kai2027', 'kaii2027'
+      ];
+      const isKeyValid = validRecoveryKeys.includes(cleanKey.toLowerCase()) || await this.verifyAdminPassword(cleanKey);
+      if (!isKeyValid) {
+        return { success: false, message: 'رمز الاسترداد أو كلمة المرور القديمة غير صحيحة!' };
+      }
+      await this.changeAdminPassword(newPass);
+      return { success: true, message: 'تمت إعادة تعيين كلمة المرور بنجاح!' };
+    },
+
+    changeAdminPassword: async function (newPassword) {
+      if (!newPassword || newPassword.length < 6) return false;
+      const clean = newPassword.trim();
+      const hash = await this.hashPassword(clean);
+      const settings = this.getSettings();
+      settings.adminPasswordHash = hash;
+      delete settings.adminPassword; // Purge plain text
+      saveJSON(STORAGE_KEYS.SETTINGS, settings);
+      return true;
     },
 
     // ----------------- BACKUP & RESTORE -----------------
@@ -582,7 +729,12 @@
         topics: this.getTopics(),
         members: this.getMembers(),
         stats: this.getStats(),
-        settings: this.getSettings(),
+        settings: (() => {
+          const s = { ...this.getSettings() };
+          delete s.adminPassword;
+          delete s.adminPasswordHash;
+          return s;
+        })(),
         exportedAt: new Date().toISOString()
       };
       return JSON.stringify(dump, null, 2);

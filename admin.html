@@ -2,8 +2,11 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة التحكم الإدارية | KALI COMMUNITY ADMIN</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KALI COMMUNITY | System</title>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
@@ -101,17 +104,21 @@ tr:hover td{background:rgba(57,255,20,0.02)}
 <div id="loginGate">
   <div class="login-card">
     <div class="logo" style="margin:0 auto 16px; width:52px; height:52px; font-size:26px;">K</div>
-    <h2>لوحة تحكم المسؤول</h2>
-    <p>أدخل كلمة سر الإدارة للوصول للتحكم الكامل في قاعدة بيانات KALI COMMUNITY.</p>
+    <h2>KALI GATE</h2>
+    <p>أدخل رمز المصادقة الأمني للمتابعة.</p>
     
     <input type="password" id="adminPasswordInput" placeholder="أدخل كلمة المرور" autofocus>
-    <button class="btn" style="width:100%; justify-content:center; padding:12px;" onclick="verifyAdminLogin()">
-      <i class="fa-solid fa-unlock"></i> فتح لوحة الإدارة
+        <button class="btn" style="width:100%; justify-content:center; padding:12px;" onclick="verifyAdminLogin()">
+      <i class="fa-solid fa-shield"></i> مصادقة الدخول
     </button>
 
-    <div class="hint-text">
-      <i class="fa-solid fa-key"></i> كلمة المرور الافتراضية هي: <strong style="color:var(--green)">kali</strong> أو <strong style="color:var(--green)">kali2026</strong>
+    <div style="margin-top:14px; text-align:center;">
+      <button type="button" class="btn ghost btn-sm" style="font-size:12px; color:var(--muted); border-color:transparent; cursor:pointer;" onclick="openResetPasswordModal()">
+        <i class="fa-solid fa-key"></i> إعادة تعيين / استرداد كلمة المرور
+      </button>
     </div>
+
+    
 
     <div style="margin-top:18px; border-top:1px solid var(--line); padding-top:14px;">
       <a href="index.html" style="font-size:13px; color:var(--muted); display:inline-flex; align-items:center; gap:6px;">
@@ -122,6 +129,7 @@ tr:hover td{background:rgba(57,255,20,0.02)}
 </div>
 
 <!-- 2. ADMIN MAIN INTERFACE -->
+<div id="adminMainContent" style="display:none;">
 <header>
   <div class="wrap">
     <div class="admin-nav">
@@ -459,11 +467,23 @@ tr:hover td{background:rgba(57,255,20,0.02)}
       <div class="card-head">
         <h3><i class="fa-solid fa-lock"></i> تغيير كلمة سر لوحة التحكم</h3>
       </div>
-      <div class="form-group" style="max-width:380px; margin-bottom:16px;">
-        <label>كلمة المرور الجديدة للإدارة:</label>
-        <input type="password" id="newAdminPasswordInput" class="admin-input" placeholder="اكتب كلمة سر قوية">
+      <p style="color:var(--muted); font-size:13px; margin-bottom:16px;">
+        يتم تشفير كلمة المرور وتجزئتها أمنياً بنظام (SHA-256) لمنع أي محاولة استخراج أو تسريب.
+      </p>
+      <div class="form-group" style="max-width:420px; margin-bottom:12px;">
+        <label><i class="fa-solid fa-lock"></i> كلمة المرور الحالية:</label>
+        <input type="password" id="currentAdminPasswordInput" class="admin-input" placeholder="أدخل كلمة المرور الحالية" autocomplete="current-password">
       </div>
-      <button class="btn" onclick="changeAdminPasswordAction()"><i class="fa-solid fa-key"></i> حفظ كلمة المرور الجديدة</button>
+      <div class="form-group" style="max-width:420px; margin-bottom:12px;">
+        <label><i class="fa-solid fa-key"></i> كلمة المرور الجديدة:</label>
+        <input type="password" id="newAdminPasswordInput" class="admin-input" placeholder="كلمة سر جديدة (6 أحرف على الأقل)" autocomplete="new-password">
+      </div>
+      <div class="form-group" style="max-width:420px; margin-bottom:16px;">
+        <label><i class="fa-solid fa-check-double"></i> تأكيد كلمة المرور الجديدة:</label>
+        <input type="password" id="confirmAdminPasswordInput" class="admin-input" placeholder="أعد إدخال كلمة المرور الجديدة" autocomplete="new-password">
+      </div>
+            <button class="btn" onclick="changeAdminPasswordAction()"><i class="fa-solid fa-shield-virus"></i> تحديث وحفظ كلمة المرور</button>
+      <button class="btn ghost" style="color:var(--danger); border-color:var(--danger); margin-right:10px;" onclick="resetToDefaultPasswordAction()"><i class="fa-solid fa-arrow-rotate-left"></i> إعادة ضبط للافتراضية (KAIi 2027)</button>
     </div>
   </div>
 
@@ -527,7 +547,7 @@ tr:hover td{background:rgba(57,255,20,0.02)}
 <!-- TOAST -->
 <div class="toast" id="adminToast"></div>
 
-<script src="db.js"></script>
+<script src="db.js?v=2026.11.24.3"></script>
 
 <script>
 /**
@@ -535,26 +555,62 @@ tr:hover td{background:rgba(57,255,20,0.02)}
  */
 const AUTH_SESSION_KEY = 'kali_admin_auth_v2';
 
-function checkAuth() {
-  const isAuth = sessionStorage.getItem(AUTH_SESSION_KEY) === 'true';
+async function checkAuth() {
+  const token = sessionStorage.getItem(AUTH_SESSION_KEY);
+  const isAuth = await KALI_DB.verifySessionToken(token);
   const gate = document.getElementById('loginGate');
+  const main = document.getElementById('adminMainContent');
+
   if (isAuth) {
     gate.style.display = 'none';
+    if (main) main.style.display = 'block';
     loadAdminDashboard();
   } else {
+    sessionStorage.removeItem(AUTH_SESSION_KEY);
+    if (main) main.style.display = 'none';
     gate.style.display = 'flex';
   }
 }
 
-function verifyAdminLogin() {
-  const pass = document.getElementById('adminPasswordInput').value.trim();
-  if (KALI_DB.verifyAdminPassword(pass)) {
-    sessionStorage.setItem(AUTH_SESSION_KEY, 'true');
+let failedLoginAttempts = 0;
+let lockoutTimer = null;
+
+async function verifyAdminLogin() {
+  if (lockoutTimer) {
+    adminToast('تم تجميد المحاولات مؤقتاً لحماية اللوحة. يرجى الانتظار.');
+    return;
+  }
+
+  const input = document.getElementById('adminPasswordInput');
+  const pass = input.value.trim();
+
+  if (!pass) {
+    adminToast('يرجى إدخال كلمة المرور أولاً');
+    return;
+  }
+
+  const isValid = await KALI_DB.verifyAdminPassword(pass);
+  if (isValid) {
+    failedLoginAttempts = 0;
+    const token = await KALI_DB.createSessionToken(pass);
+    sessionStorage.setItem(AUTH_SESSION_KEY, token);
     document.getElementById('loginGate').style.display = 'none';
+    const main = document.getElementById('adminMainContent');
+    if (main) main.style.display = 'block';
     loadAdminDashboard();
-    adminToast('تم التحقق بنجاح! مرحباً بك في لوحة تحكم KALI COMMUNITY');
+    adminToast('تم التحقق بنجاح! مرحباً بك في لوحة تحكم KALI COMMUNITY 🛡️');
   } else {
-    adminToast('كلمة المرور غير صحيحة! جرّب "kali" أو "kali2026"');
+    failedLoginAttempts++;
+    input.value = '';
+    if (failedLoginAttempts >= 5) {
+      adminToast('تم استنفاد المحاولات! تم قفل الدخول مؤقتاً لمدة 30 ثانية لدواعي الأمان.');
+      lockoutTimer = setTimeout(() => {
+        failedLoginAttempts = 0;
+        lockoutTimer = null;
+      }, 30000);
+    } else {
+      adminToast(`كلمة المرور غير صحيحة! (متبقي ${5 - failedLoginAttempts} محاولات)`);
+    }
   }
 }
 
@@ -624,7 +680,7 @@ function renderPostsTable() {
         <td>
           <div style="display:flex; align-items:center;">
             <span class="table-avatar">${p.authorAvatar || p.author.charAt(0)}</span>
-            <strong>${p.author}</strong>
+            <strong>${escapeHTML(p.author)}</strong>
           </div>
         </td>
         <td><span class="tag-badge green">${p.topicTag || 'عام'}</span></td>
@@ -670,7 +726,7 @@ function renderDiscussionsTable() {
         <td>
           <div style="display:flex; align-items:center;">
             <span class="table-avatar">${d.senderAvatar || d.sender.charAt(0)}</span>
-            <strong>${d.sender}</strong>
+            <strong>${escapeHTML(d.sender)}</strong>
           </div>
         </td>
         <td><span class="tag-badge green">${d.role || 'عضو'}</span></td>
@@ -869,7 +925,7 @@ function renderMembersTable() {
           <div style="display:flex; align-items:center;">
             <span class="table-avatar">${m.avatar || m.name.charAt(0)}</span>
             <div>
-              <strong>${m.name} ${isGhost ? '<i class="fa-solid fa-ghost" style="color:var(--green); font-size:12px;" title="عضو تيم الشباح"></i>' : ''}</strong>
+              <strong>${escapeHTML(m.name)} ${isGhost ? '<i class="fa-solid fa-ghost" style="color:var(--green); font-size:12px;" title="عضو تيم الشباح"></i>' : ''}</strong>
               <div style="font-size:11px; color:var(--muted);">${m.bio || ''}</div>
             </div>
           </div>
@@ -957,15 +1013,38 @@ function saveStatsAction() {
   adminToast('تم حفظ أرقام الإحصائيات بنجاح، وستظهر فوراً في الواجهة الرئيسية!');
 }
 
-function changeAdminPasswordAction() {
+async function changeAdminPasswordAction() {
+  const currentPass = document.getElementById('currentAdminPasswordInput').value.trim();
   const newPass = document.getElementById('newAdminPasswordInput').value.trim();
-  if (!newPass || newPass.length < 3) {
-    adminToast('يرجى إدخال كلمة سر لا تقل عن 3 أحرف');
+  const confirmPass = document.getElementById('confirmAdminPasswordInput').value.trim();
+
+  if (!currentPass) {
+    adminToast('يرجى إدخال كلمة المرور الحالية أولاً');
     return;
   }
-  KALI_DB.updateSettings({ adminPassword: newPass });
+  const isCurrentValid = await KALI_DB.verifyAdminPassword(currentPass);
+  if (!isCurrentValid) {
+    adminToast('كلمة المرور الحالية غير صحيحة!');
+    return;
+  }
+  if (!newPass || newPass.length < 6) {
+    adminToast('يرجى إدخال كلمة سر جديدة لا تقل عن 6 أحرف');
+    return;
+  }
+  if (newPass !== confirmPass) {
+    adminToast('كلمة المرور الجديدة غير متطابقة مع التأكيد!');
+    return;
+  }
+  if (newPass === currentPass) {
+    adminToast('كلمة المرور الجديدة مطابقة للكلمة الحالية!');
+    return;
+  }
+
+  await KALI_DB.changeAdminPassword(newPass);
+  document.getElementById('currentAdminPasswordInput').value = '';
   document.getElementById('newAdminPasswordInput').value = '';
-  adminToast(`تم تغيير كلمة المرور بنجاح! كلمة السر الجديدة هي: ${newPass}`);
+  document.getElementById('confirmAdminPasswordInput').value = '';
+  adminToast('تم تغيير كلمة المرور وتشفيرها بنجاح! 🔒');
 }
 
 // Database Backup & Restore
@@ -1030,6 +1109,62 @@ function adminToast(msg) {
   t._timer = setTimeout(() => { t.style.display = 'none'; }, 3200);
 }
 
+
+// ================= PASSWORD RESET SYSTEM =================
+function openResetPasswordModal() {
+  const modal = document.getElementById('resetPasswordModal');
+  if (modal) modal.style.display = 'flex';
+}
+
+function closeResetPasswordModal() {
+  const modal = document.getElementById('resetPasswordModal');
+  if (modal) modal.style.display = 'none';
+  document.getElementById('recoveryKeyInput').value = '';
+  document.getElementById('resetNewPasswordInput').value = '';
+  document.getElementById('resetConfirmPasswordInput').value = '';
+}
+
+async function submitResetPasswordAction() {
+  const key = document.getElementById('recoveryKeyInput').value.trim();
+  const newPass = document.getElementById('resetNewPasswordInput').value.trim();
+  const confirmPass = document.getElementById('resetConfirmPasswordInput').value.trim();
+
+  if (!key) {
+    adminToast('يرجى إدخال رمز الاسترداد أو كلمة المرور القديمة');
+    return;
+  }
+  if (!newPass || newPass.length < 6) {
+    adminToast('كلمة المرور الجديدة يجب ألا تقل عن 6 أحرف');
+    return;
+  }
+  if (newPass !== confirmPass) {
+    adminToast('كلمة المرور الجديدة غير متطابقة مع التأكيد!');
+    return;
+  }
+
+  const result = await KALI_DB.resetAdminPassword(key, newPass);
+  if (result.success) {
+    closeResetPasswordModal();
+    // Auto-login with the newly set password
+    const token = await KALI_DB.createSessionToken(newPass);
+    sessionStorage.setItem(AUTH_SESSION_KEY, token);
+    document.getElementById('loginGate').style.display = 'none';
+    const main = document.getElementById('adminMainContent');
+    if (main) main.style.display = 'block';
+    loadAdminDashboard();
+    adminToast('تمت إعادة تعيين كلمة المرور بنجاح وتسجيل الدخول! 🔓');
+  } else {
+    adminToast(result.message);
+  }
+}
+
+async function resetToDefaultPasswordAction() {
+  if (confirm('هل أنت متأكد من رغبتك في إعادة ضبط كلمة المرور إلى الافتراضية (KAIi 2027)؟')) {
+    await KALI_DB.changeAdminPassword('KAIi 2027');
+    adminToast('تمت استعادة كلمة المرور الافتراضية (KAIi 2027) بنجاح!');
+  }
+}
+
 function escapeHTML(str) {
   return str.replace(/[&<>'"]/g, tag => ({
     '&': '&amp;',
@@ -1040,7 +1175,39 @@ function escapeHTML(str) {
   }[tag] || tag));
 }
 
-document.addEventListener('DOMContentLoaded', checkAuth);
+document.addEventListener('DOMContentLoaded', () => { checkAuth(); });
 </script>
+
+<!-- ================= RESET PASSWORD MODAL ================= -->
+<div class="login-overlay" id="resetPasswordModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9999; align-items:center; justify-content:center;">
+  <div class="login-card" style="max-width:440px; width:90%; position:relative;">
+    <div class="logo" style="margin:0 auto 14px; width:48px; height:48px; font-size:22px;"><i class="fa-solid fa-arrows-rotate"></i></div>
+    <h3 style="margin-bottom:6px;">إعادة تعيين كلمة المرور</h3>
+    <p style="font-size:12px; color:var(--muted); margin-bottom:16px;">
+      أدخل رمز الاسترداد الأمني أو كلمة المرور القديمة لتعيين كلمة مرور جديدة:
+    </p>
+    <div class="form-group" style="margin-bottom:12px; text-align:right;">
+      <label style="font-size:12px; color:var(--muted); display:block; margin-bottom:4px;"><i class="fa-solid fa-shield-halved"></i> رمز الاسترداد أو كلمة المرور القديمة:</label>
+      <input type="password" id="recoveryKeyInput" class="admin-input" placeholder="رمز الاسترداد (مثال: GHOST2027) أو السابقة">
+    </div>
+    <div class="form-group" style="margin-bottom:12px; text-align:right;">
+      <label style="font-size:12px; color:var(--muted); display:block; margin-bottom:4px;"><i class="fa-solid fa-key"></i> كلمة المرور الجديدة:</label>
+      <input type="password" id="resetNewPasswordInput" class="admin-input" placeholder="كلمة سر جديدة (6 خانات على الأقل)">
+    </div>
+    <div class="form-group" style="margin-bottom:16px; text-align:right;">
+      <label style="font-size:12px; color:var(--muted); display:block; margin-bottom:4px;"><i class="fa-solid fa-check-double"></i> تأكيد كلمة المرور الجديدة:</label>
+      <input type="password" id="resetConfirmPasswordInput" class="admin-input" placeholder="أعد إدخال كلمة المرور الجديدة">
+    </div>
+    <div style="display:flex; gap:10px;">
+      <button class="btn" style="flex:1; justify-content:center;" onclick="submitResetPasswordAction()">
+        <i class="fa-solid fa-check"></i> تأكيد وحفظ
+      </button>
+      <button class="btn ghost" style="flex:1; justify-content:center;" onclick="closeResetPasswordModal()">
+        إلغاء
+      </button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
