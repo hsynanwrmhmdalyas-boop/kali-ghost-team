@@ -5,7 +5,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com; img-src 'self' data: https:; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com https://www.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com; img-src 'self' data: https:; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; object-src 'none'; base-uri 'self'; form-action 'self';">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -96,9 +96,6 @@ pre{white-space:pre-wrap;color:#c9d8cc;font:13px/2 Consolas,monospace;direction:
 .msg-time{color:#6c8072;font-size:10px;margin-right:auto}
 .msg-text{color:#e0ece2;font-size:14px;line-height:1.7;word-break:break-word;margin:0}
 .msg-text .mention{color:var(--green);font-weight:bold;background:rgba(57,255,20,0.12);padding:1px 6px;border-radius:4px}
-.msg-actions-bar{display:flex;gap:12px;margin-top:8px;font-size:11px;color:#7c9282}
-.msg-actions-bar button{background:none;border:none;color:inherit;cursor:pointer;padding:0;font-size:11px}
-.msg-actions-bar button:hover{color:var(--green)}
 /* Chat Input Area */
 .chat-composer{padding:16px 20px;border-top:1px solid var(--line);background:#0a120c;border-radius:0 0 16px 16px;display:flex;flex-direction:column;gap:10px}
 .reply-preview-pill{background:#112015;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:11px;color:var(--green);display:none;align-items:center;justify-content:space-between}
@@ -181,7 +178,6 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
         <a href="#community">المجتمع</a>
         <a href="javascript:void(0)" onclick="switchView('discussions')">💬 صالون المناقشات</a>
         <a href="#topics">المواضيع</a>
-        
       </div>
 
       <div class="actions" id="authActions">
@@ -204,7 +200,6 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
       <div class="hero-buttons">
         <button class="btn" onclick="switchView('discussions')"><i class="fa-solid fa-comments"></i> الدخول لصالون المناقشات الحي</button>
         <a class="btn" href="join.html" style="background:#112517; border-color:var(--green); color:var(--green);"><i class="fa-solid fa-ghost"></i> رابط انضمام تيم الشبح</a>
-        
       </div>
     </div>
 
@@ -257,13 +252,8 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
   </div>
 
   <div class="layout">
-    
-    <!-- MAIN COLUMN: POSTS FEED OR DISCUSSIONS LOUNGE -->
     <section>
-      
-      <!-- ================= 1. POSTS FEED VIEW ================= -->
       <div id="feedViewArea">
-        <!-- Compose Post Card -->
         <div class="card compose">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
             <div class="active-user-pill" id="postingAsPill">
@@ -272,9 +262,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
             </div>
             <span style="font-size:11px; color:var(--muted);" id="postCharCount">0 / 1000</span>
           </div>
-
           <textarea id="postText" placeholder="شنو الفكرة أو المعلومة التقنية الداير تشاركها اليوم مع زملائك؟" maxlength="1000"></textarea>
-          
           <div class="compose-options">
             <label style="font-size:12px; color:var(--muted);">اختر مجال المنشور:</label>
             <select id="postTopicSelect" class="compose-select">
@@ -287,20 +275,14 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
               <option value="مجتمعنا">🚀 نقاش عام / مجتمعنا</option>
             </select>
           </div>
-
           <div class="compose-row">
             <span>✦ شارك معرفة مفيدة • تُحفظ المشاركة في قاعدة البيانات فوراً</span>
             <button class="btn" onclick="addPost()"><i class="fa-solid fa-paper-plane"></i> نشر المشاركة</button>
           </div>
         </div>
-
-        <!-- Posts List -->
-        <div id="posts">
-          <!-- Rendered dynamically via KALI_DB -->
-        </div>
+        <div id="posts"><!-- Rendered dynamically via KALI_DB --></div>
       </div>
 
-      <!-- ================= 2. LIVE DISCUSSIONS LOUNGE VIEW (غرفة مناقشات الأعضاء) ================= -->
       <div id="discussionsViewArea" class="discussion-lounge-card">
         <div class="lounge-header">
           <div class="lounge-title">
@@ -310,78 +292,46 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
           </div>
           <button class="btn ghost btn-sm" onclick="clearDiscussionsInput()" title="تحديث النقاشات"><i class="fa-solid fa-arrows-rotate"></i> تحديث</button>
         </div>
-
-        <!-- Live Messages Box -->
-        <div class="messages-box" id="messagesChatBox">
-          <!-- Rendered dynamically from KALI_DB.getDiscussions() -->
-        </div>
-
-        <!-- Chat Input Form -->
+        <div class="messages-box" id="messagesChatBox"><!-- Rendered dynamically from KALI_DB.getDiscussions() --></div>
         <div class="chat-composer">
           <div class="reply-preview-pill" id="replyPreviewPill">
             <span><i class="fa-solid fa-reply"></i> جاري الرد على: <strong id="replyToUserText"></strong></span>
             <button style="background:none; border:none; color:var(--danger); cursor:pointer;" onclick="cancelReply()"><i class="fa-solid fa-xmark"></i></button>
           </div>
-
           <div class="chat-input-row">
-            <input type="text" id="chatMessageInput" maxlength="1000" class="chat-input" placeholder="اكتب رسالتك أو استفسارك هنا للمناقشة مع الأعضاء... (اضغط Enter للإرسال)" maxlength="500">
+            <input type="text" id="chatMessageInput" maxlength="1000" class="chat-input" placeholder="اكتب رسالتك أو استفسارك هنا للمناقشة مع الأعضاء... (اضغط Enter للإرسال)">
             <button class="btn" onclick="sendDiscussionMessage()"><i class="fa-solid fa-paper-plane"></i> إرسال</button>
           </div>
           <span style="font-size:11px; color:var(--muted);"><i class="fa-solid fa-circle-info"></i> يمكنك الضغط على أي عضو في القائمة الجانبية للتحدث وتوجيه السؤال له مباشرة.</span>
         </div>
       </div>
-
     </section>
 
-    <!-- SIDEBAR COLUMN (ENHANCED MEMBER CARDS & TOPICS) -->
     <aside>
-      
-      <!-- Interactive Members List Card -->
       <div class="card" id="membersCardSection">
         <div class="side-title">
           <span>بطاقات أعضاء المجتمع</span>
           <span style="font-size:11px; color:var(--green);" id="membersCountPill">● 5 أعضاء متصلين</span>
         </div>
-        <p style="font-size:11px; color:var(--muted); margin-top:-6px; margin-bottom:14px;">
-          اضغط على أي عضو للتحدث معه في صالون المناقشات أو الاطلاع على تخصصه ومنشوراته.
-        </p>
-        
-        <div id="membersInteractiveList">
-          <!-- Rendered dynamically as interactive member cards -->
-        </div>
+        <p style="font-size:11px; color:var(--muted); margin-top:-6px; margin-bottom:14px;">اضغط على أي عضو للتحدث معه في صالون المناقشات أو الاطلاع على تخصصه ومنشوراته.</p>
+        <div id="membersInteractiveList"><!-- Rendered dynamically as interactive member cards --></div>
       </div>
-
-      <!-- Topics Card -->
       <div class="card" id="topics">
-        <div class="side-title">
-          <span>استكشف المجالات</span>
-          
-        </div>
-        <div id="topicsList">
-          <!-- Rendered dynamically from KALI_DB -->
-        </div>
+        <div class="side-title"><span>استكشف المجالات</span></div>
+        <div id="topicsList"><!-- Rendered dynamically from KALI_DB --></div>
       </div>
-
-      <!-- About Card -->
       <div class="card" id="about">
         <div class="side-title">عن KALI COMMUNITY</div>
-        <p style="color:var(--muted);font-size:13px;line-height:1.9;margin-bottom:12px">
-          مجتمع عربي تقني للنقاش والتعاون المعرفي المسؤول والآمن في مجالات البرمجة ولينكس والشبكات والأمن السيبراني.
-        </p>
-        
+        <p style="color:var(--muted);font-size:13px;line-height:1.9;margin-bottom:12px">مجتمع عربي تقني للنقاش والتعاون المعرفي المسؤول والآمن في مجالات البرمجة ولينكس والشبكات والأمن السيبراني.</p>
       </div>
     </aside>
-
   </div>
 </main>
 
-<!-- FOOTER -->
 <footer>
   <div class="wrap">
     &copy; 2026 KALI COMMUNITY — صُنع بشغف للتقنية <span style="color:var(--green)">♥</span><br>
-    <span style="display:inline-block;margin-top:10px;color:#39ff14">
-      تصميم وتطوير: حسين أنور (Kali Hussein) | University of Gezira • IT Level 2
-    </span>
+    <span style="display:inline-block;margin-top:10px;color:#39ff14">تصميم وتطوير: حسين أنور (Kali Hussein) | University of Gezira • IT Level 2</span>
     <div style="margin-top:10px; font-size:12px;">
       <a href="admin.html" style="color:var(--muted); opacity:0.6;" title="System"><i class="fa-solid fa-gear" style="font-size:11px;"></i></a>
       <span style="color:var(--line); margin:0 8px;">|</span>
@@ -390,7 +340,6 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
   </div>
 </footer>
 
-<!-- MEMBER PROFILE POPUP MODAL -->
 <div class="modal" id="memberModal">
   <div class="profile-modal-box">
     <button class="close" onclick="closeMemberModal()">×</button>
@@ -399,17 +348,14 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
       <div class="profile-name" id="modalMemberName">حسين أنور</div>
       <span class="profile-badge" id="modalMemberRole">مؤسس المجتمع</span>
     </div>
-
     <div class="profile-spec-box">
       <strong><i class="fa-solid fa-microchip"></i> التخصص والاهتمامات:</strong>
       <p id="modalMemberSpecialty">تطوير تطبيقات Flutter، هندسة البرمجيات، والأمن السيبراني.</p>
     </div>
-
     <div class="profile-spec-box">
       <strong><i class="fa-solid fa-quote-right"></i> نبذة تعريفية:</strong>
       <p id="modalMemberBio">طالب تقنية معلومات (المستوى الثاني) بجامعة الجزيرة. شغوف بالهوية السيبرانية وبناء الحلول الرقمية.</p>
     </div>
-
     <div class="profile-actions-row">
       <button class="btn" id="modalTalkBtn"><i class="fa-solid fa-comment-dots"></i> بدء مناقشة مع العضو</button>
       <button class="btn ghost" id="modalFilterPostsBtn"><i class="fa-solid fa-newspaper"></i> منشورات العضو</button>
@@ -417,49 +363,31 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
   </div>
 </div>
 
-<!-- AUTH MODAL -->
 <div class="modal" id="modal">
   <div class="modalbox">
     <button class="close" onclick="closeModal()">×</button>
     <div style="text-align:center; margin-bottom:12px;">
-      <span style="display:inline-block; background:rgba(57,255,20,0.12); color:var(--green); border:1px solid rgba(57,255,20,0.4); padding:3px 12px; border-radius:12px; font-size:11px; font-weight:bold; letter-spacing:1px;">
-        ⚡ GHOST TEAM ENTRY
-      </span>
+      <span style="display:inline-block; background:rgba(57,255,20,0.12); color:var(--green); border:1px solid rgba(57,255,20,0.4); padding:3px 12px; border-radius:12px; font-size:11px; font-weight:bold; letter-spacing:1px;">⚡ GHOST TEAM ENTRY</span>
     </div>
     <h3 id="modalTitle" style="text-align:center;">تسجيل الدخول والانضمام لتيم الشبح</h3>
     <p style="color:var(--muted);font-size:13px; text-align:center;" id="modalDesc">سجل اسمك للانضمام فوراً لتيم الشبح والمشاركة في النقاشات والتفاعل المباشر.</p>
-    
     <label>اسم المستخدم أو الكنية (مطلوب):</label>
     <input id="usernameInput" placeholder="اكتب اسمك (مثال: الشبح، أحمد، عمر...)">
-    
     <label>مجالك واهتمامك التقني:</label>
     <input id="userSpecialtyInput" placeholder="مثال: مطور تطبيقات، شبكات، أمن معلومات...">
-
     <div style="margin-top:20px; display:flex; flex-direction:column; gap:10px;">
-      <button class="btn" style="width:100%; justify-content:center; padding:12px;" onclick="handleJoin()">
-        <i class="fa-solid fa-bolt"></i> تسجيل الدخول والانضمام لتيم الشبح
-      </button>
-      
+      <button class="btn" style="width:100%; justify-content:center; padding:12px;" onclick="handleJoin()"><i class="fa-solid fa-bolt"></i> تسجيل الدخول والانضمام لتيم الشبح</button>
     </div>
   </div>
 </div>
 
-<!-- GHOST TEAM WELCOME MODAL (مرحباً بك في تيم الشبح) -->
 <div class="modal" id="ghostWelcomeModal">
   <div class="modalbox" style="text-align:center; border:2px solid var(--green); box-shadow:0 0 40px var(--green-glow); max-width:480px; position:relative;">
     <button class="close" onclick="closeGhostWelcomeModal()">×</button>
-    <div style="width:76px; height:76px; margin:0 auto 14px; border-radius:22px; background:#122817; border:2px solid var(--green); display:grid; place-items:center; font-size:38px; color:var(--green); box-shadow:0 0 25px var(--green-glow);">
-      <i class="fa-solid fa-ghost"></i>
-    </div>
-    <div style="display:inline-block; background:rgba(57,255,20,0.12); color:var(--green); border:1px solid rgba(57,255,20,0.4); padding:3px 12px; border-radius:12px; font-size:11px; font-weight:bold; letter-spacing:1px; margin-bottom:8px;">
-      ⚡ GHOST TEAM OFFICIAL ACCESS
-    </div>
-    <h2 style="color:var(--green); font-size:26px; font-weight:900; margin-bottom:10px; text-shadow:0 0 15px var(--green-glow);">
-      مرحباً بك في تيم الشبح
-    </h2>
-    <p style="color:#d0dcd2; font-size:14px; line-height:1.7; margin-bottom:18px;">
-      أهلاً وسهلاً بك في الكتيبة السيبرانية الرسمية لمجتمع <strong>KALI COMMUNITY</strong> بقيادة <strong>KALI HUSSEIN</strong>! تم تفعيل هويتك الرقمية بنجاح كعضو رسمي.
-    </p>
+    <div style="width:76px; height:76px; margin:0 auto 14px; border-radius:22px; background:#122817; border:2px solid var(--green); display:grid; place-items:center; font-size:38px; color:var(--green); box-shadow:0 0 25px var(--green-glow);"><i class="fa-solid fa-ghost"></i></div>
+    <div style="display:inline-block; background:rgba(57,255,20,0.12); color:var(--green); border:1px solid rgba(57,255,20,0.4); padding:3px 12px; border-radius:12px; font-size:11px; font-weight:bold; letter-spacing:1px; margin-bottom:8px;">⚡ GHOST TEAM OFFICIAL ACCESS</div>
+    <h2 style="color:var(--green); font-size:26px; font-weight:900; margin-bottom:10px; text-shadow:0 0 15px var(--green-glow);">مرحباً بك في تيم الشبح</h2>
+    <p style="color:#d0dcd2; font-size:14px; line-height:1.7; margin-bottom:18px;">أهلاً وسهلاً بك في الكتيبة السيبرانية الرسمية لمجتمع <strong>KALI COMMUNITY</strong> بقيادة <strong>KALI HUSSEIN</strong>! تم تفعيل هويتك الرقمية بنجاح كعضو رسمي.</p>
     <div style="background:#070d09; border:1px dashed var(--green); border-radius:12px; padding:14px; margin-bottom:20px; text-align:right; font-size:13px; display:flex; flex-direction:column; gap:6px;">
       <div><span style="color:var(--muted)">الاسم:</span> <strong id="ghostWelcomeName" style="color:#fff;">—</strong></div>
       <div><span style="color:var(--muted)">الفريق:</span> <strong style="color:#00f0ff">تيم الشبح (GHOST SQUAD) 👻</strong></div>
@@ -467,31 +395,22 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
       <div><span style="color:var(--muted)">حالة الاتصال:</span> <span style="color:var(--green); font-weight:bold;">🟢 متصل ونشط الآن</span></div>
     </div>
     <div style="display:flex; flex-direction:column; gap:10px;">
-      <button class="btn" style="width:100%; justify-content:center; padding:12px;" onclick="closeGhostWelcomeModal(); switchView('discussions');">
-        <i class="fa-solid fa-comments"></i> الدخول لصالون المناقشات والتحدث مع الأعضاء
-      </button>
-      <button class="btn ghost" style="width:100%; justify-content:center;" onclick="copyGhostInviteLink()">
-        <i class="fa-solid fa-share-nodes"></i> نسخ رابط تيم الشبح لإرساله للأصدقاء
-      </button>
+      <button class="btn" style="width:100%; justify-content:center; padding:12px;" onclick="closeGhostWelcomeModal(); switchView('discussions');"><i class="fa-solid fa-comments"></i> الدخول لصالون المناقشات والتحدث مع الأعضاء</button>
+      <button class="btn ghost" style="width:100%; justify-content:center;" onclick="copyGhostInviteLink()"><i class="fa-solid fa-share-nodes"></i> نسخ رابط تيم الشبح لإرساله للأصدقاء</button>
     </div>
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- SCRIPTS -->
+<!-- Load the existing local database first, then the Firebase bridge module. -->
 <script src="db.js?v=2026.11.24.4"></script>
+<script type="module" src="firebase-bridge.js"></script>
 <script>
-/**
- * Enhanced Application Logic for KALI COMMUNITY
- * With Live Member Discussions Lounge & Interactive Member Cards
- */
 let currentFilter = 'all';
-let currentActiveView = 'feed'; // 'feed' or 'discussions'
+let currentActiveView = 'feed';
 let activeReplyTarget = null;
 
-// Initialize
 function initApp() {
   renderStats();
   renderTopics();
@@ -500,7 +419,6 @@ function initApp() {
   renderDiscussions();
   updateAuthUI();
 
-  // Cross-tab real-time sync
   window.addEventListener('kali_db_updated', () => {
     renderStats();
     renderTopics();
@@ -520,21 +438,15 @@ function initApp() {
   const chatInput = document.getElementById('chatMessageInput');
   if (chatInput) {
     chatInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        sendDiscussionMessage();
-      }
+      if (e.key === 'Enter') sendDiscussionMessage();
     });
   }
 
-  // Handle URL queries for invite link and welcome message
   const user = KALI_DB.getCurrentUser();
   const urlParams = new URLSearchParams(window.location.search);
 
   if (!user) {
-    // Automatically prompt guest for Ghost Team entry
-    setTimeout(() => {
-      openModal('register');
-    }, 400);
+    setTimeout(() => openModal('register'), 400);
     switchView('discussions');
   } else if (urlParams.get('welcome') === 'ghost' || urlParams.has('ghost')) {
     showGhostWelcomeModal(user.name, user.role);
@@ -542,12 +454,9 @@ function initApp() {
     openModal('register');
   }
 
-  if (urlParams.get('view') === 'discussions') {
-    switchView('discussions');
-  }
+  if (urlParams.get('view') === 'discussions') switchView('discussions');
 }
 
-// Switch between Community Feed and Live Discussions Lounge
 function switchView(view) {
   currentActiveView = view;
   const feedArea = document.getElementById('feedViewArea');
@@ -573,7 +482,6 @@ function switchView(view) {
   }
 }
 
-// Render Stats
 function renderStats() {
   const stats = KALI_DB.getStats();
   document.getElementById('statMembers').textContent = stats.membersCount;
@@ -581,7 +489,6 @@ function renderStats() {
   document.getElementById('statUptime').textContent = stats.uptime;
 }
 
-// Render Topics in Sidebar
 function renderTopics() {
   const topics = KALI_DB.getTopics();
   const container = document.getElementById('topicsList');
@@ -593,78 +500,59 @@ function renderTopics() {
   </div>`;
 
   topics.forEach(t => {
-    html += `
-      <div class="topic-item" onclick="filterByTopic(${jsArg(t.name)})">
-        <span>${escapeHTML(t.icon)} ${escapeHTML(t.name)}</span>
-        <span class="topic-count">${escapeHTML(t.count)}</span>
-      </div>
-    `;
+    html += `<div class="topic-item" onclick="filterByTopic(${jsArg(t.name)})">
+      <span>${escapeHTML(t.icon)} ${escapeHTML(t.name)}</span>
+      <span class="topic-count">${escapeHTML(t.count)}</span>
+    </div>`;
   });
-
   container.innerHTML = html;
 }
 
-// Render Interactive Member Cards in Sidebar
 function renderInteractiveMembers() {
   const members = KALI_DB.getMembers();
   const container = document.getElementById('membersInteractiveList');
   const pill = document.getElementById('membersCountPill');
   if (!container) return;
-
   if (pill) pill.textContent = `● ${members.length} أعضاء نشطين`;
 
   let html = '';
   members.forEach(m => {
-    html += `
-      <div class="member-card-interactive" onclick="openMemberModal(${jsArg(m.id)})" title="اضغط لعرض الملف الشخصي ومناقشة العضو">
-        <div class="member-card-top">
-          <div class="member-avatar-box">
-            <div class="avatar">${escapeHTML(m.avatar || m.name.charAt(0).toUpperCase())}</div>
-            ${m.isOnline ? '<span class="online-dot" title="متصل الآن"></span>' : ''}
-          </div>
-          <div class="member-name-group">
-            <strong>${escapeHTML(m.name)}</strong>
-            <div class="member-specialty">${escapeHTML(m.specialty || m.role)}</div>
-          </div>
+    html += `<div class="member-card-interactive" onclick="openMemberModal(${jsArg(m.id)})" title="اضغط لعرض الملف الشخصي ومناقشة العضو">
+      <div class="member-card-top">
+        <div class="member-avatar-box">
+          <div class="avatar">${escapeHTML(m.avatar || m.name.charAt(0).toUpperCase())}</div>
+          ${m.isOnline ? '<span class="online-dot" title="متصل الآن"></span>' : ''}
         </div>
-        <div class="member-card-actions">
-          <button class="btn-member-action" onclick="event.stopPropagation(); startChatWithMember(${jsArg(m.name)})">
-            <i class="fa-solid fa-comments"></i> مناقشة
-          </button>
-          <button class="btn-member-action" onclick="event.stopPropagation(); filterMemberPosts(${jsArg(m.name)})">
-            <i class="fa-solid fa-newspaper"></i> منشوراته
-          </button>
+        <div class="member-name-group">
+          <strong>${escapeHTML(m.name)}</strong>
+          <div class="member-specialty">${escapeHTML(m.specialty || m.role)}</div>
         </div>
       </div>
-    `;
+      <div class="member-card-actions">
+        <button class="btn-member-action" onclick="event.stopPropagation(); startChatWithMember(${jsArg(m.name)})"><i class="fa-solid fa-comments"></i> مناقشة</button>
+        <button class="btn-member-action" onclick="event.stopPropagation(); filterMemberPosts(${jsArg(m.name)})"><i class="fa-solid fa-newspaper"></i> منشوراته</button>
+      </div>
+    </div>`;
   });
-
   container.innerHTML = html;
 }
 
-// Open Member Profile Modal
 function openMemberModal(memberId) {
   const member = KALI_DB.getMemberById(memberId);
   if (!member) return;
-
   document.getElementById('modalMemberAvatar').textContent = member.avatar || member.name.charAt(0);
   document.getElementById('modalMemberName').textContent = member.name;
   document.getElementById('modalMemberRole').textContent = member.role;
   document.getElementById('modalMemberSpecialty').textContent = member.specialty || 'تقنية المعلومات والأمن السيبراني';
   document.getElementById('modalMemberBio').textContent = member.bio || 'عضو مميز في KALI COMMUNITY يشارك النقاشات والأفكار التقنية.';
-
-  const talkBtn = document.getElementById('modalTalkBtn');
-  talkBtn.onclick = () => {
+  document.getElementById('modalTalkBtn').onclick = () => {
     closeMemberModal();
     startChatWithMember(member.name);
   };
-
-  const filterBtn = document.getElementById('modalFilterPostsBtn');
-  filterBtn.onclick = () => {
+  document.getElementById('modalFilterPostsBtn').onclick = () => {
     closeMemberModal();
     filterMemberPosts(member.name);
   };
-
   document.getElementById('memberModal').classList.add('show');
   playChime(850);
 }
@@ -673,7 +561,6 @@ function closeMemberModal() {
   document.getElementById('memberModal').classList.remove('show');
 }
 
-// Start Direct Discussion with Member
 function startChatWithMember(memberName) {
   switchView('discussions');
   const chatInput = document.getElementById('chatMessageInput');
@@ -684,7 +571,6 @@ function startChatWithMember(memberName) {
   toast(`جاري بدء مناقشة مع ${memberName}... اكتب رسالتك واضغط إرسال`);
 }
 
-// Filter posts by Member Name
 function filterMemberPosts(memberName) {
   switchView('feed');
   currentFilter = memberName;
@@ -698,53 +584,41 @@ function filterMemberPosts(memberName) {
   document.getElementById('community').scrollIntoView({ behavior: 'smooth' });
 }
 
-// ================= LIVE DISCUSSIONS ENGINE =================
 function renderDiscussions() {
   const box = document.getElementById('messagesChatBox');
   const countPill = document.getElementById('discussionsCountPill');
   if (!box) return;
-
   const discussions = KALI_DB.getDiscussions();
   if (countPill) countPill.textContent = discussions.length;
-
   const currentUser = KALI_DB.getCurrentUser();
   const currentUserName = currentUser ? currentUser.name : '';
 
   if (discussions.length === 0) {
-    box.innerHTML = `
-      <div style="text-align:center; padding:50px 20px; color:var(--muted);">
-        <i class="fa-solid fa-comments" style="font-size:36px; margin-bottom:12px; color:var(--green);"></i>
-        <p>لا توجد مناقشات بعد. ابدأ أول رسالة أو استفسار للنقاش مع باقي الأعضاء الآن!</p>
-      </div>
-    `;
+    box.innerHTML = `<div style="text-align:center; padding:50px 20px; color:var(--muted);">
+      <i class="fa-solid fa-comments" style="font-size:36px; margin-bottom:12px; color:var(--green);"></i>
+      <p>لا توجد مناقشات بعد. ابدأ أول رسالة أو استفسار للنقاش مع باقي الأعضاء الآن!</p>
+    </div>`;
     return;
   }
 
   let html = '';
   discussions.forEach(msg => {
     const isMe = msg.sender === currentUserName;
-    
-    // Highlight @mentions in text
-    let formattedText = escapeHTML(msg.text);
-    formattedText = formattedText.replace(/@([^\s]+)/g, '<span class="mention">@$1</span>');
-
-    html += `
-      <div class="msg-bubble ${isMe ? 'my-msg' : 'other-msg'}" id="${escapeHTML(msg.id)}">
-        <div class="msg-head">
-          <span class="avatar" style="width:24px; height:24px; font-size:11px;" onclick="openMemberModal(${jsArg(msg.sender)})">${escapeHTML(msg.senderAvatar || msg.sender.charAt(0))}</span>
-          <strong onclick="openMemberModal(${jsArg(msg.sender)})">${escapeHTML(msg.sender)}</strong>
-          <span class="msg-role-tag">${escapeHTML(msg.role || 'عضو')}</span>
-          <span class="msg-time">${escapeHTML(msg.time || 'الآن')}</span>
-        </div>
-        <p class="msg-text">${formattedText}</p>
-        <div class="msg-actions-bar">
-          <button onclick="replyToDiscussion(${jsArg(msg.id)}, ${jsArg(msg.sender)})"><i class="fa-solid fa-reply"></i> رد على ${escapeHTML(msg.sender)}</button>
-          ${KALI_DB.isAdminSession() ? `<button style="color:var(--danger)" onclick="deleteDiscussion(${jsArg(msg.id)})"><i class="fa-regular fa-trash-can"></i> حذف</button>` : ''}
-        </div>
+    let formattedText = escapeHTML(msg.text).replace(/@([^\s]+)/g, '<span class="mention">@$1</span>');
+    html += `<div class="msg-bubble ${isMe ? 'my-msg' : 'other-msg'}" id="${escapeHTML(msg.id)}">
+      <div class="msg-head">
+        <span class="avatar" style="width:24px; height:24px; font-size:11px;" onclick="openMemberModal(${jsArg(msg.sender)})">${escapeHTML(msg.senderAvatar || msg.sender.charAt(0))}</span>
+        <strong onclick="openMemberModal(${jsArg(msg.sender)})">${escapeHTML(msg.sender)}</strong>
+        <span class="msg-role-tag">${escapeHTML(msg.role || 'عضو')}</span>
+        <span class="msg-time">${escapeHTML(msg.time || 'الآن')}</span>
       </div>
-    `;
+      <p class="msg-text">${formattedText}</p>
+      <div class="msg-actions-bar">
+        <button onclick="replyToDiscussion(${jsArg(msg.id)}, ${jsArg(msg.sender)})"><i class="fa-solid fa-reply"></i> رد على ${escapeHTML(msg.sender)}</button>
+        ${KALI_DB.isAdminSession() ? `<button style="color:var(--danger)" onclick="deleteDiscussion(${jsArg(msg.id)})"><i class="fa-regular fa-trash-can"></i> حذف</button>` : ''}
+      </div>
+    </div>`;
   });
-
   box.innerHTML = html;
 }
 
@@ -752,17 +626,11 @@ function sendDiscussionMessage() {
   const input = document.getElementById('chatMessageInput');
   const text = input.value.trim();
   if (!text) return;
-
   const user = KALI_DB.getCurrentUser() || { name: 'زائر تقني', avatar: 'U', role: 'عضو' };
-  
   KALI_DB.addDiscussionMessage({
-    sender: user.name,
-    senderAvatar: user.avatar,
-    role: user.role,
-    text: text,
-    replyTo: activeReplyTarget
+    sender: user.name, senderAvatar: user.avatar, role: user.role,
+    text, replyTo: activeReplyTarget
   });
-
   input.value = '';
   cancelReply();
   renderDiscussions();
@@ -800,11 +668,7 @@ function deleteDiscussion(msgId) {
 
 function scrollToLatestMessage() {
   const box = document.getElementById('messagesChatBox');
-  if (box) {
-    setTimeout(() => {
-      box.scrollTop = box.scrollHeight;
-    }, 50);
-  }
+  if (box) setTimeout(() => { box.scrollTop = box.scrollHeight; }, 50);
 }
 
 function clearDiscussionsInput() {
@@ -813,129 +677,86 @@ function clearDiscussionsInput() {
   toast('تم تحديث المناقشات');
 }
 
-// ================= POSTS FEED ENGINE =================
 function renderPosts() {
   let posts = KALI_DB.getPosts();
   const container = document.getElementById('posts');
   if (!container) return;
-
   if (currentFilter !== 'all') {
     posts = posts.filter(p => p.topicTag === currentFilter || p.author.includes(currentFilter));
   }
-
   if (posts.length === 0) {
-    container.innerHTML = `
-      <div class="card" style="text-align:center; padding:50px 20px;">
-        <i class="fa-regular fa-folder-open" style="font-size:32px; color:var(--muted); margin-bottom:12px; display:block;"></i>
-        <p style="color:var(--muted); margin:0;">لا توجد مشاركات حتى الآن في هذا التصنيف.</p>
-        <button class="btn ghost btn-sm" style="margin-top:14px;" onclick="clearTopicFilter()">عرض جميع المنشورات</button>
-      </div>
-    `;
+    container.innerHTML = `<div class="card" style="text-align:center; padding:50px 20px;">
+      <i class="fa-regular fa-folder-open" style="font-size:32px; color:var(--muted); margin-bottom:12px; display:block;"></i>
+      <p style="color:var(--muted); margin:0;">لا توجد مشاركات حتى الآن في هذا التصنيف.</p>
+      <button class="btn ghost btn-sm" style="margin-top:14px;" onclick="clearTopicFilter()">عرض جميع المنشورات</button>
+    </div>`;
     return;
   }
 
   const currentUser = KALI_DB.getCurrentUser();
   const currentUserId = currentUser ? currentUser.id : '';
-
   let html = '';
   posts.forEach(post => {
     const isLiked = Array.isArray(post.likedBy) && post.likedBy.includes(currentUserId);
     const comments = post.comments || [];
-
     let commentsHtml = '';
     comments.forEach(c => {
-      commentsHtml += `
-        <div class="comment-item">
-          <div class="comment-head">
-            <strong>${escapeHTML(c.author)}</strong>
-            <span class="comment-time">${escapeHTML(c.time || 'الآن')}</span>
-          </div>
-          <p style="margin:0; color:#d1ddd3; font-size:13px;">${escapeHTML(c.text)}</p>
-        </div>
-      `;
+      commentsHtml += `<div class="comment-item">
+        <div class="comment-head"><strong>${escapeHTML(c.author)}</strong><span class="comment-time">${escapeHTML(c.time || 'الآن')}</span></div>
+        <p style="margin:0; color:#d1ddd3; font-size:13px;">${escapeHTML(c.text)}</p>
+      </div>`;
     });
 
-    html += `
-      <article class="card post" id="${escapeHTML(post.id)}">
-        <div class="post-head">
-          <div class="avatar" onclick="openMemberModal(${jsArg(post.author)})">${escapeHTML(post.authorAvatar || post.author.charAt(0).toUpperCase())}</div>
-          <div class="user-info">
-            <div class="user" onclick="openMemberModal(${jsArg(post.author)})">
-              ${escapeHTML(post.author)}
-              ${post.pinned ? '<span class="pinned-badge"><i class="fa-solid fa-thumbtack"></i> مثبت</span>' : ''}
-            </div>
-            <div class="time">${escapeHTML(post.time || 'الآن')} · ${escapeHTML(post.role || 'عضو')}</div>
+    html += `<article class="card post" id="${escapeHTML(post.id)}">
+      <div class="post-head">
+        <div class="avatar" onclick="openMemberModal(${jsArg(post.author)})">${escapeHTML(post.authorAvatar || post.author.charAt(0).toUpperCase())}</div>
+        <div class="user-info">
+          <div class="user" onclick="openMemberModal(${jsArg(post.author)})">
+            ${escapeHTML(post.author)} ${post.pinned ? '<span class="pinned-badge"><i class="fa-solid fa-thumbtack"></i> مثبت</span>' : ''}
           </div>
-          <span class="tag">${escapeHTML(post.topicTag || 'عام')}</span>
+          <div class="time">${escapeHTML(post.time || 'الآن')} · ${escapeHTML(post.role || 'عضو')}</div>
         </div>
-
-        <p>${escapeHTML(post.content)}</p>
-
-        <div class="post-actions">
-          <button class="${isLiked ? 'liked' : ''}" onclick="toggleLike(${jsArg(post.id)})">
-            ${isLiked ? '♥' : '♡'} إعجاب <b id="likes_${escapeHTML(post.id)}">${escapeHTML(post.likesCount || 0)}</b>
-          </button>
-          
-          <button onclick="toggleComments(${jsArg(post.id)})">
-            <i class="fa-regular fa-comment"></i> مناقشة وتعليقات (<b>${comments.length}</b>)
-          </button>
-
-          <button onclick="startChatWithMember(${jsArg(post.author)})">
-            <i class="fa-solid fa-reply"></i> تحدث مع الناشر
-          </button>
-
-          <button onclick="sharePost(${jsArg(post.id)})">
-            <i class="fa-solid fa-arrow-up-from-bracket"></i> مشاركة
-          </button>
-
-          ${KALI_DB.isAdminSession() ? `<button class="btn-del-post" onclick="deletePost(${jsArg(post.id)})" title="حذف المنشور كمسؤول"><i class="fa-regular fa-trash-can"></i> حذف</button>` : ''}
-        </div>
-
-        <!-- Comments Drawer -->
-        <div class="comments-container" id="comments_${escapeHTML(post.id)}">
-          <div id="comments_list_${escapeHTML(post.id)}">
-            ${commentsHtml}
-          </div>
-          <form class="comment-form" onsubmit="submitComment(event, ${jsArg(post.id)})">
-            <input type="text" class="comment-input" maxlength="500" placeholder="اكتب تعليقك أو استفسارك هنا للمناقشة..." required>
-            <button type="submit" class="comment-btn">إرسال</button>
-          </form>
-        </div>
-      </article>
-    `;
+        <span class="tag">${escapeHTML(post.topicTag || 'عام')}</span>
+      </div>
+      <p>${escapeHTML(post.content)}</p>
+      <div class="post-actions">
+        <button class="${isLiked ? 'liked' : ''}" onclick="toggleLike(${jsArg(post.id)})">${isLiked ? '♥' : '♡'} إعجاب <b id="likes_${escapeHTML(post.id)}">${escapeHTML(post.likesCount || 0)}</b></button>
+        <button onclick="toggleComments(${jsArg(post.id)})"><i class="fa-regular fa-comment"></i> مناقشة وتعليقات (<b>${comments.length}</b>)</button>
+        <button onclick="startChatWithMember(${jsArg(post.author)})"><i class="fa-solid fa-reply"></i> تحدث مع الناشر</button>
+        <button onclick="sharePost(${jsArg(post.id)})"><i class="fa-solid fa-arrow-up-from-bracket"></i> مشاركة</button>
+        ${KALI_DB.isAdminSession() ? `<button class="btn-del-post" onclick="deletePost(${jsArg(post.id)})" title="حذف المنشور كمسؤول"><i class="fa-regular fa-trash-can"></i> حذف</button>` : ''}
+      </div>
+      <div class="comments-container" id="comments_${escapeHTML(post.id)}">
+        <div id="comments_list_${escapeHTML(post.id)}">${commentsHtml}</div>
+        <form class="comment-form" onsubmit="submitComment(event, ${jsArg(post.id)})">
+          <input type="text" class="comment-input" maxlength="500" placeholder="اكتب تعليقك أو استفسارك هنا للمناقشة..." required>
+          <button type="submit" class="comment-btn">إرسال</button>
+        </form>
+      </div>
+    </article>`;
   });
-
   container.innerHTML = html;
 }
 
-// Add New Post
 function addPost() {
   const area = document.getElementById('postText');
   const tagSelect = document.getElementById('postTopicSelect');
   const content = area.value.trim();
-
   if (!content) {
     toast('يرجى كتابة نص المشاركة أولاً');
     return;
   }
-
   const topicTag = tagSelect ? tagSelect.value : 'نقاش عام';
-  KALI_DB.addPost({
-    content: content,
-    topicTag: topicTag
-  });
-
+  KALI_DB.addPost({ content, topicTag });
   KALI_DB.incrementTopicCount(topicTag);
-
   area.value = '';
   document.getElementById('postCharCount').textContent = '0 / 1000';
   renderPosts();
   renderTopics();
   playChime(900);
-  toast('تم حفظ المشاركة في قاعدة البيانات ونشرها فوراً! 🚀');
+  toast('تم حفظ المشاركة محلياً، وجاري مزامنتها مع Firebase إذا اكتمل الاتصال. 🚀');
 }
 
-// Like Post
 function toggleLike(postId) {
   const user = KALI_DB.getCurrentUser();
   const result = KALI_DB.toggleLike(postId, user ? user.id : null);
@@ -946,7 +767,6 @@ function toggleLike(postId) {
   toast(result.liked ? 'تم تسجيل إعجابك بالمشاركة' : 'تم إلغاء الإعجاب');
 }
 
-// Comments
 function toggleComments(postId) {
   const box = document.getElementById(`comments_${postId}`);
   if (box) {
@@ -964,19 +784,14 @@ function submitComment(e, postId) {
   const input = form.querySelector('.comment-input');
   const text = input.value.trim();
   if (!text) return;
-
   const user = KALI_DB.getCurrentUser();
-  const authorName = user ? user.name : 'زائر تقني';
-
-  KALI_DB.addComment(postId, text, authorName);
+  KALI_DB.addComment(postId, text, user ? user.name : 'زائر تقني');
   input.value = '';
   renderPosts();
-
   const box = document.getElementById(`comments_${postId}`);
   if (box) box.classList.add('open');
-
   playChime(900);
-  toast('تم حفظ التعليق والمناقشة في قاعدة البيانات!');
+  toast('تم حفظ التعليق محلياً ومزامنته عند اتصال Firebase.');
 }
 
 function deletePost(postId) {
@@ -993,12 +808,10 @@ function filterByTopic(topicName) {
   currentFilter = topicName;
   const notice = document.getElementById('activeFilterNotice');
   const topicLabel = document.getElementById('filterTopicName');
-
   if (notice && topicLabel) {
     topicLabel.textContent = topicName;
     notice.style.display = 'flex';
   }
-
   renderPosts();
   document.getElementById('community').scrollIntoView({ behavior: 'smooth' });
 }
@@ -1012,14 +825,10 @@ function clearTopicFilter() {
 
 function sharePost(postId) {
   const url = `${window.location.origin}${window.location.pathname}#${postId}`;
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(url).then(() => toast('تم نسخ رابط المنشور!'));
-  } else {
-    toast(`رابط المنشور: ${url}`);
-  }
+  if (navigator.clipboard) navigator.clipboard.writeText(url).then(() => toast('تم نسخ رابط المنشور!'));
+  else toast(`رابط المنشور: ${url}`);
 }
 
-// User Profile & Join
 function updateAuthUI() {
   const actions = document.getElementById('authActions');
   const user = KALI_DB.getCurrentUser();
@@ -1029,7 +838,6 @@ function updateAuthUI() {
   if (user) {
     if (composeAvatar) composeAvatar.textContent = user.avatar || user.name.charAt(0);
     if (composeName) composeName.textContent = `النشر باسم: ${user.name} (${user.role})`;
-
     if (actions) {
       actions.innerHTML = `
         <a href="admin.html" class="btn ghost admin-btn" style="padding:8px 12px;" title="الإعدادات"><i class="fa-solid fa-gear"></i></a>
@@ -1040,37 +848,29 @@ function updateAuthUI() {
           ${KALI_DB.isAdminSession() ? '<span class="admin-badge-user">ADMIN</span>' : ''}
           <span style="font-size:10px; background:rgba(57,255,20,0.15); color:var(--green); padding:1px 5px; border-radius:4px;">👻 الشبح</span>
         </div>
-        <button class="btn ghost" onclick="handleLogout()" title="تسجيل الخروج"><i class="fa-solid fa-right-from-bracket"></i></button>
-      `;
+        <button class="btn ghost" onclick="handleLogout()" title="تسجيل الخروج"><i class="fa-solid fa-right-from-bracket"></i></button>`;
     }
-  } else {
-    if (actions) {
-      actions.innerHTML = `
-        <a href="admin.html" class="btn ghost admin-btn" style="padding:8px 12px;" title="الإعدادات"><i class="fa-solid fa-gear"></i></a>
-        <a href="join.html" class="btn" style="background:#132918; border-color:var(--green); color:var(--green); font-weight:bold;" title="بوابة الانضمام الرسمية"><i class="fa-solid fa-ghost"></i> تسجيل دخول تيم الشبح</a>
-        <button class="btn ghost" onclick="openModal('register')">انضم إلينا</button>
-      `;
-    }
+  } else if (actions) {
+    actions.innerHTML = `
+      <a href="admin.html" class="btn ghost admin-btn" style="padding:8px 12px;" title="الإعدادات"><i class="fa-solid fa-gear"></i></a>
+      <a href="join.html" class="btn" style="background:#132918; border-color:var(--green); color:var(--green); font-weight:bold;" title="بوابة الانضمام الرسمية"><i class="fa-solid fa-ghost"></i> تسجيل دخول تيم الشبح</a>
+      <button class="btn ghost" onclick="openModal('register')">انضم إلينا</button>`;
   }
 }
 
 function openModal(mode = 'register') {
-  const modal = document.getElementById('modal');
-  modal.classList.add('show');
+  document.getElementById('modal').classList.add('show');
 }
 function closeModal() {
   document.getElementById('modal').classList.remove('show');
 }
-
 function handleJoin() {
   const name = document.getElementById('usernameInput').value.trim();
   const specialty = document.getElementById('userSpecialtyInput').value.trim() || 'تقنية المعلومات والبرمجة';
-
   if (!name) {
     toast('يرجى كتابة اسم المستخدم أولاً');
     return;
   }
-
   const newUser = KALI_DB.registerGhostMember(name, specialty);
   if (!newUser) {
     toast('هذا الاسم غير صالح أو محجوز، اختر اسماً آخر (حرفان على الأقل)');
@@ -1085,34 +885,24 @@ function handleJoin() {
 
 function showGhostWelcomeModal(name, role) {
   const modal = document.getElementById('ghostWelcomeModal');
-  const nameSpan = document.getElementById('ghostWelcomeName');
-  const roleSpan = document.getElementById('ghostWelcomeRole');
-  if (nameSpan) nameSpan.textContent = name;
-  if (roleSpan && role) roleSpan.textContent = role;
+  if (document.getElementById('ghostWelcomeName')) document.getElementById('ghostWelcomeName').textContent = name;
+  if (document.getElementById('ghostWelcomeRole') && role) document.getElementById('ghostWelcomeRole').textContent = role;
   if (modal) modal.classList.add('show');
   playChime(880);
   toast(`مرحباً بك في تيم الشبح يا ${name}! 👻⚡`);
 }
-
 function closeGhostWelcomeModal() {
   const modal = document.getElementById('ghostWelcomeModal');
   if (modal) modal.classList.remove('show');
 }
-
 function copyGhostInviteLink() {
   const origin = window.location.origin || '';
   const path = window.location.pathname || '';
   const folder = path.substring(0, path.lastIndexOf('/') + 1);
   const inviteUrl = `${origin}${folder}join.html`;
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(inviteUrl).then(() => {
-      toast('تم نسخ رابط تيم الشبح! أرسله لأي شخص لتسجيل الدخول 📋');
-    });
-  } else {
-    toast(`رابط تيم الشبح: ${inviteUrl}`);
-  }
+  if (navigator.clipboard) navigator.clipboard.writeText(inviteUrl).then(() => toast('تم نسخ رابط تيم الشبح! أرسله لأي شخص لتسجيل الدخول 📋'));
+  else toast(`رابط تيم الشبح: ${inviteUrl}`);
 }
-
 function handleLogout() {
   if (confirm('تسجيل الخروج؟')) {
     KALI_DB.logout();
@@ -1121,7 +911,6 @@ function handleLogout() {
   }
 }
 
-// Subtle Audio Chime
 function playChime(freq = 700) {
   try {
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -1145,29 +934,19 @@ function toast(msg) {
   t.textContent = msg;
   t.style.display = 'block';
   clearTimeout(t._timer);
-  t._timer = setTimeout(() => {
-    t.style.display = 'none';
-  }, 3200);
+  t._timer = setTimeout(() => { t.style.display = 'none'; }, 3200);
 }
 
 function escapeHTML(str) {
   if (str === null || str === undefined) return '';
   return String(str).replace(/[&<>'"]/g, tag => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    "'": '&#39;',
-    '"': '&quot;'
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
   }[tag] || tag));
 }
-
-// Safe value for inline handlers: onclick="fn(${jsArg(value)})"
 function jsArg(value) {
   return escapeHTML(JSON.stringify(String(value === null || value === undefined ? '' : value)));
 }
 
-
-// Auto-Sync across tabs: When admin adds posts, discussions or updates stats in another tab
 window.addEventListener('storage', (e) => {
   if (!e.key) return;
   if (e.key.includes('kali_comm')) {
