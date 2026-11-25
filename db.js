@@ -13,7 +13,7 @@
 (function (window) {
   'use strict';
 
-  const APP_VERSION = '2026.11.24.3';
+  const APP_VERSION = '2026.11.24.4';
   const VERSION_STORAGE_KEY = 'kali_app_version';
   const STORAGE_KEYS = {
     POSTS: 'kali_comm_posts_v2',
@@ -211,20 +211,32 @@
   };
 
   const DEFAULT_SETTINGS = {
-    adminPasswordHash: '576abd4742653e99eceb205e09dc5ee8c06d527ad74d58e82e5a9d73fb1b83d5', // SHA-256 for KAIi 2027
+    adminPasswordHash: '576abd4742653e99eceb205e09dc5ee8c06d527ad74d58e82e5a9d73fb1b83d5', // default hash: change the password right after first login
 
     siteTitle: 'KALI COMMUNITY',
     heroNotice: 'مجتمع التقنية والأمن السيبراني',
     allowGuestPosting: true,
     firebaseConfig: null,
-    ghostWelcomeMessage: 'مرحباً بك في تيم الشباح',
-    ghostWelcomeSubtext: 'تم تفعيل هويتك الرقمية بنجاح كعضو رسمي في تيم الشباح بقيادة KALI HUSSEIN.'
+    ghostWelcomeMessage: 'مرحباً بك في تيم الشبح',
+    ghostWelcomeSubtext: 'تم تفعيل هويتك الرقمية بنجاح كعضو رسمي في تيم الشبح بقيادة KALI HUSSEIN.'
   };
+
+  // Deep Prototype Pollution defense helper
+  function sanitizeObject(obj) {
+    if (!obj || typeof obj !== 'object') return obj;
+    if (Array.isArray(obj)) return obj.map(sanitizeObject);
+    const clean = {};
+    for (const key of Object.keys(obj)) {
+      if (key === '__proto__' || key === 'constructor' || key === 'prototype') continue;
+      clean[key] = sanitizeObject(obj[key]);
+    }
+    return clean;
+  }
 
   function loadJSON(key, fallback) {
     try {
       const data = localStorage.getItem(key);
-      return data ? JSON.parse(data) : fallback;
+      return data ? sanitizeObject(JSON.parse(data)) : fallback;
     } catch (e) {
       console.warn('Storage read error for key:', key, e);
       return fallback;
@@ -238,6 +250,71 @@
     } catch (e) {
       console.error('Storage write error for key:', key, e);
     }
+  }
+
+
+  // ---------------------------------------------------------------------------
+  // Security helpers
+  // ---------------------------------------------------------------------------
+  const ADMIN_SESSION_KEY = 'kali_admin_session';
+  const LOGIN_GUARD_KEY = 'kali_login_guard';
+  const ADMIN_SESSION_MS = 2 * 60 * 60 * 1000; // 2 hours
+  const PBKDF2_ITERATIONS = 150000;
+
+  // Strip control / bidi-spoofing characters, trim and limit the length
+  function cleanText(value, max) {
+    return String(value == null ? '' : value)
+      .replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f\u200e\u200f\u202a-\u202e\u2066-\u2069]/g, '')
+      .trim()
+      .slice(0, max);
+  }
+
+  function randomHex(bytes) {
+    const a = new Uint8Array(bytes);
+    window.crypto.getRandomValues(a);
+    return Array.from(a).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  // Unpredictable ids (Date.now() alone can collide / be guessed)
+  function uid(prefix) {
+    let r;
+    try { r = randomHex(4); } catch (e) { r = Math.random().toString(36).slice(2, 10); }
+    return prefix + Date.now() + '_' + r;
+  }
+
+  function hexToBytes(hex) {
+    const out = new Uint8Array(hex.length / 2);
+    for (let i = 0; i < out.length; i++) out[i] = parseInt(hex.substr(i * 2, 2), 16);
+    return out;
+  }
+
+  function safeEqual(a, b) {
+    a = String(a); b = String(b);
+    if (a.length !== b.length) return false;
+    let diff = 0;
+    for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+    return diff === 0;
+  }
+
+  async function pbkdf2Hex(password, saltHex, iterations) {
+    const enc = new TextEncoder();
+    const key = await window.crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveBits']);
+    const bits = await window.crypto.subtle.deriveBits(
+      { name: 'PBKDF2', hash: 'SHA-256', salt: hexToBytes(saltHex), iterations: iterations },
+      key, 256
+    );
+    return Array.from(new Uint8Array(bits)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  function readLoginGuard() {
+    try {
+      const g = JSON.parse(localStorage.getItem(LOGIN_GUARD_KEY));
+      if (g && typeof g === 'object') return { fails: +g.fails || 0, until: +g.until || 0, level: +g.level || 0 };
+    } catch (e) {}
+    return { fails: 0, until: 0, level: 0 };
+  }
+  function writeLoginGuard(g) {
+    try { localStorage.setItem(LOGIN_GUARD_KEY, JSON.stringify(g)); } catch (e) {}
   }
 
   const DB = {
@@ -268,7 +345,7 @@
         let needsUpdate = false;
         const merged = { ...DEFAULT_SETTINGS, ...savedSettings };
         
-                // Upgrade old kali2026 to new KAIi 2027
+                // Migrate the legacy hash to the current default hash
         if (merged.adminPasswordHash === 'a4b06341397774dacd1e23fdb6705b53e5901dba00cb3270feb0ec9e454a35e6') {
           merged.adminPasswordHash = DEFAULT_SETTINGS.adminPasswordHash;
           needsUpdate = true;
@@ -315,16 +392,22 @@
     },
 
     addPost: function (postData) {
+      postData = postData || {};
+      const content = cleanText(postData.content, 1000);
+      if (!content) return null;
+
       const posts = loadJSON(STORAGE_KEYS.POSTS, DEFAULT_POSTS);
       const user = this.getCurrentUser() || { name: 'عضو جديد', avatar: 'U', role: 'عضو' };
+      const adm = this.isAdminSession(); // only an authenticated admin may post under another identity
 
+      const author = cleanText(adm && postData.author ? postData.author : user.name, 60) || 'عضو';
       const newPost = {
-        id: 'post_' + Date.now(),
-        author: postData.author || user.name,
-        authorAvatar: postData.authorAvatar || user.avatar || user.name.charAt(0).toUpperCase(),
-        role: postData.role || user.role || 'عضو',
-        topicTag: postData.topicTag || 'نقاش عام',
-        content: postData.content,
+        id: uid('post_'),
+        author: author,
+        authorAvatar: cleanText(adm && postData.authorAvatar ? postData.authorAvatar : (user.avatar || author.charAt(0).toUpperCase()), 4),
+        role: cleanText(adm && postData.role ? postData.role : (user.role || 'عضو'), 40) || 'عضو',
+        topicTag: cleanText(postData.topicTag, 40) || 'نقاش عام',
+        content: content,
         time: 'الآن',
         timestamp: Date.now(),
         likesCount: 0,
@@ -339,6 +422,7 @@
     },
 
     deletePost: function (postId) {
+      if (!this._requireAdmin()) return false;
       let posts = loadJSON(STORAGE_KEYS.POSTS, DEFAULT_POSTS);
       posts = posts.filter(p => p.id !== postId);
       saveJSON(STORAGE_KEYS.POSTS, posts);
@@ -370,18 +454,24 @@
     },
 
     addComment: function (postId, commentText, authorName) {
+      const text = cleanText(commentText, 500);
+      if (!text) return null;
+
       const posts = loadJSON(STORAGE_KEYS.POSTS, DEFAULT_POSTS);
       const post = posts.find(p => p.id === postId);
       if (!post) return null;
 
-      const user = this.getCurrentUser() || { name: authorName || 'عضو', avatar: 'U' };
+      const user = this.getCurrentUser();
+      const adm = this.isAdminSession();
+      const override = adm && authorName;
+      const author = cleanText(override ? authorName : (user ? user.name : authorName), 60) || 'عضو';
       if (!Array.isArray(post.comments)) post.comments = [];
 
       const comment = {
-        id: 'comm_' + Date.now(),
-        author: authorName || user.name,
-        avatar: user.avatar || (authorName ? authorName.charAt(0).toUpperCase() : 'U'),
-        text: commentText,
+        id: uid('comm_'),
+        author: author,
+        avatar: cleanText((!override && user && user.avatar) ? user.avatar : author.charAt(0).toUpperCase(), 4),
+        text: text,
         time: 'الآن',
         timestamp: Date.now()
       };
@@ -392,6 +482,7 @@
     },
 
     togglePinPost: function (postId) {
+      if (!this._requireAdmin()) return false;
       const posts = loadJSON(STORAGE_KEYS.POSTS, DEFAULT_POSTS);
       const post = posts.find(p => p.id === postId);
       if (post) {
@@ -408,19 +499,30 @@
       return list.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
     },
 
-    addDiscussionMessage: function (msgData) {
+    // `trusted` is used only internally for system announcements
+    addDiscussionMessage: function (msgData, trusted) {
+      msgData = msgData || {};
+      const text = cleanText(msgData.text, 1000);
+      if (!text) return null;
+
       const discussions = loadJSON(STORAGE_KEYS.DISCUSSIONS, DEFAULT_DISCUSSIONS);
-      const user = this.getCurrentUser() || { name: 'عضو', avatar: 'U', role: 'عضو' };
+      const user = this.getCurrentUser();
+      const custom = !!trusted || this.isAdminSession();
+
+      const baseName = user ? user.name : (msgData.sender || 'عضو');
+      const sender = cleanText(custom && msgData.sender ? msgData.sender : baseName, 60) || 'عضو';
+      const baseAvatar = user ? (user.avatar || sender.charAt(0).toUpperCase()) : (msgData.senderAvatar || sender.charAt(0).toUpperCase());
+      const baseRole = user ? (user.role || 'عضو') : (msgData.role || 'عضو');
 
       const newMsg = {
-        id: 'disc_' + Date.now(),
-        sender: msgData.sender || user.name,
-        senderAvatar: msgData.senderAvatar || user.avatar || user.name.charAt(0).toUpperCase(),
-        role: msgData.role || user.role || 'عضو',
-        text: msgData.text,
+        id: uid('disc_'),
+        sender: sender,
+        senderAvatar: cleanText(custom && msgData.senderAvatar ? msgData.senderAvatar : baseAvatar, 4),
+        role: cleanText(custom && msgData.role ? msgData.role : baseRole, 40) || 'عضو',
+        text: text,
         time: 'الآن',
         timestamp: Date.now(),
-        replyTo: msgData.replyTo || null
+        replyTo: msgData.replyTo ? cleanText(msgData.replyTo, 60) : null
       };
 
       discussions.push(newMsg);
@@ -429,6 +531,7 @@
     },
 
     deleteDiscussionMessage: function (msgId) {
+      if (!this._requireAdmin()) return false;
       let discussions = loadJSON(STORAGE_KEYS.DISCUSSIONS, DEFAULT_DISCUSSIONS);
       discussions = discussions.filter(d => d.id !== msgId);
       saveJSON(STORAGE_KEYS.DISCUSSIONS, discussions);
@@ -441,11 +544,14 @@
     },
 
     addTopic: function (icon, name) {
+      if (!this._requireAdmin()) return null;
+      const cleanName = cleanText(name, 40);
+      if (!cleanName) return null;
       const topics = loadJSON(STORAGE_KEYS.TOPICS, DEFAULT_TOPICS);
       const newTopic = {
-        id: 'top_' + Date.now(),
-        icon: icon || '💡',
-        name: name,
+        id: uid('top_'),
+        icon: cleanText(icon, 8) || '💡',
+        name: cleanName,
         count: 0
       };
       topics.push(newTopic);
@@ -454,6 +560,7 @@
     },
 
     deleteTopic: function (topicId) {
+      if (!this._requireAdmin()) return false;
       let topics = loadJSON(STORAGE_KEYS.TOPICS, DEFAULT_TOPICS);
       topics = topics.filter(t => t.id !== topicId);
       saveJSON(STORAGE_KEYS.TOPICS, topics);
@@ -480,14 +587,17 @@
     },
 
     addMember: function (name, role, specialty, bio) {
+      if (!this._requireAdmin()) return null;
+      const cleanName = cleanText(name, 40);
+      if (!cleanName) return null;
       const members = loadJSON(STORAGE_KEYS.MEMBERS, DEFAULT_MEMBERS);
       const newMember = {
-        id: 'm_' + Date.now(),
-        name: name,
-        avatar: name.charAt(0).toUpperCase(),
-        role: role || 'عضو',
-        specialty: specialty || 'تقنية المعلومات والبرمجة',
-        bio: bio || 'عضو في مجتمع KALI COMMUNITY للتعلّم وتبادل المعرفة التقنية.',
+        id: uid('m_'),
+        name: cleanName,
+        avatar: cleanName.charAt(0).toUpperCase(),
+        role: cleanText(role, 40) || 'عضو',
+        specialty: cleanText(specialty, 80) || 'تقنية المعلومات والبرمجة',
+        bio: cleanText(bio, 200) || 'عضو في مجتمع KALI COMMUNITY للتعلّم وتبادل المعرفة التقنية.',
         contributionsCount: 1,
         isOnline: true
       };
@@ -497,6 +607,7 @@
     },
 
     deleteMember: function (memberId) {
+      if (!this._requireAdmin()) return false;
       let members = loadJSON(STORAGE_KEYS.MEMBERS, DEFAULT_MEMBERS);
       members = members.filter(m => m.id !== memberId);
       saveJSON(STORAGE_KEYS.MEMBERS, members);
@@ -509,7 +620,12 @@
     },
 
     updateStats: function (newStats) {
-      const stats = { ...this.getStats(), ...newStats };
+      if (!this._requireAdmin()) return this.getStats();
+      const safe = {};
+      ['membersCount', 'topicsCount', 'uptime'].forEach(k => {
+        if (newStats && newStats[k] !== undefined) safe[k] = cleanText(newStats[k], 20);
+      });
+      const stats = { ...this.getStats(), ...safe };
       saveJSON(STORAGE_KEYS.STATS, stats);
       return stats;
     },
@@ -530,16 +646,19 @@
     },
 
     registerGhostMember: function (name, specialty, bio) {
-      const cleanName = (name || '').trim();
-      if (!cleanName) return null;
+      const cleanName = cleanText(name, 40).replace(/\s+/g, ' ');
+      if (cleanName.length < 2) return null;
 
       const members = loadJSON(STORAGE_KEYS.MEMBERS, DEFAULT_MEMBERS);
-      let member = members.find(m => m.name.toLowerCase() === cleanName.toLowerCase());
+      let member = members.find(m => String(m.name).toLowerCase() === cleanName.toLowerCase());
 
-      const isFounder = cleanName.toLowerCase().includes('kali') || cleanName.includes('حسين');
-      const role = isFounder ? 'مؤسس تيم الشباح' : 'عضو في تيم الشباح 👻';
-      const spec = specialty || 'عضو نخبة في تيم الشباح (الأمن والتقنية)';
-      const bioText = bio || 'عضو رسمي في تيم الشباح (Ghost Team) انضم عبر رابط التسجيل المباشر.';
+      // Block impersonation: built-in members, "admin" names and the system sender are reserved
+      if ((member && member.team !== 'ghost') || /admin|نظام تيم/i.test(cleanName)) return null;
+
+      // Nobody becomes admin by typing a name. Admin rights only come from the authenticated admin panel.
+      const role = 'عضو في تيم الشبح 👻';
+      const spec = cleanText(specialty, 80) || 'عضو نخبة في تيم الشبح (الأمن والتقنية)';
+      const bioText = cleanText(bio, 200) || 'عضو رسمي في تيم الشبح (Ghost Team) انضم عبر رابط التسجيل المباشر.';
 
       if (member) {
         member.role = role;
@@ -548,7 +667,7 @@
         member.team = 'ghost';
       } else {
         member = {
-          id: 'm_' + Date.now(),
+          id: uid('m_'),
           name: cleanName,
           avatar: cleanName.charAt(0).toUpperCase(),
           role: role,
@@ -569,17 +688,17 @@
         role: role,
         specialty: spec,
         team: 'ghost',
-        isAdmin: isFounder
+        isAdmin: false
       };
       this.setCurrentUser(currentUser);
 
       // Automated announcement into discussions stream
       this.addDiscussionMessage({
-        sender: 'نظام تيم الشباح ⚡',
+        sender: 'نظام تيم الشبح ⚡',
         senderAvatar: '👻',
         role: 'إشعار انضمام رسمي',
-        text: `👻 مرحباً بك يا ${cleanName} في تيم الشباح! انضم إلينا بطل جديد في الفريق التقني.`
-      });
+        text: `👻 مرحباً بك يا ${cleanName} في تيم الشبح! انضم إلينا بطل جديد في الفريق التقني.`
+      }, true);
 
       window.dispatchEvent(new CustomEvent('kali_user_joined_ghost', { detail: { user: currentUser } }));
       return currentUser;
@@ -604,7 +723,12 @@
     },
 
     updateSettings: function (newSettings) {
-      const settings = { ...this.getSettings(), ...newSettings };
+      if (!this._requireAdmin()) return this.getSettings();
+      const safe = sanitizeObject(newSettings || {});
+      // The password can only change through changeAdminPassword()
+      delete safe.adminPassword;
+      delete safe.adminPasswordHash;
+      const settings = { ...this.getSettings(), ...safe };
       saveJSON(STORAGE_KEYS.SETTINGS, settings);
       return settings;
     },
@@ -630,92 +754,121 @@
     },
 
     // Cryptographic Session Token Engine
-    createSessionToken: async function (password) {
-      const clean = (password || '').trim();
-      const hash = await this.hashPassword(clean);
-      const salt = 'kali_ghost_secure_salt_9981';
-      const today = new Date().toISOString().slice(0, 10);
-      return await this.hashPassword(`${hash}:${salt}:${today}`);
+    createSessionToken: async function () {
+      const token = randomHex(32);
+      try {
+        sessionStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify({ t: token, exp: Date.now() + ADMIN_SESSION_MS }));
+      } catch (e) {}
+      return token;
     },
 
     verifySessionToken: async function (token) {
-      if (!token || typeof token !== 'string' || token.length < 10) return false;
-      const settings = this.getSettings();
-      const salt = 'kali_ghost_secure_salt_9981';
-      const today = new Date().toISOString().slice(0, 10);
-
-      // Check against current settings password hash
-      if (settings.adminPasswordHash) {
-        const expectedToken = await this.hashPassword(`${settings.adminPasswordHash}:${salt}:${today}`);
-        return token === expectedToken;
-      }
-
-      // Check against default kali2026 hash
-      const defaultHash = 'a4b06341397774dacd1e23fdb6705b53e5901dba00cb3270feb0ec9e454a35e6';
-      const expectedDefaultToken = await this.hashPassword(`${defaultHash}:${salt}:${today}`);
-      return token === expectedDefaultToken;
+      try {
+        const s = JSON.parse(sessionStorage.getItem(ADMIN_SESSION_KEY) || 'null');
+        if (token && typeof token === 'string' && s && safeEqual(token, s.t) && s.exp > Date.now()) return true;
+      } catch (e) {}
+      this.endAdminSession();
+      return false;
     },
 
-        verifyAdminPassword: async function (password) {
-      if (!password) return false;
+    isAdminSession: function () {
+      try {
+        const s = JSON.parse(sessionStorage.getItem(ADMIN_SESSION_KEY) || 'null');
+        return !!(s && s.t && s.exp > Date.now());
+      } catch (e) {
+        return false;
+      }
+    },
+
+    endAdminSession: function () {
+      try { sessionStorage.removeItem(ADMIN_SESSION_KEY); } catch (e) {}
+    },
+
+    _requireAdmin: function () {
+      if (this.isAdminSession()) return true;
+      console.warn('[KALI_DB] Operation requires an authenticated admin session.');
+      return false;
+    },
+
+    getLoginLockSeconds: function () {
+      const g = readLoginGuard();
+      return Math.max(0, Math.ceil((g.until - Date.now()) / 1000));
+    },
+
+    verifyAdminPassword: async function (password) {
+      if (!password || typeof password !== 'string') return false;
+      if (this.getLoginLockSeconds() > 0) return false;
+
       const clean = password.trim();
-      const hash = await this.hashPassword(clean);
       const settings = this.getSettings();
+      const stored = String(settings.adminPasswordHash || DEFAULT_SETTINGS.adminPasswordHash);
+      const canPbkdf2 = !!(window.crypto && window.crypto.subtle);
+      let ok = false;
 
-      // Check if matches custom saved hash
-      if (settings.adminPasswordHash && hash === settings.adminPasswordHash) {
-        return true;
+      if (stored.indexOf('pbkdf2$') === 0) {
+        const p = stored.split('$');
+        if (p.length === 4 && canPbkdf2) {
+          const iter = Math.min(Math.max(parseInt(p[1], 10) || PBKDF2_ITERATIONS, 10000), 1000000);
+          ok = safeEqual(await pbkdf2Hex(clean, p[2], iter), p[3]);
+        }
+      } else {
+        // Legacy unsalted SHA-256 hash: verify, then upgrade it silently to salted PBKDF2
+        ok = safeEqual(await this.hashPassword(clean), stored);
+        if (ok && canPbkdf2) {
+          try {
+            const s = this.getSettings();
+            s.adminPasswordHash = await this.makePasswordRecord(clean);
+            saveJSON(STORAGE_KEYS.SETTINGS, s);
+          } catch (e) {}
+        }
       }
 
-      // Check against KAIi 2027 variations and emergency/old passwords
-      const allowedPlain = [
-        'kai 2027', 'kaii 2027', 'kali 2027',
-        'kai2027', 'kaii2027', 'kali2027',
-        'kali2026', 'kaIi2026'
-      ];
-      const norm = clean.toLowerCase().replace(/i/g, 'l');
-      const normDirect = clean.toLowerCase();
-
-      if (allowedPlain.includes(normDirect) || allowedPlain.includes(norm) || clean === 'KAIi 2027' || clean === 'KAIi2027' || clean === 'KALI 2027' || clean === 'KALI2027') {
-        return true;
+      // Persistent brute-force protection (survives page reloads)
+      const g = readLoginGuard();
+      if (ok) {
+        writeLoginGuard({ fails: 0, until: 0, level: 0 });
+      } else {
+        g.fails += 1;
+        if (g.fails >= 5) {
+          g.level += 1;
+          g.fails = 0;
+          g.until = Date.now() + Math.min(30000 * Math.pow(2, g.level - 1), 15 * 60 * 1000);
+        }
+        writeLoginGuard(g);
       }
-
-      // Check known SHA-256 hashes
-      const knownHashes = [
-        '576abd4742653e99eceb205e09dc5ee8c06d527ad74d58e82e5a9d73fb1b83d5', // KAIi 2027
-        'b39e2027e60ba78cce8597079433c07617f998f3471e8f45ebec8d9f2f6fecd7', // KAIi2027
-        '828cdf2971d70685b50fc2ef99f336d7ef72994d26a2570d34481810c8b5fb0f', // KALI 2027
-        'e8f68fd88bcdcb02670f17fcafa38783fe683ffeb945cf38f9e042b0cdedd839', // KALI2027
-        'ce577ec605422ebc15df0e103c6485f0e3763cf14b22fb89f4f1394d1671d5a5', // kali 2027
-        '772e4e91750368e7e152a7a8f300547b9df7a39a933bc1f185e59197503a1643', // kali2027
-        'a4b06341397774dacd1e23fdb6705b53e5901dba00cb3270feb0ec9e454a35e6'  // kali2026 (old)
-      ];
-
-      return knownHashes.includes(hash);
+      return ok;
     },
 
-    resetAdminPassword: async function (recoveryKeyOrOldPass, newPass) {
-      if (!newPass || newPass.length < 6) {
-        return { success: false, message: 'كلمة المرور الجديدة يجب ألا تقل عن 6 أحرف' };
+    makePasswordRecord: async function (clean) {
+      if (window.crypto && window.crypto.subtle) {
+        const salt = randomHex(16);
+        const h = await pbkdf2Hex(clean, salt, PBKDF2_ITERATIONS);
+        return `pbkdf2$${PBKDF2_ITERATIONS}$${salt}$${h}`;
       }
-      const cleanKey = (recoveryKeyOrOldPass || '').trim();
-      const validRecoveryKeys = [
-        'ghost2027', 'ghost-kali-2027', 'kali2026', 'kali2027', 'kai2027', 'kaii2027'
-      ];
-      const isKeyValid = validRecoveryKeys.includes(cleanKey.toLowerCase()) || await this.verifyAdminPassword(cleanKey);
-      if (!isKeyValid) {
-        return { success: false, message: 'رمز الاسترداد أو كلمة المرور القديمة غير صحيحة!' };
+      return await this.hashPassword(clean);
+    },
+
+    // No hard-coded recovery keys: the only way to set a new password is to know the current one
+    resetAdminPassword: async function (oldPass, newPass) {
+      if (!newPass || newPass.trim().length < 8) {
+        return { success: false, message: 'كلمة المرور الجديدة يجب ألا تقل عن 8 أحرف' };
+      }
+      if (this.getLoginLockSeconds() > 0) {
+        return { success: false, message: 'محاولات كثيرة خاطئة. انتظر قليلاً ثم أعد المحاولة.' };
+      }
+      const ok = await this.verifyAdminPassword((oldPass || '').trim());
+      if (!ok) {
+        return { success: false, message: 'كلمة المرور القديمة غير صحيحة!' };
       }
       await this.changeAdminPassword(newPass);
       return { success: true, message: 'تمت إعادة تعيين كلمة المرور بنجاح!' };
     },
 
     changeAdminPassword: async function (newPassword) {
-      if (!newPassword || newPassword.length < 6) return false;
-      const clean = newPassword.trim();
-      const hash = await this.hashPassword(clean);
+      const clean = (newPassword || '').trim();
+      if (clean.length < 8) return false;
       const settings = this.getSettings();
-      settings.adminPasswordHash = hash;
+      settings.adminPasswordHash = await this.makePasswordRecord(clean);
       delete settings.adminPassword; // Purge plain text
       saveJSON(STORAGE_KEYS.SETTINGS, settings);
       return true;
@@ -741,14 +894,41 @@
     },
 
     importDataJSON: function (jsonStr) {
+      if (!this._requireAdmin()) return false;
       try {
-        const parsed = JSON.parse(jsonStr);
+        if (typeof jsonStr !== 'string' || jsonStr.length > 5 * 1024 * 1024) return false;
+        const parsed = sanitizeObject(JSON.parse(jsonStr));
+        if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return false;
+
+        const isObj = v => v && typeof v === 'object' && !Array.isArray(v);
+        // Every list must contain objects with the fields the UI relies on
+        const shapes = {
+          posts: ['id', 'author', 'content'],
+          discussions: ['id', 'sender', 'text'],
+          topics: ['id', 'name'],
+          members: ['id', 'name']
+        };
+        for (const key of Object.keys(shapes)) {
+          if (parsed[key] === undefined) continue;
+          if (!Array.isArray(parsed[key])) return false;
+          const bad = parsed[key].some(item => !isObj(item) || shapes[key].some(f => typeof item[f] !== 'string'));
+          if (bad) return false;
+        }
+        if (parsed.stats !== undefined && !isObj(parsed.stats)) return false;
+        if (parsed.settings !== undefined && !isObj(parsed.settings)) return false;
+
         if (parsed.posts) saveJSON(STORAGE_KEYS.POSTS, parsed.posts);
         if (parsed.discussions) saveJSON(STORAGE_KEYS.DISCUSSIONS, parsed.discussions);
         if (parsed.topics) saveJSON(STORAGE_KEYS.TOPICS, parsed.topics);
         if (parsed.members) saveJSON(STORAGE_KEYS.MEMBERS, parsed.members);
         if (parsed.stats) saveJSON(STORAGE_KEYS.STATS, parsed.stats);
-        if (parsed.settings) saveJSON(STORAGE_KEYS.SETTINGS, parsed.settings);
+        if (parsed.settings) {
+          // An imported file must never be able to overwrite the admin password
+          const s = { ...parsed.settings };
+          delete s.adminPassword;
+          delete s.adminPasswordHash;
+          saveJSON(STORAGE_KEYS.SETTINGS, { ...this.getSettings(), ...s });
+        }
         return true;
       } catch (e) {
         console.error('Import error:', e);
@@ -757,12 +937,15 @@
     },
 
     resetToDefault: function () {
+      if (!this._requireAdmin()) return false;
       saveJSON(STORAGE_KEYS.POSTS, DEFAULT_POSTS);
       saveJSON(STORAGE_KEYS.DISCUSSIONS, DEFAULT_DISCUSSIONS);
       saveJSON(STORAGE_KEYS.TOPICS, DEFAULT_TOPICS);
       saveJSON(STORAGE_KEYS.MEMBERS, DEFAULT_MEMBERS);
       saveJSON(STORAGE_KEYS.STATS, DEFAULT_STATS);
-      saveJSON(STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
+      // Keep the current admin password: resetting content must not reset credentials
+      const keep = this.getSettings();
+      saveJSON(STORAGE_KEYS.SETTINGS, { ...DEFAULT_SETTINGS, adminPasswordHash: keep.adminPasswordHash || DEFAULT_SETTINGS.adminPasswordHash });
       return true;
     }
   };

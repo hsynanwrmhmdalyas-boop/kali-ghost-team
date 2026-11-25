@@ -5,8 +5,11 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com; img-src 'self' data: https:; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; object-src 'none'; base-uri 'self'; form-action 'self';">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تسجيل الدخول والانضمام | تيم الشباح - KALI COMMUNITY</title>
+<title>تسجيل الدخول والانضمام | تيم الشبح - KALI COMMUNITY</title>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
@@ -246,7 +249,7 @@ h1 span {
   background: rgba(57, 255, 20, 0.06);
 }
 
-/* SUCCESS WELCOME SCREEN (مرحباً بك في تيم الشباح) */
+/* SUCCESS WELCOME SCREEN (مرحباً بك في تيم الشبح) */
 #welcomeScreen {
   display: none;
 }
@@ -353,24 +356,24 @@ footer a {
       <span class="team-pill"><i class="fa-solid fa-shield-halved"></i> GHOST TEAM ACCESS</span>
     </div>
 
-    <h1>بوابة تسجيل الدخول<br><span>تيم الشباح (GHOST TEAM)</span></h1>
-    <p class="subtitle">سجّل اسمك للانضمام فوراً إلى تيم الشباح والتواصل المباشر في صالون المناقشات مع KALI HUSSEIN وباقي الأعضاء.</p>
+    <h1>بوابة تسجيل الدخول<br><span>تيم الشبح (GHOST TEAM)</span></h1>
+    <p class="subtitle">سجّل اسمك للانضمام فوراً إلى تيم الشبح والتواصل المباشر في صالون المناقشات مع KALI HUSSEIN وباقي الأعضاء.</p>
 
     <form onsubmit="handleGhostJoin(event)">
       <div class="form-box">
         <div class="input-group">
           <label><i class="fa-solid fa-user-astronaut"></i> اسمك أو كنيتك في الفريق (مطلوب):</label>
-          <input type="text" id="ghostName" class="cyber-input" placeholder="اكتب اسمك (مثال: الشبح، أحمد، عمر...)" required autofocus>
+          <input type="text" id="ghostName" maxlength="50" class="cyber-input" placeholder="اكتب اسمك (مثال: الشبح، أحمد، عمر...)" required autofocus>
         </div>
 
         <div class="input-group">
           <label><i class="fa-solid fa-laptop-code"></i> تخصصك واهتمامك التقني:</label>
-          <input type="text" id="ghostSpecialty" class="cyber-input" placeholder="مثال: أمن سيبراني، تطبيقات Flutter، شبكات، لينكس...">
+          <input type="text" id="ghostSpecialty" maxlength="100" class="cyber-input" placeholder="مثال: أمن سيبراني، تطبيقات Flutter، شبكات، لينكس...">
         </div>
       </div>
 
       <button type="submit" class="btn-submit">
-        <i class="fa-solid fa-bolt"></i> تسجيل الدخول والانضمام لتيم الشباح
+        <i class="fa-solid fa-bolt"></i> تسجيل الدخول والانضمام لتيم الشبح
       </button>
     </form>
 
@@ -382,7 +385,7 @@ footer a {
     </div>
   </div>
 
-  <!-- SUCCESS WELCOME CARD: مرحباً بك في تيم الشباح -->
+  <!-- SUCCESS WELCOME CARD: مرحباً بك في تيم الشبح -->
   <div class="ghost-card welcome-burst" id="welcomeScreen">
     <div class="ghost-badge-header">
       <div class="ghost-icon-ring" style="border-color:var(--green); box-shadow:0 0 35px var(--green-glow);">
@@ -394,9 +397,9 @@ footer a {
     </div>
 
     <!-- The exact requested headline -->
-    <h2 class="welcome-headline">مرحباً بك في تيم الشباح</h2>
+    <h2 class="welcome-headline">مرحباً بك في تيم الشبح</h2>
     <p class="subtitle" style="margin-bottom:16px;">
-      تم تسجيل دخولك بنجاح في المنظومة الرقمية لـ <strong>KALI HUSSEIN</strong>. أهلاً وسهلاً بك في كتيبة الشباح للأمن والتقنية! ⚡👻
+      تم تسجيل دخولك بنجاح في المنظومة الرقمية لـ <strong>KALI HUSSEIN</strong>. أهلاً وسهلاً بك في كتيبة الشبح للأمن والتقنية! ⚡👻
     </p>
 
     <div class="member-identity-card">
@@ -406,11 +409,11 @@ footer a {
       </div>
       <div class="identity-row">
         <span class="identity-label">الفريق الرسمي:</span>
-        <span class="identity-val" style="color:#00f0ff;">تيم الشباح (GHOST SQUAD) 👻</span>
+        <span class="identity-val" style="color:#00f0ff;">تيم الشبح (GHOST SQUAD) 👻</span>
       </div>
       <div class="identity-row">
         <span class="identity-label">الرتبة في المنظومة:</span>
-        <span class="identity-val" id="resMemberRole">عضو في تيم الشباح 👻</span>
+        <span class="identity-val" id="resMemberRole">عضو في تيم الشبح 👻</span>
       </div>
       <div class="identity-row">
         <span class="identity-label">التخصص التقني:</span>
@@ -444,7 +447,7 @@ footer a {
 <div class="toast" id="toast"></div>
 
 <!-- Unified DB -->
-<script src="db.js?v=2026.11.24.3"></script>
+<script src="db.js?v=2026.11.24.4"></script>
 <script>
 // Play access granted sound
 function playAccessSound() {
@@ -473,7 +476,7 @@ function playAccessSound() {
 function handleGhostJoin(e) {
   e.preventDefault();
   const name = document.getElementById('ghostName').value.trim();
-  const specialty = document.getElementById('ghostSpecialty').value.trim() || 'عضو في تيم الشباح (الأمن والتقنية)';
+  const specialty = document.getElementById('ghostSpecialty').value.trim() || 'عضو في تيم الشبح (الأمن والتقنية)';
 
   if (!name) {
     showToast('يرجى كتابة اسمك أولاً');
@@ -482,6 +485,10 @@ function handleGhostJoin(e) {
 
   // Register in DB
   const user = KALI_DB.registerGhostMember(name, specialty);
+  if (!user) {
+    showToast('هذا الاسم غير صالح أو محجوز، اختر اسماً آخر (حرفان على الأقل)');
+    return;
+  }
 
   // Play sound
   playAccessSound();
@@ -496,14 +503,14 @@ function handleGhostJoin(e) {
   const welcomeScreen = document.getElementById('welcomeScreen');
   welcomeScreen.style.display = 'block';
 
-  showToast(`مرحباً بك في تيم الشباح يا ${user.name}! 👻⚡`);
+  showToast(`مرحباً بك في تيم الشبح يا ${user.name}! 👻⚡`);
 }
 
 function copyInviteLink() {
   const url = window.location.href;
   if (navigator.clipboard) {
     navigator.clipboard.writeText(url).then(() => {
-      showToast('تم نسخ رابط تيم الشباح! يمكنك إرساله لأصدقائك 📋');
+      showToast('تم نسخ رابط تيم الشبح! يمكنك إرساله لأصدقائك 📋');
     });
   } else {
     showToast(`رابط التسجيل: ${url}`);
@@ -528,7 +535,7 @@ window.addEventListener('DOMContentLoaded', () => {
   if (urlParams.get('status') === 'active' && user) {
     document.getElementById('resMemberName').textContent = user.name;
     document.getElementById('resMemberRole').textContent = user.role;
-    document.getElementById('resMemberSpecialty').textContent = user.specialty || 'عضو في تيم الشباح';
+    document.getElementById('resMemberSpecialty').textContent = user.specialty || 'عضو في تيم الشبح';
     document.getElementById('formCard').style.display = 'none';
     document.getElementById('welcomeScreen').style.display = 'block';
   }

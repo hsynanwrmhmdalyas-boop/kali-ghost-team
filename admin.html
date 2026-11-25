@@ -5,6 +5,9 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com; img-src 'self' data: https:; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; object-src 'none'; base-uri 'self'; form-action 'self';">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KALI COMMUNITY | System</title>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
@@ -107,7 +110,7 @@ tr:hover td{background:rgba(57,255,20,0.02)}
     <h2>KALI GATE</h2>
     <p>أدخل رمز المصادقة الأمني للمتابعة.</p>
     
-    <input type="password" id="adminPasswordInput" placeholder="أدخل كلمة المرور" autofocus>
+    <input type="password" id="adminPasswordInput" maxlength="64" placeholder="أدخل كلمة المرور" autofocus>
         <button class="btn" style="width:100%; justify-content:center; padding:12px;" onclick="verifyAdminLogin()">
       <i class="fa-solid fa-shield"></i> مصادقة الدخول
     </button>
@@ -204,7 +207,7 @@ tr:hover td{background:rgba(57,255,20,0.02)}
     </div>
   </div>
 
-  <!-- GHOST TEAM INVITE PORTAL CARD (رابط تيم الشباح) -->
+  <!-- GHOST TEAM INVITE PORTAL CARD (رابط تيم الشبح) -->
   <div class="admin-card" style="border:1px solid var(--green); background:linear-gradient(135deg, #0d1a10, #060c08); box-shadow:0 0 25px rgba(57,255,20,0.15); margin-bottom:24px;">
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
       <div style="display:flex; align-items:center; gap:14px;">
@@ -213,17 +216,17 @@ tr:hover td{background:rgba(57,255,20,0.02)}
         </div>
         <div>
           <div style="display:flex; align-items:center; gap:8px;">
-            <h3 style="margin:0; font-size:18px; color:#fff;">بوابة ورابط انضمام <span style="color:var(--green)">تيم الشباح (GHOST TEAM)</span></h3>
+            <h3 style="margin:0; font-size:18px; color:#fff;">بوابة ورابط انضمام <span style="color:var(--green)">تيم الشبح (GHOST TEAM)</span></h3>
             <span class="tag-badge green"><i class="fa-solid fa-bolt"></i> رابط تسجيل معتمد</span>
           </div>
           <p style="margin:4px 0 0; color:var(--muted); font-size:13px;">
-            أي شخص يفتح هذا الرابط ويسجل اسمه، تظهر له فوراً رسالة الترحيب: <strong style="color:var(--green)">"مرحباً بك في تيم الشباح"</strong> ويتم إدراجه فوراً كعضو معتمد في المحادثات وقائمة الأعضاء.
+            أي شخص يفتح هذا الرابط ويسجل اسمه، تظهر له فوراً رسالة الترحيب: <strong style="color:var(--green)">"مرحباً بك في تيم الشبح"</strong> ويتم إدراجه فوراً كعضو معتمد في المحادثات وقائمة الأعضاء.
           </p>
         </div>
       </div>
       <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
         <input type="text" id="adminGhostLinkInput" readonly style="background:#050906; border:1px solid var(--line); color:var(--green); padding:10px 14px; border-radius:8px; font-size:13px; font-family:monospace; min-width:320px;" dir="ltr">
-        <button class="btn" onclick="copyGhostTeamLink()"><i class="fa-solid fa-copy"></i> نسخ رابط تيم الشباح</button>
+        <button class="btn" onclick="copyGhostTeamLink()"><i class="fa-solid fa-copy"></i> نسخ رابط تيم الشبح</button>
         <a href="join.html" target="_blank" class="btn cyan"><i class="fa-solid fa-arrow-up-right-from-square"></i> تجربة الرابط</a>
       </div>
     </div>
@@ -472,18 +475,18 @@ tr:hover td{background:rgba(57,255,20,0.02)}
       </p>
       <div class="form-group" style="max-width:420px; margin-bottom:12px;">
         <label><i class="fa-solid fa-lock"></i> كلمة المرور الحالية:</label>
-        <input type="password" id="currentAdminPasswordInput" class="admin-input" placeholder="أدخل كلمة المرور الحالية" autocomplete="current-password">
+        <input type="password" id="currentAdminPasswordInput" maxlength="64" class="admin-input" placeholder="أدخل كلمة المرور الحالية" autocomplete="current-password">
       </div>
       <div class="form-group" style="max-width:420px; margin-bottom:12px;">
         <label><i class="fa-solid fa-key"></i> كلمة المرور الجديدة:</label>
-        <input type="password" id="newAdminPasswordInput" class="admin-input" placeholder="كلمة سر جديدة (6 أحرف على الأقل)" autocomplete="new-password">
+        <input type="password" id="newAdminPasswordInput" maxlength="64" class="admin-input" placeholder="كلمة سر جديدة (8 أحرف على الأقل)" autocomplete="new-password">
       </div>
       <div class="form-group" style="max-width:420px; margin-bottom:16px;">
         <label><i class="fa-solid fa-check-double"></i> تأكيد كلمة المرور الجديدة:</label>
-        <input type="password" id="confirmAdminPasswordInput" class="admin-input" placeholder="أعد إدخال كلمة المرور الجديدة" autocomplete="new-password">
+        <input type="password" id="confirmAdminPasswordInput" maxlength="64" class="admin-input" placeholder="أعد إدخال كلمة المرور الجديدة" autocomplete="new-password">
       </div>
             <button class="btn" onclick="changeAdminPasswordAction()"><i class="fa-solid fa-shield-virus"></i> تحديث وحفظ كلمة المرور</button>
-      <button class="btn ghost" style="color:var(--danger); border-color:var(--danger); margin-right:10px;" onclick="resetToDefaultPasswordAction()"><i class="fa-solid fa-arrow-rotate-left"></i> إعادة ضبط للافتراضية (KAIi 2027)</button>
+      <button class="btn ghost" style="color:var(--danger); border-color:var(--danger); margin-right:10px;" onclick="resetToDefaultPasswordAction()"><i class="fa-solid fa-arrow-rotate-left"></i> تعيين كلمة مرور جديدة الآن</button>
     </div>
   </div>
 
@@ -547,13 +550,36 @@ tr:hover td{background:rgba(57,255,20,0.02)}
 <!-- TOAST -->
 <div class="toast" id="adminToast"></div>
 
-<script src="db.js?v=2026.11.24.3"></script>
+<script src="db.js?v=2026.11.24.4"></script>
 
 <script>
 /**
  * Admin Console Logic with Live Discussions Moderation
  */
 const AUTH_SESSION_KEY = 'kali_admin_auth_v2';
+
+// Anti-Clickjacking: Prevent framing in malicious iframes
+if (window.top !== window.self) {
+  window.top.location = window.self.location;
+}
+
+// Inactivity Auto-Logout: Protect admin session after 25 minutes of idle time
+let adminIdleTimer = null;
+function resetAdminIdle() {
+  clearTimeout(adminIdleTimer);
+  adminIdleTimer = setTimeout(() => {
+    if (sessionStorage.getItem(AUTH_SESSION_KEY)) {
+      sessionStorage.removeItem(AUTH_SESSION_KEY);
+      KALI_DB.endAdminSession();
+      location.reload();
+    }
+  }, 25 * 60 * 1000);
+}
+['mousemove', 'keydown', 'click', 'scroll'].forEach(evt => {
+  window.addEventListener(evt, resetAdminIdle, { passive: true });
+});
+resetAdminIdle();
+
 
 async function checkAuth() {
   const token = sessionStorage.getItem(AUTH_SESSION_KEY);
@@ -576,8 +602,9 @@ let failedLoginAttempts = 0;
 let lockoutTimer = null;
 
 async function verifyAdminLogin() {
-  if (lockoutTimer) {
-    adminToast('تم تجميد المحاولات مؤقتاً لحماية اللوحة. يرجى الانتظار.');
+  const lockSecs = KALI_DB.getLoginLockSeconds();
+  if (lockoutTimer || lockSecs > 0) {
+    adminToast('تم تجميد المحاولات مؤقتاً لحماية اللوحة. حاول بعد ' + (lockSecs || 30) + ' ثانية.');
     return;
   }
 
@@ -592,7 +619,7 @@ async function verifyAdminLogin() {
   const isValid = await KALI_DB.verifyAdminPassword(pass);
   if (isValid) {
     failedLoginAttempts = 0;
-    const token = await KALI_DB.createSessionToken(pass);
+    const token = await KALI_DB.createSessionToken();
     sessionStorage.setItem(AUTH_SESSION_KEY, token);
     document.getElementById('loginGate').style.display = 'none';
     const main = document.getElementById('adminMainContent');
@@ -620,6 +647,7 @@ document.getElementById('adminPasswordInput').addEventListener('keypress', (e) =
 
 function adminLogout() {
   sessionStorage.removeItem(AUTH_SESSION_KEY);
+  KALI_DB.endAdminSession();
   location.reload();
 }
 
@@ -679,24 +707,24 @@ function renderPostsTable() {
       <tr>
         <td>
           <div style="display:flex; align-items:center;">
-            <span class="table-avatar">${p.authorAvatar || p.author.charAt(0)}</span>
+            <span class="table-avatar">${escapeHTML(p.authorAvatar || p.author.charAt(0))}</span>
             <strong>${escapeHTML(p.author)}</strong>
           </div>
         </td>
-        <td><span class="tag-badge green">${p.topicTag || 'عام'}</span></td>
+        <td><span class="tag-badge green">${escapeHTML(p.topicTag || 'عام')}</span></td>
         <td style="max-width:320px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHTML(p.content)}</td>
-        <td style="font-size:11px; color:var(--muted);">${p.time || 'الآن'}</td>
-        <td><strong style="color:var(--green)">${p.likesCount || 0}</strong></td>
+        <td style="font-size:11px; color:var(--muted);">${escapeHTML(p.time || 'الآن')}</td>
+        <td><strong style="color:var(--green)">${escapeHTML(p.likesCount || 0)}</strong></td>
         <td>${p.comments ? p.comments.length : 0}</td>
         <td>
           <div class="table-actions">
-            <button class="action-icon-btn ${p.pinned ? 'danger' : ''}" onclick="togglePinAction('${p.id}')" title="${p.pinned ? 'إلغاء التثبيت' : 'تثبيت في الأعلى'}">
+            <button class="action-icon-btn ${p.pinned ? 'danger' : ''}" onclick="togglePinAction(${jsArg(p.id)})" title="${p.pinned ? 'إلغاء التثبيت' : 'تثبيت في الأعلى'}">
               <i class="fa-solid fa-thumbtack"></i>
             </button>
-            <button class="action-icon-btn" onclick="openEditModal('${p.id}')" title="تعديل المنشور">
+            <button class="action-icon-btn" onclick="openEditModal(${jsArg(p.id)})" title="تعديل المنشور">
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
-            <button class="action-icon-btn danger" onclick="deletePostAction('${p.id}')" title="حذف نهائي">
+            <button class="action-icon-btn danger" onclick="deletePostAction(${jsArg(p.id)})" title="حذف نهائي">
               <i class="fa-regular fa-trash-can"></i>
             </button>
           </div>
@@ -725,15 +753,15 @@ function renderDiscussionsTable() {
       <tr>
         <td>
           <div style="display:flex; align-items:center;">
-            <span class="table-avatar">${d.senderAvatar || d.sender.charAt(0)}</span>
+            <span class="table-avatar">${escapeHTML(d.senderAvatar || d.sender.charAt(0))}</span>
             <strong>${escapeHTML(d.sender)}</strong>
           </div>
         </td>
-        <td><span class="tag-badge green">${d.role || 'عضو'}</span></td>
+        <td><span class="tag-badge green">${escapeHTML(d.role || 'عضو')}</span></td>
         <td style="max-width:380px; word-break:break-word;">${escapeHTML(d.text)}</td>
-        <td style="font-size:11px; color:var(--muted);">${d.time || 'الآن'}</td>
+        <td style="font-size:11px; color:var(--muted);">${escapeHTML(d.time || 'الآن')}</td>
         <td>
-          <button class="action-icon-btn danger" onclick="deleteDiscussionAction('${d.id}')" title="حذف الرسالة"><i class="fa-regular fa-trash-can"></i></button>
+          <button class="action-icon-btn danger" onclick="deleteDiscussionAction(${jsArg(d.id)})" title="حذف الرسالة"><i class="fa-regular fa-trash-can"></i></button>
         </td>
       </tr>
     `;
@@ -832,7 +860,7 @@ function populateTopicSelect() {
 
   let html = '';
   topics.forEach(t => {
-    html += `<option value="${t.name}">${t.icon} ${t.name}</option>`;
+    html += `<option value="${escapeHTML(t.name)}">${escapeHTML(t.icon)} ${escapeHTML(t.name)}</option>`;
   });
   select.innerHTML = html;
 }
@@ -873,11 +901,11 @@ function renderTopicsTable() {
   topics.forEach(t => {
     html += `
       <tr>
-        <td style="font-size:20px;">${t.icon}</td>
-        <td><strong>${t.name}</strong></td>
-        <td><span class="tag-badge green">${t.count} موضوع</span></td>
+        <td style="font-size:20px;">${escapeHTML(t.icon)}</td>
+        <td><strong>${escapeHTML(t.name)}</strong></td>
+        <td><span class="tag-badge green">${escapeHTML(t.count)} موضوع</span></td>
         <td>
-          <button class="action-icon-btn danger" onclick="deleteTopicAction('${t.id}')" title="حذف المجال"><i class="fa-regular fa-trash-can"></i></button>
+          <button class="action-icon-btn danger" onclick="deleteTopicAction(${jsArg(t.id)})" title="حذف المجال"><i class="fa-regular fa-trash-can"></i></button>
         </td>
       </tr>
     `;
@@ -918,23 +946,23 @@ function renderMembersTable() {
 
   let html = '';
   members.forEach(m => {
-    const isGhost = m.team === 'ghost' || (m.role && m.role.includes('الشباح'));
+    const isGhost = m.team === 'ghost' || (m.role && (m.role.includes('الشبح') || m.role.includes('الشباح')));
     html += `
       <tr>
         <td>
           <div style="display:flex; align-items:center;">
-            <span class="table-avatar">${m.avatar || m.name.charAt(0)}</span>
+            <span class="table-avatar">${escapeHTML(m.avatar || m.name.charAt(0))}</span>
             <div>
-              <strong>${escapeHTML(m.name)} ${isGhost ? '<i class="fa-solid fa-ghost" style="color:var(--green); font-size:12px;" title="عضو تيم الشباح"></i>' : ''}</strong>
-              <div style="font-size:11px; color:var(--muted);">${m.bio || ''}</div>
+              <strong>${escapeHTML(m.name)} ${isGhost ? '<i class="fa-solid fa-ghost" style="color:var(--green); font-size:12px;" title="عضو تيم الشبح"></i>' : ''}</strong>
+              <div style="font-size:11px; color:var(--muted);">${escapeHTML(m.bio || '')}</div>
             </div>
           </div>
         </td>
-        <td><span class="tag-badge ${m.role.includes('مؤسس') || m.role.includes('Admin') ? 'green' : (isGhost ? 'green' : 'yellow')}">${m.role}</span></td>
-        <td style="font-size:12px; color:var(--cyan);">${m.specialty || 'تقنية المعلومات'}</td>
+        <td><span class="tag-badge ${m.role.includes('مؤسس') || m.role.includes('Admin') ? 'green' : (isGhost ? 'green' : 'yellow')}">${escapeHTML(m.role)}</span></td>
+        <td style="font-size:12px; color:var(--cyan);">${escapeHTML(m.specialty || 'تقنية المعلومات')}</td>
         <td><span style="color:var(--green)">● متصل</span></td>
         <td>
-          <button class="action-icon-btn danger" onclick="deleteMemberAction('${m.id}')" title="حذف أو حظر العضو"><i class="fa-regular fa-trash-can"></i></button>
+          <button class="action-icon-btn danger" onclick="deleteMemberAction(${jsArg(m.id)})" title="حذف أو حظر العضو"><i class="fa-regular fa-trash-can"></i></button>
         </td>
       </tr>
     `;
@@ -957,7 +985,7 @@ function copyGhostTeamLink() {
   if (input) {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(input.value).then(() => {
-        adminToast('تم نسخ رابط تيم الشباح! يمكنك إرساله لأي شخص للتسجيل والترحيب به 👻📋');
+        adminToast('تم نسخ رابط تيم الشبح! يمكنك إرساله لأي شخص للتسجيل والترحيب به 👻📋');
       });
     } else {
       input.select();
@@ -1027,8 +1055,8 @@ async function changeAdminPasswordAction() {
     adminToast('كلمة المرور الحالية غير صحيحة!');
     return;
   }
-  if (!newPass || newPass.length < 6) {
-    adminToast('يرجى إدخال كلمة سر جديدة لا تقل عن 6 أحرف');
+  if (!newPass || newPass.length < 8) {
+    adminToast('يرجى إدخال كلمة سر جديدة لا تقل عن 8 أحرف');
     return;
   }
   if (newPass !== confirmPass) {
@@ -1130,11 +1158,11 @@ async function submitResetPasswordAction() {
   const confirmPass = document.getElementById('resetConfirmPasswordInput').value.trim();
 
   if (!key) {
-    adminToast('يرجى إدخال رمز الاسترداد أو كلمة المرور القديمة');
+    adminToast('يرجى إدخال كلمة المرور القديمة');
     return;
   }
-  if (!newPass || newPass.length < 6) {
-    adminToast('كلمة المرور الجديدة يجب ألا تقل عن 6 أحرف');
+  if (!newPass || newPass.length < 8) {
+    adminToast('كلمة المرور الجديدة يجب ألا تقل عن 8 أحرف');
     return;
   }
   if (newPass !== confirmPass) {
@@ -1146,7 +1174,7 @@ async function submitResetPasswordAction() {
   if (result.success) {
     closeResetPasswordModal();
     // Auto-login with the newly set password
-    const token = await KALI_DB.createSessionToken(newPass);
+    const token = await KALI_DB.createSessionToken();
     sessionStorage.setItem(AUTH_SESSION_KEY, token);
     document.getElementById('loginGate').style.display = 'none';
     const main = document.getElementById('adminMainContent');
@@ -1159,20 +1187,30 @@ async function submitResetPasswordAction() {
 }
 
 async function resetToDefaultPasswordAction() {
-  if (confirm('هل أنت متأكد من رغبتك في إعادة ضبط كلمة المرور إلى الافتراضية (KAIi 2027)؟')) {
-    await KALI_DB.changeAdminPassword('KAIi 2027');
-    adminToast('تمت استعادة كلمة المرور الافتراضية (KAIi 2027) بنجاح!');
+  const p = (prompt('أدخل كلمة المرور الجديدة (8 أحرف على الأقل):') || '').trim();
+  if (!p) return;
+  if (p.length < 8) {
+    adminToast('كلمة المرور يجب ألا تقل عن 8 أحرف');
+    return;
   }
+  await KALI_DB.changeAdminPassword(p);
+  adminToast('تم تعيين كلمة المرور الجديدة بنجاح! 🔒');
 }
 
 function escapeHTML(str) {
-  return str.replace(/[&<>'"]/g, tag => ({
+  if (str === null || str === undefined) return '';
+  return String(str).replace(/[&<>'"]/g, tag => ({
     '&': '&amp;',
     '<': '&lt;',
     '>': '&gt;',
     "'": '&#39;',
     '"': '&quot;'
   }[tag] || tag));
+}
+
+// Safe value for inline handlers: onclick="fn(${jsArg(value)})"
+function jsArg(value) {
+  return escapeHTML(JSON.stringify(String(value === null || value === undefined ? '' : value)));
 }
 
 document.addEventListener('DOMContentLoaded', () => { checkAuth(); });
@@ -1184,11 +1222,11 @@ document.addEventListener('DOMContentLoaded', () => { checkAuth(); });
     <div class="logo" style="margin:0 auto 14px; width:48px; height:48px; font-size:22px;"><i class="fa-solid fa-arrows-rotate"></i></div>
     <h3 style="margin-bottom:6px;">إعادة تعيين كلمة المرور</h3>
     <p style="font-size:12px; color:var(--muted); margin-bottom:16px;">
-      أدخل رمز الاسترداد الأمني أو كلمة المرور القديمة لتعيين كلمة مرور جديدة:
+      أدخل كلمة المرور القديمة لتعيين كلمة مرور جديدة:
     </p>
     <div class="form-group" style="margin-bottom:12px; text-align:right;">
-      <label style="font-size:12px; color:var(--muted); display:block; margin-bottom:4px;"><i class="fa-solid fa-shield-halved"></i> رمز الاسترداد أو كلمة المرور القديمة:</label>
-      <input type="password" id="recoveryKeyInput" class="admin-input" placeholder="رمز الاسترداد (مثال: GHOST2027) أو السابقة">
+      <label style="font-size:12px; color:var(--muted); display:block; margin-bottom:4px;"><i class="fa-solid fa-shield-halved"></i> كلمة المرور القديمة:</label>
+      <input type="password" id="recoveryKeyInput" maxlength="64" class="admin-input" placeholder="كلمة المرور الحالية/القديمة">
     </div>
     <div class="form-group" style="margin-bottom:12px; text-align:right;">
       <label style="font-size:12px; color:var(--muted); display:block; margin-bottom:4px;"><i class="fa-solid fa-key"></i> كلمة المرور الجديدة:</label>

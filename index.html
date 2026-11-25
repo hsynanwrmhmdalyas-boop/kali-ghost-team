@@ -5,6 +5,9 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com; img-src 'self' data: https:; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; object-src 'none'; base-uri 'self'; form-action 'self';">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KALI COMMUNITY — مجتمع التقنية والأمن السيبراني</title>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
@@ -183,7 +186,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
 
       <div class="actions" id="authActions">
         <a href="admin.html" class="btn ghost admin-btn" style="padding:8px 12px;" title="الإعدادات"><i class="fa-solid fa-gear"></i></a>
-        <a href="join.html" class="btn ghost" style="border-color:var(--green); color:var(--green);" title="رابط تسجيل الدخول والانضمام"><i class="fa-solid fa-ghost"></i> تيم الشباح</a>
+        <a href="join.html" class="btn ghost" style="border-color:var(--green); color:var(--green);" title="رابط تسجيل الدخول والانضمام"><i class="fa-solid fa-ghost"></i> تيم الشبح</a>
         <button class="btn ghost" onclick="openModal('login')">دخول</button>
         <button class="btn" onclick="openModal('register')">انضم إلينا</button>
       </div>
@@ -200,7 +203,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
       <p>مرحباً بك في KALI COMMUNITY — مساحة تفاعلية تجمع الطلاب والمهتمين بالبرمجة والشبكات وتوزيعات لينكس والأمن السيبراني. تبادل النقاشات وتحدث مباشرة مع باقي الأعضاء واستفد من خبراتهم.</p>
       <div class="hero-buttons">
         <button class="btn" onclick="switchView('discussions')"><i class="fa-solid fa-comments"></i> الدخول لصالون المناقشات الحي</button>
-        <a class="btn" href="join.html" style="background:#112517; border-color:var(--green); color:var(--green);"><i class="fa-solid fa-ghost"></i> رابط انضمام تيم الشباح</a>
+        <a class="btn" href="join.html" style="background:#112517; border-color:var(--green); color:var(--green);"><i class="fa-solid fa-ghost"></i> رابط انضمام تيم الشبح</a>
         
       </div>
     </div>
@@ -321,7 +324,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
           </div>
 
           <div class="chat-input-row">
-            <input type="text" id="chatMessageInput" class="chat-input" placeholder="اكتب رسالتك أو استفسارك هنا للمناقشة مع الأعضاء... (اضغط Enter للإرسال)" maxlength="500">
+            <input type="text" id="chatMessageInput" maxlength="1000" class="chat-input" placeholder="اكتب رسالتك أو استفسارك هنا للمناقشة مع الأعضاء... (اضغط Enter للإرسال)" maxlength="500">
             <button class="btn" onclick="sendDiscussionMessage()"><i class="fa-solid fa-paper-plane"></i> إرسال</button>
           </div>
           <span style="font-size:11px; color:var(--muted);"><i class="fa-solid fa-circle-info"></i> يمكنك الضغط على أي عضو في القائمة الجانبية للتحدث وتوجيه السؤال له مباشرة.</span>
@@ -423,8 +426,8 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
         ⚡ GHOST TEAM ENTRY
       </span>
     </div>
-    <h3 id="modalTitle" style="text-align:center;">تسجيل الدخول والانضمام لتيم الشباح</h3>
-    <p style="color:var(--muted);font-size:13px; text-align:center;" id="modalDesc">سجل اسمك للانضمام فوراً لتيم الشباح والمشاركة في النقاشات والتفاعل المباشر.</p>
+    <h3 id="modalTitle" style="text-align:center;">تسجيل الدخول والانضمام لتيم الشبح</h3>
+    <p style="color:var(--muted);font-size:13px; text-align:center;" id="modalDesc">سجل اسمك للانضمام فوراً لتيم الشبح والمشاركة في النقاشات والتفاعل المباشر.</p>
     
     <label>اسم المستخدم أو الكنية (مطلوب):</label>
     <input id="usernameInput" placeholder="اكتب اسمك (مثال: الشبح، أحمد، عمر...)">
@@ -434,14 +437,14 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
 
     <div style="margin-top:20px; display:flex; flex-direction:column; gap:10px;">
       <button class="btn" style="width:100%; justify-content:center; padding:12px;" onclick="handleJoin()">
-        <i class="fa-solid fa-bolt"></i> تسجيل الدخول والانضمام لتيم الشباح
+        <i class="fa-solid fa-bolt"></i> تسجيل الدخول والانضمام لتيم الشبح
       </button>
       
     </div>
   </div>
 </div>
 
-<!-- GHOST TEAM WELCOME MODAL (مرحباً بك في تيم الشباح) -->
+<!-- GHOST TEAM WELCOME MODAL (مرحباً بك في تيم الشبح) -->
 <div class="modal" id="ghostWelcomeModal">
   <div class="modalbox" style="text-align:center; border:2px solid var(--green); box-shadow:0 0 40px var(--green-glow); max-width:480px; position:relative;">
     <button class="close" onclick="closeGhostWelcomeModal()">×</button>
@@ -452,14 +455,14 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
       ⚡ GHOST TEAM OFFICIAL ACCESS
     </div>
     <h2 style="color:var(--green); font-size:26px; font-weight:900; margin-bottom:10px; text-shadow:0 0 15px var(--green-glow);">
-      مرحباً بك في تيم الشباح
+      مرحباً بك في تيم الشبح
     </h2>
     <p style="color:#d0dcd2; font-size:14px; line-height:1.7; margin-bottom:18px;">
       أهلاً وسهلاً بك في الكتيبة السيبرانية الرسمية لمجتمع <strong>KALI COMMUNITY</strong> بقيادة <strong>KALI HUSSEIN</strong>! تم تفعيل هويتك الرقمية بنجاح كعضو رسمي.
     </p>
     <div style="background:#070d09; border:1px dashed var(--green); border-radius:12px; padding:14px; margin-bottom:20px; text-align:right; font-size:13px; display:flex; flex-direction:column; gap:6px;">
       <div><span style="color:var(--muted)">الاسم:</span> <strong id="ghostWelcomeName" style="color:#fff;">—</strong></div>
-      <div><span style="color:var(--muted)">الفريق:</span> <strong style="color:#00f0ff">تيم الشباح (GHOST SQUAD) 👻</strong></div>
+      <div><span style="color:var(--muted)">الفريق:</span> <strong style="color:#00f0ff">تيم الشبح (GHOST SQUAD) 👻</strong></div>
       <div><span style="color:var(--muted)">الرتبة:</span> <strong id="ghostWelcomeRole" style="color:var(--green);">عضو رسمي معتمد ⚡</strong></div>
       <div><span style="color:var(--muted)">حالة الاتصال:</span> <span style="color:var(--green); font-weight:bold;">🟢 متصل ونشط الآن</span></div>
     </div>
@@ -468,7 +471,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
         <i class="fa-solid fa-comments"></i> الدخول لصالون المناقشات والتحدث مع الأعضاء
       </button>
       <button class="btn ghost" style="width:100%; justify-content:center;" onclick="copyGhostInviteLink()">
-        <i class="fa-solid fa-share-nodes"></i> نسخ رابط تيم الشباح لإرساله للأصدقاء
+        <i class="fa-solid fa-share-nodes"></i> نسخ رابط تيم الشبح لإرساله للأصدقاء
       </button>
     </div>
   </div>
@@ -478,7 +481,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#78877c;text-align:
 <div class="toast" id="toast"></div>
 
 <!-- SCRIPTS -->
-<script src="db.js?v=2026.11.24.3"></script>
+<script src="db.js?v=2026.11.24.4"></script>
 <script>
 /**
  * Enhanced Application Logic for KALI COMMUNITY
@@ -591,9 +594,9 @@ function renderTopics() {
 
   topics.forEach(t => {
     html += `
-      <div class="topic-item" onclick="filterByTopic('${t.name}')">
-        <span>${t.icon} ${t.name}</span>
-        <span class="topic-count">${t.count}</span>
+      <div class="topic-item" onclick="filterByTopic(${jsArg(t.name)})">
+        <span>${escapeHTML(t.icon)} ${escapeHTML(t.name)}</span>
+        <span class="topic-count">${escapeHTML(t.count)}</span>
       </div>
     `;
   });
@@ -613,10 +616,10 @@ function renderInteractiveMembers() {
   let html = '';
   members.forEach(m => {
     html += `
-      <div class="member-card-interactive" onclick="openMemberModal('${m.id}')" title="اضغط لعرض الملف الشخصي ومناقشة العضو">
+      <div class="member-card-interactive" onclick="openMemberModal(${jsArg(m.id)})" title="اضغط لعرض الملف الشخصي ومناقشة العضو">
         <div class="member-card-top">
           <div class="member-avatar-box">
-            <div class="avatar">${m.avatar || m.name.charAt(0).toUpperCase()}</div>
+            <div class="avatar">${escapeHTML(m.avatar || m.name.charAt(0).toUpperCase())}</div>
             ${m.isOnline ? '<span class="online-dot" title="متصل الآن"></span>' : ''}
           </div>
           <div class="member-name-group">
@@ -625,10 +628,10 @@ function renderInteractiveMembers() {
           </div>
         </div>
         <div class="member-card-actions">
-          <button class="btn-member-action" onclick="event.stopPropagation(); startChatWithMember('${m.name}')">
+          <button class="btn-member-action" onclick="event.stopPropagation(); startChatWithMember(${jsArg(m.name)})">
             <i class="fa-solid fa-comments"></i> مناقشة
           </button>
-          <button class="btn-member-action" onclick="event.stopPropagation(); filterMemberPosts('${m.name}')">
+          <button class="btn-member-action" onclick="event.stopPropagation(); filterMemberPosts(${jsArg(m.name)})">
             <i class="fa-solid fa-newspaper"></i> منشوراته
           </button>
         </div>
@@ -726,17 +729,17 @@ function renderDiscussions() {
     formattedText = formattedText.replace(/@([^\s]+)/g, '<span class="mention">@$1</span>');
 
     html += `
-      <div class="msg-bubble ${isMe ? 'my-msg' : 'other-msg'}" id="${msg.id}">
+      <div class="msg-bubble ${isMe ? 'my-msg' : 'other-msg'}" id="${escapeHTML(msg.id)}">
         <div class="msg-head">
-          <span class="avatar" style="width:24px; height:24px; font-size:11px;" onclick="openMemberModal('${msg.sender}')">${msg.senderAvatar || msg.sender.charAt(0)}</span>
-          <strong onclick="openMemberModal(decodeURIComponent('${encodeURIComponent(msg.sender)}'))">${escapeHTML(msg.sender)}</strong>
+          <span class="avatar" style="width:24px; height:24px; font-size:11px;" onclick="openMemberModal(${jsArg(msg.sender)})">${escapeHTML(msg.senderAvatar || msg.sender.charAt(0))}</span>
+          <strong onclick="openMemberModal(${jsArg(msg.sender)})">${escapeHTML(msg.sender)}</strong>
           <span class="msg-role-tag">${escapeHTML(msg.role || 'عضو')}</span>
-          <span class="msg-time">${msg.time || 'الآن'}</span>
+          <span class="msg-time">${escapeHTML(msg.time || 'الآن')}</span>
         </div>
         <p class="msg-text">${formattedText}</p>
         <div class="msg-actions-bar">
-          <button onclick="replyToDiscussion('${msg.id}', decodeURIComponent('${encodeURIComponent(msg.sender)}'))"><i class="fa-solid fa-reply"></i> رد على ${escapeHTML(msg.sender)}</button>
-          ${(currentUser && currentUser.isAdmin) ? `<button style="color:var(--danger)" onclick="deleteDiscussion('${msg.id}')"><i class="fa-regular fa-trash-can"></i> حذف</button>` : ''}
+          <button onclick="replyToDiscussion(${jsArg(msg.id)}, ${jsArg(msg.sender)})"><i class="fa-solid fa-reply"></i> رد على ${escapeHTML(msg.sender)}</button>
+          ${KALI_DB.isAdminSession() ? `<button style="color:var(--danger)" onclick="deleteDiscussion(${jsArg(msg.id)})"><i class="fa-regular fa-trash-can"></i> حذف</button>` : ''}
         </div>
       </div>
     `;
@@ -853,48 +856,48 @@ function renderPosts() {
     });
 
     html += `
-      <article class="card post" id="${post.id}">
+      <article class="card post" id="${escapeHTML(post.id)}">
         <div class="post-head">
-          <div class="avatar" onclick="openMemberModal('${post.author}')">${post.authorAvatar || post.author.charAt(0).toUpperCase()}</div>
+          <div class="avatar" onclick="openMemberModal(${jsArg(post.author)})">${escapeHTML(post.authorAvatar || post.author.charAt(0).toUpperCase())}</div>
           <div class="user-info">
-            <div class="user" onclick="openMemberModal(decodeURIComponent('${encodeURIComponent(post.author)}'))">
+            <div class="user" onclick="openMemberModal(${jsArg(post.author)})">
               ${escapeHTML(post.author)}
               ${post.pinned ? '<span class="pinned-badge"><i class="fa-solid fa-thumbtack"></i> مثبت</span>' : ''}
             </div>
-            <div class="time">${post.time || 'الآن'} · ${post.role || 'عضو'}</div>
+            <div class="time">${escapeHTML(post.time || 'الآن')} · ${escapeHTML(post.role || 'عضو')}</div>
           </div>
-          <span class="tag">${post.topicTag || 'عام'}</span>
+          <span class="tag">${escapeHTML(post.topicTag || 'عام')}</span>
         </div>
 
         <p>${escapeHTML(post.content)}</p>
 
         <div class="post-actions">
-          <button class="${isLiked ? 'liked' : ''}" onclick="toggleLike('${post.id}')">
-            ${isLiked ? '♥' : '♡'} إعجاب <b id="likes_${post.id}">${post.likesCount || 0}</b>
+          <button class="${isLiked ? 'liked' : ''}" onclick="toggleLike(${jsArg(post.id)})">
+            ${isLiked ? '♥' : '♡'} إعجاب <b id="likes_${escapeHTML(post.id)}">${escapeHTML(post.likesCount || 0)}</b>
           </button>
           
-          <button onclick="toggleComments('${post.id}')">
+          <button onclick="toggleComments(${jsArg(post.id)})">
             <i class="fa-regular fa-comment"></i> مناقشة وتعليقات (<b>${comments.length}</b>)
           </button>
 
-          <button onclick="startChatWithMember(decodeURIComponent('${encodeURIComponent(post.author)}'))">
+          <button onclick="startChatWithMember(${jsArg(post.author)})">
             <i class="fa-solid fa-reply"></i> تحدث مع الناشر
           </button>
 
-          <button onclick="sharePost('${post.id}')">
+          <button onclick="sharePost(${jsArg(post.id)})">
             <i class="fa-solid fa-arrow-up-from-bracket"></i> مشاركة
           </button>
 
-          ${(currentUser && currentUser.isAdmin) ? `<button class="btn-del-post" onclick="deletePost('${post.id}')" title="حذف المنشور كمسؤول"><i class="fa-regular fa-trash-can"></i> حذف</button>` : ''}
+          ${KALI_DB.isAdminSession() ? `<button class="btn-del-post" onclick="deletePost(${jsArg(post.id)})" title="حذف المنشور كمسؤول"><i class="fa-regular fa-trash-can"></i> حذف</button>` : ''}
         </div>
 
         <!-- Comments Drawer -->
-        <div class="comments-container" id="comments_${post.id}">
-          <div id="comments_list_${post.id}">
+        <div class="comments-container" id="comments_${escapeHTML(post.id)}">
+          <div id="comments_list_${escapeHTML(post.id)}">
             ${commentsHtml}
           </div>
-          <form class="comment-form" onsubmit="submitComment(event, '${post.id}')">
-            <input type="text" class="comment-input" placeholder="اكتب تعليقك أو استفسارك هنا للمناقشة..." required>
+          <form class="comment-form" onsubmit="submitComment(event, ${jsArg(post.id)})">
+            <input type="text" class="comment-input" maxlength="500" placeholder="اكتب تعليقك أو استفسارك هنا للمناقشة..." required>
             <button type="submit" class="comment-btn">إرسال</button>
           </form>
         </div>
@@ -1030,12 +1033,12 @@ function updateAuthUI() {
     if (actions) {
       actions.innerHTML = `
         <a href="admin.html" class="btn ghost admin-btn" style="padding:8px 12px;" title="الإعدادات"><i class="fa-solid fa-gear"></i></a>
-        <a href="join.html" class="btn ghost" style="color:var(--green); border-color:var(--green);" title="رابط دعوة تيم الشباح"><i class="fa-solid fa-ghost"></i> تيم الشباح</a>
-        <div class="active-user-pill" style="color:#fff;" onclick="openMemberModal('${user.name}')" title="عرض ملفي الشخصي">
-          <span class="avatar" style="width:26px; height:26px; font-size:12px;">${user.avatar || 'K'}</span>
-          <span>${user.name}</span>
-          ${user.isAdmin ? '<span class="admin-badge-user">ADMIN</span>' : ''}
-          <span style="font-size:10px; background:rgba(57,255,20,0.15); color:var(--green); padding:1px 5px; border-radius:4px;">👻 الشباح</span>
+        <a href="join.html" class="btn ghost" style="color:var(--green); border-color:var(--green);" title="رابط دعوة تيم الشبح"><i class="fa-solid fa-ghost"></i> تيم الشبح</a>
+        <div class="active-user-pill" style="color:#fff;" onclick="openMemberModal(${jsArg(user.name)})" title="عرض ملفي الشخصي">
+          <span class="avatar" style="width:26px; height:26px; font-size:12px;">${escapeHTML(user.avatar || 'K')}</span>
+          <span>${escapeHTML(user.name)}</span>
+          ${KALI_DB.isAdminSession() ? '<span class="admin-badge-user">ADMIN</span>' : ''}
+          <span style="font-size:10px; background:rgba(57,255,20,0.15); color:var(--green); padding:1px 5px; border-radius:4px;">👻 الشبح</span>
         </div>
         <button class="btn ghost" onclick="handleLogout()" title="تسجيل الخروج"><i class="fa-solid fa-right-from-bracket"></i></button>
       `;
@@ -1044,7 +1047,7 @@ function updateAuthUI() {
     if (actions) {
       actions.innerHTML = `
         <a href="admin.html" class="btn ghost admin-btn" style="padding:8px 12px;" title="الإعدادات"><i class="fa-solid fa-gear"></i></a>
-        <a href="join.html" class="btn" style="background:#132918; border-color:var(--green); color:var(--green); font-weight:bold;" title="بوابة الانضمام الرسمية"><i class="fa-solid fa-ghost"></i> تسجيل دخول تيم الشباح</a>
+        <a href="join.html" class="btn" style="background:#132918; border-color:var(--green); color:var(--green); font-weight:bold;" title="بوابة الانضمام الرسمية"><i class="fa-solid fa-ghost"></i> تسجيل دخول تيم الشبح</a>
         <button class="btn ghost" onclick="openModal('register')">انضم إلينا</button>
       `;
     }
@@ -1069,6 +1072,10 @@ function handleJoin() {
   }
 
   const newUser = KALI_DB.registerGhostMember(name, specialty);
+  if (!newUser) {
+    toast('هذا الاسم غير صالح أو محجوز، اختر اسماً آخر (حرفان على الأقل)');
+    return;
+  }
   closeModal();
   updateAuthUI();
   renderInteractiveMembers();
@@ -1084,7 +1091,7 @@ function showGhostWelcomeModal(name, role) {
   if (roleSpan && role) roleSpan.textContent = role;
   if (modal) modal.classList.add('show');
   playChime(880);
-  toast(`مرحباً بك في تيم الشباح يا ${name}! 👻⚡`);
+  toast(`مرحباً بك في تيم الشبح يا ${name}! 👻⚡`);
 }
 
 function closeGhostWelcomeModal() {
@@ -1099,10 +1106,10 @@ function copyGhostInviteLink() {
   const inviteUrl = `${origin}${folder}join.html`;
   if (navigator.clipboard) {
     navigator.clipboard.writeText(inviteUrl).then(() => {
-      toast('تم نسخ رابط تيم الشباح! أرسله لأي شخص لتسجيل الدخول 📋');
+      toast('تم نسخ رابط تيم الشبح! أرسله لأي شخص لتسجيل الدخول 📋');
     });
   } else {
-    toast(`رابط تيم الشباح: ${inviteUrl}`);
+    toast(`رابط تيم الشبح: ${inviteUrl}`);
   }
 }
 
@@ -1152,6 +1159,11 @@ function escapeHTML(str) {
     "'": '&#39;',
     '"': '&quot;'
   }[tag] || tag));
+}
+
+// Safe value for inline handlers: onclick="fn(${jsArg(value)})"
+function jsArg(value) {
+  return escapeHTML(JSON.stringify(String(value === null || value === undefined ? '' : value)));
 }
 
 
