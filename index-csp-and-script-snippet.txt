@@ -1,0 +1,10 @@
+داخل <head> في وسم Content-Security-Policy الحالي أضف التوجيهين التاليين مع الحفاظ على بقية السياسة:
+
+script-src 'self' 'unsafe-inline' https://www.gstatic.com;
+connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com;
+
+وبعد السطر الحالي:
+<script src="db.js?v=2026.11.24.4"></script>
+
+أضف:
+<script type="module" src="firebase-bridge.js"></script>
